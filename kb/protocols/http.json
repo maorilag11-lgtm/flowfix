@@ -1,0 +1,1129 @@
+[
+  {
+    "id": "http-400-bad-request",
+    "title": "HTTP 400 Bad Request",
+    "problem": "The external API rejects the request because the request body, query parameters, or headers are malformed or structurally invalid. This is distinct from HTTP 422, which accepts the structure but rejects the data values.",
+    "error_messages": [],
+    "error_codes": [
+      "400"
+    ],
+    "category": "http",
+    "layer": "external_api",
+    "origin": "external_service",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "Module fails with HTTP 400 status",
+      "API error response body contains field-specific or structure-specific messages",
+      "Error happens consistently for specific data or after a configuration change",
+      "Error occurs immediately after a mapping change"
+    ],
+    "likely_causes": [
+      {
+        "cause": "A required request parameter is missing from the body or query string",
+        "confidence": 0.82
+      },
+      {
+        "cause": "The request body is malformed or not valid JSON when JSON is expected",
+        "confidence": 0.78
+      },
+      {
+        "cause": "A field value does not match the expected format for this specific API",
+        "confidence": 0.75
+      },
+      {
+        "cause": "An unexpected or unknown field is included in the request body",
+        "confidence": 0.6
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the failing execution and read the full error response body from the HTTP module — it typically contains specific field error messages",
+      "Identify which field or parameter the API is rejecting based on the error body",
+      "Compare the request sent by Make with the API documentation for that specific endpoint",
+      "Reproduce the same request in Postman or curl with the exact same data to isolate whether the issue is in the data or in how Make sends it",
+      "Determine whether the error occurs for all records or only specific ones — if data-dependent, inspect the failing record's field values"
+    ],
+    "solutions": [
+      {
+        "solution": "Read the full 400 error response body to identify the exact rejected field or structure issue, then correct the specific mapping or parameter",
+        "conditions": "General first step — the specific correction depends entirely on what the error body reports",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Add missing required parameters by mapping the correct field from the source module or by setting a static default value",
+        "conditions": "When the error body indicates a missing required parameter",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Validate the JSON body by using parseJSON() on the body string and inspecting the result in a test run",
+        "conditions": "When the request body may be malformed due to incorrect string concatenation or encoding",
+        "confidence": 0.78
+      }
+    ],
+    "prevention": [
+      "Always read the full error response body — it usually contains the exact field causing the 400",
+      "Test API endpoints manually with representative sample data before building the Make scenario",
+      "Add validation filters before HTTP modules to ensure required fields are present before sending the request"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP"
+      ],
+      "apps": [],
+      "features": [
+        "HTTP request",
+        "Mapping",
+        "Error handling"
+      ]
+    },
+    "related_errors": [
+      "http-422-validation-error",
+      "make-core-mapping-empty-value",
+      "make-core-wrong-data-type",
+      "make-core-json-parse-error"
+    ],
+    "search_keywords": [
+      "make 400 bad request",
+      "make HTTP 400",
+      "make bad request error",
+      "make API 400",
+      "make invalid request",
+      "make HTTP module 400"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — HTTP module",
+      "source_url": "https://www.make.com/en/help/apps/http",
+      "evidence": "HTTP 400 is a standard HTTP status code well-defined in RFC 7231. The behavior in Make's HTTP module is consistent with standard HTTP semantics. Specific error messages are generic and vary by API — not from a single confirmed source. Solutions are logically sound but context-dependent."
+    },
+    "confidence": 0.82,
+    "verification_status": "partially_verified",
+    "quality_score": 0.78,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "HTTP 400 is a standard HTTP status code well-defined in RFC 7231. The behavior in Make's HTTP module is consistent with standard HTTP semantics. Specific error messages are generic and vary by API — not from a single confirmed source. Solutions are logically sound but context-dependent.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "HTTP 400 is a standard HTTP status code well-defined in RFC 7231. The behavior in Make's HTTP module is consistent with standard HTTP semantics. Specific error messages are generic and vary by API — not from a single confirmed source. Solutions are logically sound but context-dependent.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/http",
+        "confidence": 0.87
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Module fails with HTTP 400 status",
+      "API error response body contains field-specific or structure-specific messages",
+      "Error happens consistently for specific data or after a configuration change",
+      "[observed message variant] \"400 Bad Request\"",
+      "[observed message variant] \"The request was invalid or malformed\""
+    ],
+    "next_review": "2026-12-01"
+  },
+  {
+    "id": "http-401-unauthorized",
+    "title": "HTTP 401 Unauthorized — authentication failure from external API",
+    "problem": "The external API returns 401 because Make's request does not include valid authentication credentials. This is an error from the external service — Make is correctly forwarding the credentials stored in the connection, but those credentials are rejected by the external API.",
+    "error_messages": [],
+    "error_codes": [
+      "401"
+    ],
+    "category": "authentication",
+    "layer": "external_api",
+    "origin": "external_service",
+    "surface": "module",
+    "severity": "critical",
+    "symptoms": [
+      "Module fails immediately with 401 status on every execution",
+      "Error started occurring after a period where the scenario was working",
+      "Error started after a password change or account modification on the external service",
+      "All modules using the same connection fail simultaneously"
+    ],
+    "likely_causes": [
+      {
+        "cause": "OAuth2 access token stored by Make has expired and the refresh token is also invalid or expired",
+        "confidence": 0.85
+      },
+      {
+        "cause": "The user changed their password on the external service, invalidating all OAuth tokens",
+        "confidence": 0.8
+      },
+      {
+        "cause": "API key has been deleted, rotated, or deactivated on the external service",
+        "confidence": 0.8
+      },
+      {
+        "cause": "The OAuth2 app access was revoked by the user in the external service's settings",
+        "confidence": 0.75
+      }
+    ],
+    "diagnosis_steps": [
+      "Go to Make > Connections and find the connection used by the failing module",
+      "Check the connection status — a warning icon or error indicator shows an issue",
+      "Attempt to reauthorize the connection",
+      "If using an API Key, verify that the key is still active in the external service's dashboard",
+      "Check if the OAuth2 scopes granted to Make are still valid",
+      "Look for recent account changes on the external service (password change, permission revocation)"
+    ],
+    "solutions": [
+      {
+        "solution": "Go to Make > Connections > find the failing connection > click Reauthorize and complete the OAuth2 flow",
+        "conditions": "When the OAuth2 token has expired or the refresh token is invalid",
+        "confidence": 0.92
+      },
+      {
+        "solution": "Delete the failing connection and create a new one with fresh credentials",
+        "conditions": "When Reauthorize fails or the connection is in an unrecoverable broken state",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Generate a new API key in the external service dashboard and update the Make connection with it",
+        "conditions": "When using API key authentication and the key was rotated or deleted",
+        "confidence": 0.88
+      }
+    ],
+    "prevention": [
+      "Use dedicated service accounts rather than personal accounts for Make connections to avoid disruption from password changes",
+      "Set up Make scenario failure notifications to catch 401 errors immediately",
+      "Regularly audit connections in Make > Connections to verify their status"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP"
+      ],
+      "apps": [],
+      "features": [
+        "Connections",
+        "OAuth2",
+        "API Key authentication"
+      ]
+    },
+    "related_errors": [
+      "http-403-forbidden",
+      "auth-oauth2-token-expired",
+      "auth-api-key-invalid",
+      "auth-connection-invalid"
+    ],
+    "search_keywords": [
+      "make 401 unauthorized",
+      "make HTTP 401",
+      "make OAuth expired",
+      "make token expired",
+      "make authentication failed",
+      "make connection reauthorize",
+      "make API key invalid 401"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Managing connections",
+      "source_url": "https://www.make.com/en/help/connections/managing-connections",
+      "evidence": "HTTP 401 semantics are defined by RFC 7235. The origin is correctly classified as external_service — the 401 is returned by the external API, not generated by Make. The Reauthorize mechanism is confirmed in Make Help Center. Note: this entry and auth-oauth2-token-expired cover partially overlapping scenarios — they are kept separate because this entry covers the HTTP-level symptom (401 in any HTTP context) while auth-oauth2-token-expired covers the Make-specific connection management aspect."
+    },
+    "confidence": 0.88,
+    "verification_status": "partially_verified",
+    "quality_score": 0.85,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "HTTP 401 semantics are defined by RFC 7235. The origin is correctly classified as external_service — the 401 is returned by the external API, not generated by Make. The Reauthorize mechanism is confirmed in Make Help Center. Note: this entry and auth-oauth2-token-expired cover partially overlapping scenarios — they are kept separate because this entry covers the HTTP-level symptom (401 in any HTTP context) while auth-oauth2-token-expired covers the Make-specific connection management aspect.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "HTTP 401 semantics are defined by RFC 7235. The origin is correctly classified as external_service — the 401 is returned by the external API, not generated by Make. The Reauthorize mechanism is confirmed in Make Help Center. Note: this entry and auth-oauth2-token-expired cover partially overlapping scenarios — they are kept separate because this entry covers the HTTP-level symptom (401 in any HTTP context) while auth-oauth2-token-expired covers the Make-specific connection management aspect.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/connections/managing-connections",
+        "confidence": 0.93
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Module fails immediately with 401 status on every execution",
+      "Error started occurring after a period where the scenario was working",
+      "Error started after a password change or account modification on the external service",
+      "[observed message variant] \"401 Unauthorized from external API\"",
+      "[observed message variant] \"Authentication failed\"",
+      "[observed message variant] \"Token has expired\"",
+      "[observed message variant] \"Invalid access token\"",
+      "[observed message variant] \"OAuth token expired\"",
+      "[observed message variant] \"invalid_grant\""
+    ],
+    "next_review": "2026-12-01"
+  },
+  {
+    "id": "http-403-forbidden",
+    "title": "HTTP 403 Forbidden — insufficient permissions on external API",
+    "problem": "The external API accepts the authentication credentials but rejects the request because the authenticated account or token does not have permission to perform the requested action on the requested resource.",
+    "error_messages": [],
+    "error_codes": [
+      "403"
+    ],
+    "category": "authorization",
+    "layer": "external_api",
+    "origin": "external_service",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "Module fails with 403 after what appears to be successful authentication",
+      "Error occurs for specific resources or actions but not others",
+      "Error started after a role or permission change in the external service",
+      "Error is consistent — not data-dependent"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The connected account does not have the required role or permission level in the external service",
+        "confidence": 0.88
+      },
+      {
+        "cause": "The OAuth2 scope granted to Make does not include the required permission for this specific action",
+        "confidence": 0.85
+      },
+      {
+        "cause": "The API plan or subscription tier does not include access to the requested endpoint",
+        "confidence": 0.68
+      },
+      {
+        "cause": "The resource being accessed is owned by a different user or workspace and the account cannot access it",
+        "confidence": 0.72
+      }
+    ],
+    "diagnosis_steps": [
+      "Read the full 403 error response body — it often specifies which permission or scope is missing",
+      "Check the role and permissions of the account used for the Make connection in the external service's admin panel",
+      "Review the OAuth2 scopes granted during the Make connection authorization — compare with the API documentation for the required scope for this action",
+      "Verify whether the resource being accessed requires admin-level access or a specific role"
+    ],
+    "solutions": [
+      {
+        "solution": "Grant the required permissions to the connected account in the external service, then reauthorize the Make connection",
+        "conditions": "When the account lacks the required role (e.g., not admin, wrong team role)",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Delete the Make connection and recreate it, ensuring that all required OAuth2 scopes for the needed actions are granted during the authorization step",
+        "conditions": "When scopes were not granted during initial authorization and cannot be added without re-authorization",
+        "confidence": 0.88
+      }
+    ],
+    "prevention": [
+      "Before creating a Make connection, review the required permissions for each module and action in the API documentation",
+      "Grant only the scopes required by the specific modules and actions used in the workflow — not broader than needed",
+      "Use accounts with the appropriate role level for Make integrations"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP"
+      ],
+      "apps": [],
+      "features": [
+        "Connections",
+        "OAuth2 scopes",
+        "Permissions"
+      ]
+    },
+    "related_errors": [
+      "http-401-unauthorized",
+      "auth-insufficient-scope",
+      "auth-oauth2-token-expired"
+    ],
+    "search_keywords": [
+      "make 403 forbidden",
+      "make HTTP 403",
+      "make access denied",
+      "make insufficient permissions",
+      "make OAuth scope missing 403",
+      "make forbidden error",
+      "make permission denied API"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Connections and permissions",
+      "source_url": "https://www.make.com/en/help/connections/managing-connections",
+      "evidence": "HTTP 403 semantics defined by RFC 7231. The recommendation to 'grant broadest reasonable set of scopes' from the previous version has been corrected to 'grant only the scopes required' — broader scope grants are a security risk and were incorrectly presented as a best practice."
+    },
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.82,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "HTTP 403 semantics defined by RFC 7231. The recommendation to 'grant broadest reasonable set of scopes' from the previous version has been corrected to 'grant only the scopes required' — broader scope grants are a security risk and were incorrectly presented as a best practice.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "HTTP 403 semantics defined by RFC 7231. The recommendation to 'grant broadest reasonable set of scopes' from the previous version has been corrected to 'grant only the scopes required' — broader scope grants are a security risk and were incorrectly presented as a best practice.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/connections/managing-connections",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Module fails with 403 after what appears to be successful authentication",
+      "Error occurs for specific resources or actions but not others",
+      "Error started after a role or permission change in the external service",
+      "[observed message variant] \"403 Forbidden from external API\"",
+      "[observed message variant] \"Insufficient permissions\"",
+      "[observed message variant] \"Access denied\""
+    ],
+    "next_review": "2026-12-01"
+  },
+  {
+    "id": "http-404-not-found",
+    "title": "HTTP 404 Not Found — resource does not exist on external service",
+    "problem": "The HTTP module or integration module targets a resource (record, file, endpoint URL) that does not exist on the external service. The 404 response is from the external service.",
+    "error_messages": [],
+    "error_codes": [
+      "404"
+    ],
+    "category": "http",
+    "layer": "external_api",
+    "origin": "external_service",
+    "surface": "module",
+    "severity": "medium",
+    "symptoms": [
+      "Module fails with 404 on specific records but not others",
+      "A hardcoded ID in the scenario refers to a deleted or non-existent resource",
+      "The resource existed during development but was deleted before the scenario ran in production"
+    ],
+    "likely_causes": [
+      {
+        "cause": "A hardcoded record ID in the module points to a resource that has since been deleted",
+        "confidence": 0.82
+      },
+      {
+        "cause": "A dynamically mapped ID is incorrect or refers to a non-existent resource",
+        "confidence": 0.78
+      },
+      {
+        "cause": "The API endpoint URL contains a typo or incorrect path segment",
+        "confidence": 0.68
+      },
+      {
+        "cause": "The resource exists in a different environment (staging vs production) than the one being called",
+        "confidence": 0.62
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the failing execution and inspect the exact URL sent by the HTTP module including all path segments and the resource ID",
+      "Verify directly in the external service whether that resource exists",
+      "Determine whether the ID is hardcoded or dynamically mapped — if dynamic, trace where the ID originates and verify it is correct",
+      "Verify the API endpoint URL structure against the current official API documentation"
+    ],
+    "solutions": [
+      {
+        "solution": "Add an Error Handler on the failing module to gracefully handle 404 responses (log the missing ID, skip the record, or send an alert notification)",
+        "conditions": "When 404s are expected to occur sometimes and should not stop the entire scenario",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Replace hardcoded resource IDs with dynamic mappings sourced from upstream data",
+        "conditions": "When a hardcoded ID caused the 404 by pointing to a deleted or wrong resource",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Add a lookup or search step before the action module to verify the resource exists before attempting to update or delete it",
+        "conditions": "When the resource may have been deleted between the trigger and the action",
+        "confidence": 0.82
+      }
+    ],
+    "prevention": [
+      "Never hardcode resource IDs in production scenarios — always map them dynamically from upstream data",
+      "Add Error Handlers for 404 responses on modules that modify or read specific records"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP",
+        "Error Handler"
+      ],
+      "apps": [],
+      "features": [
+        "Error handling",
+        "HTTP request",
+        "Dynamic mapping"
+      ]
+    },
+    "related_errors": [
+      "http-400-bad-request",
+      "make-core-mapping-empty-value"
+    ],
+    "search_keywords": [
+      "make 404 not found",
+      "make HTTP 404",
+      "make resource not found",
+      "make record not found",
+      "make ID not found",
+      "make delete not found 404"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — HTTP module",
+      "source_url": "https://www.make.com/en/help/apps/http",
+      "evidence": "HTTP 404 is a standard status code (RFC 7231). Causes and solutions are logically sound but context-dependent on the specific API. Solutions not confirmed by a specific Make documentation source for this exact error — they are general best practices consistent with Make's architecture."
+    },
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.82,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "HTTP 404 is a standard status code (RFC 7231). Causes and solutions are logically sound but context-dependent on the specific API. Solutions not confirmed by a specific Make documentation source for this exact error — they are general best practices consistent with Make's architecture.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "HTTP 404 is a standard status code (RFC 7231). Causes and solutions are logically sound but context-dependent on the specific API. Solutions not confirmed by a specific Make documentation source for this exact error — they are general best practices consistent with Make's architecture.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/http",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP",
+        "Error Handler"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Module fails with 404 on specific records but not others",
+      "A hardcoded ID in the scenario refers to a deleted or non-existent resource",
+      "The resource existed during development but was deleted before the scenario ran in production",
+      "[observed message variant] \"404 Not Found from external API\"",
+      "[observed message variant] \"Resource not found\"",
+      "[observed message variant] \"Record not found\""
+    ],
+    "next_review": "2026-12-01"
+  },
+  {
+    "id": "http-422-validation-error",
+    "title": "HTTP 422 Unprocessable Entity — data validation failure",
+    "problem": "The external API understands the request format (unlike 400) but rejects it because the data values fail the API's validation rules. Common causes include missing required fields, wrong formats, invalid enum values, or type mismatches in the request data.",
+    "error_messages": [],
+    "error_codes": [
+      "422"
+    ],
+    "category": "validation",
+    "layer": "external_api",
+    "origin": "external_service",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "Module fails with 422 — data was received by the API but rejected",
+      "Error response body contains per-field validation messages",
+      "Error is data-dependent — fails for some records but not others",
+      "Error occurs after a mapping change or when new types of records are processed"
+    ],
+    "likely_causes": [
+      {
+        "cause": "A required field in the API request is empty or null for this record",
+        "confidence": 0.88
+      },
+      {
+        "cause": "A field value does not match the expected format (date format, phone format, email format, enum value)",
+        "confidence": 0.85
+      },
+      {
+        "cause": "A field type is wrong (string passed where integer expected, or vice versa)",
+        "confidence": 0.8
+      },
+      {
+        "cause": "An enum field receives a value not in the API's accepted list",
+        "confidence": 0.78
+      },
+      {
+        "cause": "The mapping is correct for most records but the source field is absent for some edge cases",
+        "confidence": 0.75
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the failing execution and read the full 422 response body — it should identify the specific fields that failed validation",
+      "Map each field error in the response to the corresponding Make module field mapping",
+      "Inspect the actual value that was sent for each failing field",
+      "Check the API documentation for the exact validation rules for each field (required, format, enum values, length limits)",
+      "Test the request in Postman with the exact same data Make sent to confirm the issue is in the data values"
+    ],
+    "solutions": [
+      {
+        "solution": "When required field is empty: use ifempty() to provide a default value, or add a filter before the module to skip records where the required field is absent",
+        "conditions": "When the 422 response body indicates a required field is missing or empty",
+        "confidence": 0.9
+      },
+      {
+        "solution": "When date format is wrong: use formatDate() to convert to the exact format the API requires (verify the required format in the API documentation)",
+        "conditions": "When the 422 response body indicates a date field has an invalid format",
+        "confidence": 0.9
+      },
+      {
+        "solution": "When an enum field is invalid: create a mapping table using if() or a Set Variables module to convert source values to the API's accepted enum values",
+        "conditions": "When the source system uses different labels than the target API's enum values",
+        "confidence": 0.85
+      },
+      {
+        "solution": "When a type mismatch: use toNumber(), toString(), or parseNumber() to convert the value to the correct type before sending",
+        "conditions": "When the 422 indicates a type mismatch (string vs integer, etc.)",
+        "confidence": 0.88
+      }
+    ],
+    "prevention": [
+      "Always read the target API documentation for each endpoint's field validation rules before building the scenario",
+      "Test with edge-case data (empty fields, unusual value formats) during development before deploying",
+      "Add data validation (filters plus Set Variables) before API modules to detect invalid values early"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP"
+      ],
+      "apps": [],
+      "features": [
+        "HTTP request",
+        "Mapping",
+        "Functions",
+        "Validation"
+      ]
+    },
+    "related_errors": [
+      "http-400-bad-request",
+      "make-core-mapping-empty-value",
+      "make-core-wrong-data-type"
+    ],
+    "search_keywords": [
+      "make 422 error",
+      "make HTTP 422",
+      "make unprocessable entity",
+      "make validation failed",
+      "make missing required field 422",
+      "make API validation error",
+      "make field invalid format"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — HTTP module / Functions reference",
+      "source_url": "https://www.make.com/en/help/apps/http",
+      "evidence": "HTTP 422 semantics defined by RFC 4918. Solutions using Make functions (formatDate, ifempty, toNumber) are confirmed in Make documentation. The distinction between 400 and 422 varies by API — not all APIs follow RFC 4918 strictly. Note: previous version listed a 'cause' field inside solutions objects which was inconsistent with the schema — corrected to use 'conditions' consistently."
+    },
+    "confidence": 0.87,
+    "verification_status": "partially_verified",
+    "quality_score": 0.85,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "HTTP 422 semantics defined by RFC 4918. Solutions using Make functions (formatDate, ifempty, toNumber) are confirmed in Make documentation. The distinction between 400 and 422 varies by API — not all APIs follow RFC 4918 strictly. Note: previous version listed a 'cause' field inside solutions objects which was inconsistent with the schema — corrected to use 'conditions' consistently.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "HTTP 422 semantics defined by RFC 4918. Solutions using Make functions (formatDate, ifempty, toNumber) are confirmed in Make documentation. The distinction between 400 and 422 varies by API — not all APIs follow RFC 4918 strictly. Note: previous version listed a 'cause' field inside solutions objects which was inconsistent with the schema — corrected to use 'conditions' consistently.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/http",
+        "confidence": 0.92
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Module fails with 422 — data was received by the API but rejected",
+      "Error response body contains per-field validation messages",
+      "Error is data-dependent — fails for some records but not others",
+      "[observed message variant] \"422 Unprocessable Entity\"",
+      "[observed message variant] \"Validation failed\"",
+      "[observed message variant] \"Missing required field\"",
+      "[observed message variant] \"Invalid field value\""
+    ],
+    "next_review": "2026-12-01"
+  },
+  {
+    "id": "http-429-rate-limit",
+    "title": "HTTP 429 Too Many Requests — rate limit from external API",
+    "problem": "Make sends requests to an external API faster than the API's rate limit allows. The API returns 429. This is an error from the external service — Make is sending valid requests but too frequently for the API's policy.",
+    "error_messages": [],
+    "error_codes": [
+      "429"
+    ],
+    "category": "rate_limit",
+    "layer": "external_api",
+    "origin": "external_service",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "Module fails consistently when processing large volumes via an Iterator",
+      "Error is intermittent at moderate volumes but consistent at high volumes",
+      "API error response may contain a Retry-After header",
+      "Multiple Make scenarios calling the same API all fail together"
+    ],
+    "likely_causes": [
+      {
+        "cause": "An Iterator is processing records without delay and exceeds the API's requests-per-minute limit",
+        "confidence": 0.88
+      },
+      {
+        "cause": "Multiple Make scenarios calling the same API simultaneously exceed the combined rate limit",
+        "confidence": 0.78
+      },
+      {
+        "cause": "The current API plan tier has a lower rate limit than needed for the processing volume",
+        "confidence": 0.72
+      }
+    ],
+    "diagnosis_steps": [
+      "Read the 429 error response body — it may include rate limit details (requests per minute, reset time)",
+      "Check the Retry-After header value in the response — it indicates how many seconds to wait",
+      "Calculate how many API calls the scenario makes per minute at the current volume",
+      "Compare with the API's documented rate limit for the current plan tier",
+      "Check whether multiple scenarios are calling the same API and add their request rates together"
+    ],
+    "solutions": [
+      {
+        "solution": "Add a Tools > Sleep module inside the Iterator loop to introduce a delay between each API call. The minimum safe delay is: 60000ms divided by the API's requests-per-minute limit",
+        "conditions": "When an Iterator without delay is the direct cause of the rate limit being exceeded",
+        "confidence": 0.9
+      },
+      {
+        "solution": "Add an Error Handler on the rate-limited module with retry logic that waits for the Retry-After duration before retrying",
+        "conditions": "When 429 errors are intermittent and automatic retry after waiting is acceptable",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Consolidate multiple scenarios calling the same API into a single scenario to reduce total parallel request volume",
+        "conditions": "When multiple scenarios are collectively exceeding the rate limit",
+        "confidence": 0.82
+      },
+      {
+        "solution": "Use a batch endpoint if the API supports it to send multiple records in one request instead of one request per record",
+        "conditions": "When the API offers a batch insert or batch update endpoint",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Calculate the theoretical API call rate before deploying any Iterator-based scenario that calls an external API",
+      "Add a Sleep module with a delay calculated from the API rate limit inside any Iterator that calls an external API in each iteration"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP",
+        "Tools > Sleep",
+        "Flow Control > Repeater",
+        "Error Handler"
+      ],
+      "apps": [],
+      "features": [
+        "Rate limiting",
+        "Iterator",
+        "Error handling",
+        "Sleep"
+      ]
+    },
+    "related_errors": [
+      "make-core-operation-timeout",
+      "make-core-quota-operations-exhausted"
+    ],
+    "search_keywords": [
+      "make 429 rate limit",
+      "make too many requests",
+      "make rate limit exceeded",
+      "make HTTP 429",
+      "make API rate limit",
+      "make sleep iterator rate limit",
+      "make retry rate limit",
+      "make Retry-After header"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — HTTP module",
+      "source_url": "https://www.make.com/en/help/apps/http",
+      "evidence": "HTTP 429 semantics defined by RFC 6585. Sleep module confirmed in Make documentation. The rate calculation formula (60000ms / rate_limit) is logical and widely used in the community but is not prescribed in official Make docs. Retry-After header behavior is standard HTTP but not explicitly documented in Make's handling of it."
+    },
+    "confidence": 0.88,
+    "verification_status": "partially_verified",
+    "quality_score": 0.86,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "HTTP 429 semantics defined by RFC 6585. Sleep module confirmed in Make documentation. The rate calculation formula (60000ms / rate_limit) is logical and widely used in the community but is not prescribed in official Make docs. Retry-After header behavior is standard HTTP but not explicitly documented in Make's handling of it.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "HTTP 429 semantics defined by RFC 6585. Sleep module confirmed in Make documentation. The rate calculation formula (60000ms / rate_limit) is logical and widely used in the community but is not prescribed in official Make docs. Retry-After header behavior is standard HTTP but not explicitly documented in Make's handling of it.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/http",
+        "confidence": 0.93
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP",
+        "Tools > Sleep",
+        "Flow Control > Repeater",
+        "Error Handler"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Module fails consistently when processing large volumes via an Iterator",
+      "Error is intermittent at moderate volumes but consistent at high volumes",
+      "API error response may contain a Retry-After header",
+      "[observed message variant] \"429 Too Many Requests from external API\"",
+      "[observed message variant] \"Rate limit exceeded\""
+    ],
+    "next_review": "2026-12-01"
+  },
+  {
+    "id": "http-500-internal-server-error",
+    "title": "HTTP 500 Internal Server Error from external service",
+    "problem": "The external API returns a 500 error indicating a server-side failure on the API provider's infrastructure. This is not a Make error and is not caused by the request data. Make surfaces it as a module failure.",
+    "error_messages": [],
+    "error_codes": [
+      "500"
+    ],
+    "category": "external_service",
+    "layer": "external_api",
+    "origin": "external_service",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "Module fails with 500 status",
+      "Error is typically intermittent — not caused by specific data values",
+      "Error correlates with external service incidents or high-load periods",
+      "Retrying the same execution often succeeds"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The external service is experiencing a transient infrastructure failure or is under high load",
+        "confidence": 0.82
+      },
+      {
+        "cause": "The external service has a bug triggered by specific data combinations in the request",
+        "confidence": 0.62
+      }
+    ],
+    "diagnosis_steps": [
+      "Check the external service's official status page for ongoing incidents",
+      "Wait a few minutes and manually retry the incomplete execution",
+      "Determine whether the error reproduces consistently with the same data (suggests a service-side data bug) or is random (transient failure)",
+      "If consistent, test the exact same request in Postman to confirm it is a service-side issue"
+    ],
+    "solutions": [
+      {
+        "solution": "Add an Error Handler with a Repeater (3-5 retries with increasing delay) to automatically retry on 500 errors",
+        "conditions": "When 500 errors are transient and the external service normally recovers within minutes",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Store incomplete executions and reprocess them manually once the external service recovers",
+        "conditions": "When the 500 is caused by a known service incident and manual reprocessing is acceptable",
+        "confidence": 0.82
+      },
+      {
+        "solution": "Report the issue to the external service's support team with the request details if the 500 reproduces consistently with specific data",
+        "conditions": "When the same request data consistently triggers a 500 response (service bug)",
+        "confidence": 0.72
+      }
+    ],
+    "prevention": [
+      "Add Error Handlers with retry logic on all HTTP modules calling external APIs",
+      "Subscribe to status pages of critical external services used in your scenarios"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP",
+        "Error Handler",
+        "Flow Control > Repeater"
+      ],
+      "apps": [],
+      "features": [
+        "Error handling",
+        "Retry",
+        "Incomplete executions"
+      ]
+    },
+    "related_errors": [
+      "http-503-service-unavailable",
+      "make-core-operation-timeout",
+      "make-core-incomplete-execution"
+    ],
+    "search_keywords": [
+      "make 500 error",
+      "make HTTP 500",
+      "make internal server error",
+      "make API 500",
+      "make server error retry",
+      "make 500 external service"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Error types",
+      "source_url": "https://www.make.com/en/help/errors/types-of-errors",
+      "evidence": "HTTP 500 semantics are standard (RFC 7231). The origin is correctly classified as external_service. Retry recommendations are logical and widely used. The specific retry count (3-5) is not prescribed by Make documentation — it is a general best practice."
+    },
+    "confidence": 0.82,
+    "verification_status": "partially_verified",
+    "quality_score": 0.78,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "HTTP 500 semantics are standard (RFC 7231). The origin is correctly classified as external_service. Retry recommendations are logical and widely used. The specific retry count (3-5) is not prescribed by Make documentation — it is a general best practice.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "HTTP 500 semantics are standard (RFC 7231). The origin is correctly classified as external_service. Retry recommendations are logical and widely used. The specific retry count (3-5) is not prescribed by Make documentation — it is a general best practice.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/errors/types-of-errors",
+        "confidence": 0.87
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP",
+        "Error Handler",
+        "Flow Control > Repeater"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Module fails with 500 status",
+      "Error is typically intermittent — not caused by specific data values",
+      "Error correlates with external service incidents or high-load periods",
+      "[observed message variant] \"500 Internal Server Error from external API\"",
+      "[observed message variant] \"An unexpected error occurred on the external service\""
+    ],
+    "next_review": "2026-12-01"
+  },
+  {
+    "id": "http-503-service-unavailable",
+    "title": "HTTP 503 Service Unavailable — external service down",
+    "problem": "The external service is temporarily unavailable due to maintenance, overload, or a platform outage. Make's module receives a 503 and fails. This is not a Make error.",
+    "error_messages": [],
+    "error_codes": [
+      "503"
+    ],
+    "category": "external_service",
+    "layer": "external_api",
+    "origin": "external_service",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "Multiple modules or scenarios calling the same external service all fail simultaneously",
+      "Error coincides with an entry on the external service's status page",
+      "Error resolves on its own after a period (service recovery)"
+    ],
+    "likely_causes": [
+      {
+        "cause": "External service is experiencing a planned or unplanned outage",
+        "confidence": 0.88
+      },
+      {
+        "cause": "External service is temporarily overloaded and rejecting new requests",
+        "confidence": 0.78
+      }
+    ],
+    "diagnosis_steps": [
+      "Check the external service's official status page for any active incidents",
+      "Verify whether all Make scenarios calling this service are failing simultaneously — confirms a service-wide issue rather than a data or configuration problem",
+      "Wait for the service to recover before reprocessing incomplete executions"
+    ],
+    "solutions": [
+      {
+        "solution": "Store incomplete executions and reprocess them manually after the external service has recovered",
+        "conditions": "When the 503 is caused by a service outage and manual reprocessing is the appropriate approach",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Add an Error Handler with retry logic using a longer delay interval (e.g., retry after several minutes)",
+        "conditions": "When brief outages are expected for this service and automated retry after a delay is acceptable",
+        "confidence": 0.82
+      }
+    ],
+    "prevention": [
+      "Subscribe to status pages of critical external services",
+      "Enable incomplete execution storage for scenarios that depend on external services to allow reprocessing after recovery"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP",
+        "Error Handler"
+      ],
+      "apps": [],
+      "features": [
+        "Error handling",
+        "Incomplete executions"
+      ]
+    },
+    "related_errors": [
+      "http-500-internal-server-error",
+      "make-core-operation-timeout",
+      "make-core-incomplete-execution"
+    ],
+    "search_keywords": [
+      "make 503 error",
+      "make service unavailable",
+      "make HTTP 503",
+      "make API down",
+      "make service outage",
+      "make 503 maintenance"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Error types",
+      "source_url": "https://www.make.com/en/help/errors/types-of-errors",
+      "evidence": "HTTP 503 semantics are standard (RFC 7231). Note: http-500 and http-503 both describe external service failures. They are kept as separate entries because they have meaningfully different diagnostic implications — 500 may be data-triggered while 503 is almost always infrastructure. They share some prevention content but are not true duplicates."
+    },
+    "confidence": 0.83,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "HTTP 503 semantics are standard (RFC 7231). Note: http-500 and http-503 both describe external service failures. They are kept as separate entries because they have meaningfully different diagnostic implications — 500 may be data-triggered while 503 is almost always infrastructure. They share some prevention content but are not true duplicates.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "HTTP 503 semantics are standard (RFC 7231). Note: http-500 and http-503 both describe external service failures. They are kept as separate entries because they have meaningfully different diagnostic implications — 500 may be data-triggered while 503 is almost always infrastructure. They share some prevention content but are not true duplicates.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/errors/types-of-errors",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP",
+        "Error Handler"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Multiple modules or scenarios calling the same external service all fail simultaneously",
+      "Error coincides with an entry on the external service's status page",
+      "Error resolves on its own after a period (service recovery)",
+      "[observed message variant] \"503 Service Unavailable from external API\"",
+      "[observed message variant] \"The service is temporarily unavailable\""
+    ],
+    "next_review": "2026-12-01"
+  },
+  {
+    "id": "http-413-payload-too-large",
+    "title": "HTTP 413 Payload Too Large",
+    "problem": "The request body sent by Make exceeds the size limit of the external API or the Make platform. Commonly occurs when uploading files, sending large JSON bodies, or transmitting base64-encoded content.",
+    "error_messages": [],
+    "error_codes": [
+      "413"
+    ],
+    "category": "http",
+    "layer": "external_api",
+    "origin": "user",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "File upload module fails for large files but succeeds for small files",
+      "HTTP module fails when sending a large JSON body",
+      "Error occurs when transmitting base64-encoded images or documents"
+    ],
+    "likely_causes": [
+      {
+        "cause": "File or payload size exceeds the target API's documented maximum payload limit",
+        "confidence": 0.88
+      },
+      {
+        "cause": "Base64-encoded file content is embedded directly in JSON body instead of being uploaded as a file reference",
+        "confidence": 0.78
+      },
+      {
+        "cause": "Large API response content is being forwarded as a request body without size reduction",
+        "confidence": 0.7
+      }
+    ],
+    "diagnosis_steps": [
+      "Check the external API documentation for its maximum payload or file size limit",
+      "Estimate the actual payload size being sent — base64-encoded content is approximately 33% larger than the original binary size",
+      "Check Make's own file size limits in Make's current documentation (limits may change with platform updates)",
+      "Determine whether the issue is file content size or JSON body size"
+    ],
+    "solutions": [
+      {
+        "solution": "Upload large files to an intermediate cloud storage service (Google Drive, S3, Cloudinary) first, then pass the URL reference to the target API instead of the file content",
+        "conditions": "When the target API accepts a file URL or supports downloading from a URL instead of receiving file content directly",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Implement pagination in the source data module to reduce the size of each individual API call",
+        "conditions": "When a large JSON body can be split across multiple smaller paginated requests",
+        "confidence": 0.82
+      }
+    ],
+    "prevention": [
+      "Avoid routing binary file content through Make as base64 when URL references are supported by the target API",
+      "Check file size limits in both Make's platform documentation and the target API documentation before designing file transfer scenarios"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP",
+        "Google Drive",
+        "Dropbox"
+      ],
+      "apps": [],
+      "features": [
+        "File upload",
+        "HTTP request",
+        "Pagination"
+      ]
+    },
+    "related_errors": [
+      "http-400-bad-request",
+      "make-core-operation-timeout"
+    ],
+    "search_keywords": [
+      "make 413 error",
+      "make payload too large",
+      "make file too large",
+      "make upload limit",
+      "make request entity too large",
+      "make file size limit"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — HTTP module",
+      "source_url": "https://www.make.com/en/help/apps/http",
+      "evidence": "HTTP 413 semantics are standard (RFC 7231). The specific Make platform file size limit (~5MB) cited in the previous version was not confirmed in current documentation — removed and replaced with a recommendation to check current docs. The ID was corrected from 'http-payload-too-large' to 'http-413-payload-too-large' for consistency with the naming convention."
+    },
+    "confidence": 0.8,
+    "verification_status": "partially_verified",
+    "quality_score": 0.76,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "HTTP 413 semantics are standard (RFC 7231). The specific Make platform file size limit (~5MB) cited in the previous version was not confirmed in current documentation — removed and replaced with a recommendation to check current docs. The ID was corrected from 'http-payload-too-large' to 'http-413-payload-too-large' for consistency with the naming convention.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "HTTP 413 semantics are standard (RFC 7231). The specific Make platform file size limit (~5MB) cited in the previous version was not confirmed in current documentation — removed and replaced with a recommendation to check current docs. The ID was corrected from 'http-payload-too-large' to 'http-413-payload-too-large' for consistency with the naming convention.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/http",
+        "confidence": 0.85
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP",
+        "Google Drive",
+        "Dropbox"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "File upload module fails for large files but succeeds for small files",
+      "HTTP module fails when sending a large JSON body",
+      "Error occurs when transmitting base64-encoded images or documents",
+      "[observed message variant] \"413 Payload Too Large or Request Entity Too Large\"",
+      "[observed message variant] \"Request too large\""
+    ],
+    "next_review": "2026-12-01"
+  }
+]

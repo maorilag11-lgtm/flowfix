@@ -1,0 +1,254 @@
+[
+  {
+    "id": "make-core-iterator-array-required",
+    "title": "Iterator receives non-array input",
+    "problem": "The Make Iterator module expects an array as input. When a non-array value (string, number, collection/object, or null) is mapped to the Iterator's Array field, the module fails or processes only one unintended bundle.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "iterator",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "iterator",
+    "severity": "high",
+    "symptoms": [
+      "Iterator module fails immediately on execution",
+      "Iterator processes only one bundle instead of multiple expected items",
+      "Downstream modules receive an incorrect data structure",
+      "Iterator output appears as a single string or object"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The mapped field is a JSON string representation of an array, not a parsed array",
+        "confidence": 0.82
+      },
+      {
+        "cause": "The API response contains the array nested inside a wrapper object (e.g., {data: [...]}) and the Iterator is mapped to the wrapper instead of the array",
+        "confidence": 0.88
+      },
+      {
+        "cause": "The previous module returns a Collection (object) instead of an Array",
+        "confidence": 0.78
+      },
+      {
+        "cause": "The field is null or undefined because the source module returned 0 results",
+        "confidence": 0.75
+      }
+    ],
+    "diagnosis_steps": [
+      "Run the scenario once and inspect the output bundle of the module feeding the Iterator",
+      "Identify whether the target field is tagged as 'Array', 'Collection', or 'Text' in the bundle inspector",
+      "If the field appears as a string, it is a JSON string — it must be parsed with parseJSON() before the Iterator",
+      "If the array is nested (e.g., response.data.items), map the Iterator to the full nested path that resolves to the array",
+      "Check whether the array can be empty at runtime — add a filter before the Iterator to skip null or empty arrays"
+    ],
+    "solutions": [
+      {
+        "solution": "Map the Iterator's Array field to the correct nested path that contains the actual array (e.g., map 1.data.items instead of 1.data)",
+        "conditions": "When the array is nested inside a wrapper object from the API response",
+        "confidence": 0.92
+      },
+      {
+        "solution": "Use parseJSON() to convert a JSON string to an array before passing it to the Iterator",
+        "conditions": "When the input is a string representation of an array rather than a native array",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Add a filter before the Iterator checking that the array field exists and is not empty, to skip execution when there are no items",
+        "conditions": "When the array can be null or empty at runtime",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Always inspect the exact data type (Array vs Collection vs Text) in the bundle inspector before connecting an Iterator",
+      "Add a null/empty check filter before every Iterator to handle 0-result upstream modules",
+      "Document the expected API response structure when building the scenario"
+    ],
+    "make_context": {
+      "modules": [
+        "Flow Control > Iterator",
+        "Flow Control > Array Aggregator",
+        "Tools > Set Variables"
+      ],
+      "apps": [],
+      "features": [
+        "Iterator",
+        "Array processing",
+        "JSON parsing",
+        "parseJSON()"
+      ]
+    },
+    "related_errors": [
+      "make-core-wrong-data-type",
+      "make-core-mapping-empty-value",
+      "make-core-json-parse-error",
+      "make-core-aggregator-empty-input"
+    ],
+    "search_keywords": [
+      "make iterator array error",
+      "make iterator not iterable",
+      "make iterator non-array",
+      "make iterate over array",
+      "make iterator fails",
+      "make iterator wrong type",
+      "make iterator collection vs array",
+      "make iterator JSON string"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Iterator",
+      "source_url": "https://www.make.com/en/help/modules/iterator",
+      "evidence": "Iterator requiring array input is confirmed by Make documentation. Exact error messages are community-reported and not individually confirmed in official docs. Nested path mapping and parseJSON() solutions are well-established practices in Make community and consistent with Make's documented functions."
+    },
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.82,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Iterator requiring array input is confirmed by Make documentation. Exact error messages are community-reported and not individually confirmed in official docs. Nested path mapping and parseJSON() solutions are well-established practices in Make community and consistent with Make's documented functions.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "Iterator requiring array input is confirmed by Make documentation. Exact error messages are community-reported and not individually confirmed in official docs. Nested path mapping and parseJSON() solutions are well-established practices in Make community and consistent with Make's documented functions.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/modules/iterator",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Flow Control > Iterator",
+        "Flow Control > Array Aggregator",
+        "Tools > Set Variables"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Iterator module fails immediately on execution",
+      "Iterator processes only one bundle instead of multiple expected items",
+      "Downstream modules receive an incorrect data structure",
+      "[observed message variant] \"Unable to iterate over non-array value\"",
+      "[observed message variant] \"The value is not iterable\""
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "iterator-mapping-panel-empty",
+    "title": "Iterator — downstream module mapping panel shows no fields after Iterator",
+    "problem": "After adding an Iterator module, the mapping panel in downstream modules shows no fields from the Iterator output, or shows only generic bundle metadata (bundle order position, bundle count). This happens because Make has not yet learned the structure of the Iterator's output items. The scenario cannot be built further until Make discovers the item structure.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "iterator",
+    "layer": "make_core",
+    "origin": "user",
+    "surface": "mapping",
+    "severity": "medium",
+    "symptoms": [
+      "Mapping panel in modules after an Iterator shows only 'Bundle order position' and 'Total number of bundles' — no item fields",
+      "Fields from the source array items are not available for mapping in downstream modules",
+      "The scenario cannot be completed because required fields are missing from the mapping panel"
+    ],
+    "likely_causes": [
+      {
+        "cause": "Make has not yet executed the Iterator module and has not discovered the structure of the array items — it only knows the array exists, not its item shape",
+        "confidence": 0.92
+      },
+      {
+        "cause": "The Iterator source array is mapped to a field that does not yet have a sample value in Make's module metadata",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Verify that the Iterator module is correctly connected to a module that provides an array",
+      "Click 'Run once' on the scenario to execute at least one real data pass through the Iterator",
+      "After the run completes, open the downstream module's mapping panel — Make will now show the discovered item fields",
+      "If the array is deeply nested, verify the Iterator is mapped to the innermost array path, not the parent object"
+    ],
+    "solutions": [
+      {
+        "solution": "Execute the scenario with 'Run once' using real data. After execution, Make discovers the item structure and the mapping panel in downstream modules will show the correct fields.",
+        "conditions": "Primary and recommended fix — works in all cases where the Iterator is correctly configured",
+        "confidence": 0.95
+      },
+      {
+        "solution": "If 'Run once' cannot be used (no live data available), manually specify the array item structure using Make's custom JSON structure feature in the Iterator settings",
+        "conditions": "When live data is unavailable and the item structure must be defined manually",
+        "confidence": 0.78
+      }
+    ],
+    "prevention": [
+      "Always run the scenario once with real data after adding an Iterator before mapping downstream modules",
+      "When building scenarios with Iterators, follow the pattern: connect Iterator → run once → then build downstream mappings"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Flow Control > Iterator"
+      ],
+      "features": [
+        "Iterator",
+        "Mapping panel",
+        "Run once",
+        "Bundle structure discovery"
+      ]
+    },
+    "related_errors": [
+      "make-core-iterator-array-required",
+      "make-core-mapping-empty-value"
+    ],
+    "search_keywords": [
+      "make iterator no fields mapping",
+      "make iterator mapping panel empty",
+      "make iterator fields not showing",
+      "make iterator bundle order position only",
+      "make after iterator no variables",
+      "make iterator run once"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Iterator",
+      "source_url": "https://www.make.com/en/help/modules/iterator",
+      "evidence": "Make documentation explicitly states that when the Iterator does not know the structure of the items, the mapping panel shows only bundle metadata. Running the module allows Make to discover the structure."
+    },
+    "evidence": [
+      {
+        "claim": "When an Iterator has not processed real data, the mapping panel in downstream modules shows only 'Bundle order position' and bundle count, not item fields",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/modules/iterator",
+        "confidence": 0.92
+      },
+      {
+        "claim": "Running the scenario (Run once) causes Make to discover the item structure and populate the mapping panel",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/modules/iterator",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "List/Search module",
+        "Iterator",
+        "Any module requiring item fields"
+      ],
+      "sequence": [
+        "source returns array",
+        "iterator added but not yet run",
+        "downstream mapping panel shows no item fields"
+      ],
+      "conditions": [
+        "Iterator not yet executed with real data"
+      ]
+    },
+    "diagnostic_signals": [
+      "Mapping panel shows 'Bundle order position' and 'Total number of bundles' but no item-level fields",
+      "Iterator was just added to the scenario and has never been executed",
+      "Source array structure is known but downstream panel does not reflect it"
+    ],
+    "confidence": 0.9,
+    "verification_status": "partially_verified",
+    "quality_score": 0.88,
+    "last_verified": "2026-09-02",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "This is a high-value diagnostic entry covering a very common Make UX pain point explicitly documented in Make Help Center. The 'Run once' solution is the primary Make-recommended fix. Quality score 0.88 reflects strong documentation support."
+  }
+]

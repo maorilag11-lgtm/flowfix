@@ -1,0 +1,386 @@
+{
+  "chain": {
+    "error": "HTTP 422",
+    "blueprint": "{\"flow\": [{\"id\": 1, \"module\": \"json.parse\"}, {\"id\": 2, \"module\": \"json.parse\", \"mapper\": {\"email\": \"{{1.email}}\"}}, {\"id\": 3, \"module\": \"gmail.sendEmail\", \"mapper\": {\"email\": \"{{2.email}}\"}}], \"connections\": [{\"source\": 1, \"target\": 2}, {\"source\": 2, \"target\": 3}]}",
+    "module": "3",
+    "root_cause_context": {
+      "execution_id": "run-1",
+      "scenario_version": "v1",
+      "observations": [
+        {
+          "observation_id": "a",
+          "module_id": "1",
+          "direction": "OUTPUT",
+          "bundle_id": "a",
+          "data_path": [],
+          "observed_value": {},
+          "completeness": "COMPLETE",
+          "redaction_state": "NONE",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "execution_id": "run-1",
+          "scenario_version": "v1",
+          "evidence_origin": "HISTORICAL",
+          "observed_at": "2026-09-24T14:00:00Z"
+        },
+        {
+          "observation_id": "bin",
+          "module_id": "2",
+          "direction": "INPUT",
+          "bundle_id": "b",
+          "data_path": [],
+          "observed_value": {},
+          "completeness": "COMPLETE",
+          "redaction_state": "NONE",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "execution_id": "run-1",
+          "scenario_version": "v1",
+          "evidence_origin": "HISTORICAL",
+          "observed_at": "2026-09-24T14:00:00Z"
+        },
+        {
+          "observation_id": "bout",
+          "module_id": "2",
+          "direction": "OUTPUT",
+          "bundle_id": "b",
+          "data_path": [],
+          "observed_value": {},
+          "completeness": "COMPLETE",
+          "redaction_state": "NONE",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "execution_id": "run-1",
+          "scenario_version": "v1",
+          "evidence_origin": "HISTORICAL",
+          "observed_at": "2026-09-24T14:00:00Z"
+        }
+      ],
+      "expectations": [
+        {
+          "expectation_id": "eb",
+          "target_module_id": "2",
+          "target_field_path": [
+            "email"
+          ],
+          "required": true,
+          "expected_type": "string",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          }
+        },
+        {
+          "expectation_id": "ec",
+          "target_module_id": "3",
+          "target_field_path": [
+            "email"
+          ],
+          "required": true,
+          "expected_type": "string",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          }
+        }
+      ],
+      "correlations": [
+        {
+          "correlation_id": "ab",
+          "observation_id": "a",
+          "target_module_id": "2",
+          "target_bundle_id": "b",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "target_execution_id": "run-1",
+          "method": "HISTORY_LINK",
+          "target_observation_id": "bin"
+        },
+        {
+          "correlation_id": "bc",
+          "observation_id": "bout",
+          "target_module_id": "3",
+          "target_bundle_id": "c",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "target_execution_id": "run-1",
+          "method": "HISTORY_LINK"
+        }
+      ],
+      "transitions": [
+        {
+          "transition_id": "t2",
+          "module_id": "2",
+          "execution_id": "run-1",
+          "input_observation_id": "bin",
+          "output_observation_id": "bout",
+          "input_field_path": [
+            "email"
+          ],
+          "output_field_path": [
+            "email"
+          ],
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          }
+        }
+      ]
+    }
+  },
+  "filter": {
+    "error": "HTTP 422",
+    "blueprint": "{\"flow\": [{\"id\": 1, \"module\": \"json.parse\"}, {\"id\": 2, \"module\": \"json.parse\", \"filter\": {\"conditions\": [[{\"a\": \"{{1.email}}\", \"o\": \"exist\"}]]}}, {\"id\": 3, \"module\": \"gmail.sendEmail\", \"mapper\": {\"email\": \"{{1.email}}\"}}], \"connections\": [{\"source\": 1, \"target\": 2}, {\"source\": 2, \"target\": 3}]}",
+    "module": "3",
+    "root_cause_context": {
+      "execution_id": "run-1",
+      "scenario_version": "v1",
+      "observations": [
+        {
+          "observation_id": "source",
+          "module_id": "1",
+          "direction": "OUTPUT",
+          "bundle_id": "s",
+          "data_path": [],
+          "observed_value": {
+            "email": null
+          },
+          "completeness": "COMPLETE",
+          "redaction_state": "NONE",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "execution_id": "run-1",
+          "scenario_version": "v1",
+          "evidence_origin": "HISTORICAL",
+          "observed_at": "2026-09-24T14:00:00Z"
+        }
+      ],
+      "expectations": [],
+      "correlations": [
+        {
+          "correlation_id": "filter-correlation",
+          "observation_id": "source",
+          "target_module_id": "2",
+          "target_bundle_id": "event",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "target_execution_id": "run-1",
+          "method": "HISTORY_LINK"
+        }
+      ],
+      "operator_checks": [
+        {
+          "check_id": "operator",
+          "module_id": "2",
+          "execution_id": "run-1",
+          "kind": "FILTER",
+          "input_observation_ids": [
+            "source"
+          ],
+          "output_observation_ids": [],
+          "complete_bundle_set": true,
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "expectation_source": {
+            "source_ref": "Synthetic explicit business expectation"
+          },
+          "output_expectation_ids": [],
+          "event_bundle_id": "event",
+          "outcome": "PASSED",
+          "expected_outcome": "BLOCKED"
+        }
+      ]
+    }
+  },
+  "iterator": {
+    "error": "HTTP 422",
+    "blueprint": "{\"flow\": [{\"id\": 1, \"module\": \"json.parse\"}, {\"id\": 2, \"module\": \"builtin:BasicFeeder\"}, {\"id\": 3, \"module\": \"gmail.sendEmail\", \"mapper\": {\"email\": \"{{1.email}}\"}}], \"connections\": [{\"source\": 1, \"target\": 2}, {\"source\": 2, \"target\": 3}]}",
+    "module": "3",
+    "root_cause_context": {
+      "execution_id": "run-1",
+      "scenario_version": "v1",
+      "observations": [
+        {
+          "observation_id": "input",
+          "module_id": "2",
+          "direction": "INPUT",
+          "bundle_id": "input",
+          "data_path": [],
+          "observed_value": {
+            "items": [
+              {
+                "email": "a"
+              },
+              {
+                "email": "b"
+              }
+            ]
+          },
+          "completeness": "COMPLETE",
+          "redaction_state": "NONE",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "execution_id": "run-1",
+          "scenario_version": "v1",
+          "evidence_origin": "HISTORICAL",
+          "observed_at": "2026-09-24T14:00:00Z"
+        },
+        {
+          "observation_id": "out",
+          "module_id": "2",
+          "direction": "OUTPUT",
+          "bundle_id": "out",
+          "data_path": [],
+          "observed_value": {
+            "email": "a"
+          },
+          "completeness": "COMPLETE",
+          "redaction_state": "NONE",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "execution_id": "run-1",
+          "scenario_version": "v1",
+          "evidence_origin": "HISTORICAL",
+          "observed_at": "2026-09-24T14:00:00Z"
+        }
+      ],
+      "expectations": [],
+      "correlations": [],
+      "operator_checks": [
+        {
+          "check_id": "operator",
+          "module_id": "2",
+          "execution_id": "run-1",
+          "kind": "ITERATOR",
+          "input_observation_ids": [
+            "input"
+          ],
+          "output_observation_ids": [
+            "out"
+          ],
+          "complete_bundle_set": true,
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "expectation_source": {
+            "source_ref": "Synthetic explicit business expectation"
+          },
+          "output_expectation_ids": [],
+          "array_path": [
+            "items"
+          ],
+          "rule": "ONE_BUNDLE_PER_ITEM"
+        }
+      ]
+    }
+  },
+  "aggregator": {
+    "error": "HTTP 422",
+    "blueprint": "{\"flow\": [{\"id\": 1, \"module\": \"json.parse\"}, {\"id\": 2, \"module\": \"builtin:BasicAggregator\"}, {\"id\": 3, \"module\": \"gmail.sendEmail\", \"mapper\": {\"email\": \"{{1.email}}\"}}], \"connections\": [{\"source\": 1, \"target\": 2}, {\"source\": 2, \"target\": 3}]}",
+    "module": "3",
+    "root_cause_context": {
+      "execution_id": "run-1",
+      "scenario_version": "v1",
+      "observations": [
+        {
+          "observation_id": "input-1",
+          "module_id": "2",
+          "direction": "INPUT",
+          "bundle_id": "in1",
+          "data_path": [],
+          "observed_value": {
+            "email": "a"
+          },
+          "completeness": "COMPLETE",
+          "redaction_state": "NONE",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "execution_id": "run-1",
+          "scenario_version": "v1",
+          "evidence_origin": "HISTORICAL",
+          "observed_at": "2026-09-24T14:00:00Z"
+        },
+        {
+          "observation_id": "input-2",
+          "module_id": "2",
+          "direction": "INPUT",
+          "bundle_id": "in2",
+          "data_path": [],
+          "observed_value": {
+            "email": "b"
+          },
+          "completeness": "COMPLETE",
+          "redaction_state": "NONE",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "execution_id": "run-1",
+          "scenario_version": "v1",
+          "evidence_origin": "HISTORICAL",
+          "observed_at": "2026-09-24T14:00:00Z"
+        },
+        {
+          "observation_id": "out",
+          "module_id": "2",
+          "direction": "OUTPUT",
+          "bundle_id": "out",
+          "data_path": [],
+          "observed_value": {
+            "items": [
+              {
+                "email": "a"
+              }
+            ]
+          },
+          "completeness": "COMPLETE",
+          "redaction_state": "NONE",
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "execution_id": "run-1",
+          "scenario_version": "v1",
+          "evidence_origin": "HISTORICAL",
+          "observed_at": "2026-09-24T14:00:00Z"
+        }
+      ],
+      "expectations": [],
+      "correlations": [],
+      "operator_checks": [
+        {
+          "check_id": "operator",
+          "module_id": "2",
+          "execution_id": "run-1",
+          "kind": "AGGREGATOR",
+          "input_observation_ids": [
+            "input-1",
+            "input-2"
+          ],
+          "output_observation_ids": [
+            "out"
+          ],
+          "complete_bundle_set": true,
+          "provenance": {
+            "source_ref": "Synthetic fixture: declared execution evidence"
+          },
+          "expectation_source": {
+            "source_ref": "Synthetic explicit business expectation"
+          },
+          "output_expectation_ids": [],
+          "array_path": [
+            "items"
+          ],
+          "rule": "ONE_ITEM_PER_INPUT_IN_GROUP",
+          "group_id": "group-1"
+        }
+      ]
+    }
+  }
+}

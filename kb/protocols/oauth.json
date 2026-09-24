@@ -1,0 +1,489 @@
+[
+  {
+    "id": "auth-oauth2-token-expired",
+    "title": "OAuth2 connection requires reauthorization — token expired or revoked",
+    "problem": "The OAuth2 access token stored in a Make connection is no longer valid. Make attempts to use the refresh token to obtain a new access token, but if the refresh token is also expired or revoked, the authentication fails and all scenarios using this connection return 401 errors from the external service.",
+    "error_messages": [
+      "invalid_grant"
+    ],
+    "error_codes": [
+      "401"
+    ],
+    "category": "authentication",
+    "layer": "make_core",
+    "origin": "external_service",
+    "surface": "connection",
+    "severity": "critical",
+    "symptoms": [
+      "Scenario was working for an extended period and suddenly starts failing on every execution",
+      "All modules using the same connection fail simultaneously",
+      "Error occurs consistently, not intermittently",
+      "Make may show a warning indicator on the connection in the Connections list"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The OAuth2 refresh token has expired due to inactivity — many providers expire refresh tokens after a defined period of non-use",
+        "confidence": 0.8
+      },
+      {
+        "cause": "The user changed their password on the external service, which some providers use to invalidate all OAuth tokens",
+        "confidence": 0.78
+      },
+      {
+        "cause": "The user revoked the Make application's access in the external service's connected apps settings",
+        "confidence": 0.78
+      },
+      {
+        "cause": "The OAuth2 scope or permissions were changed on the external service, invalidating the existing token",
+        "confidence": 0.62
+      }
+    ],
+    "diagnosis_steps": [
+      "Go to Make > Connections and locate the connection used by the failing modules",
+      "Look for a warning indicator or error status on the connection",
+      "Attempt to reauthorize the connection by clicking the Reauthorize option",
+      "If reauthorization fails, read the exact error message — it will indicate whether the issue is an expired token, revoked access, or another problem",
+      "Log into the external service and check whether the Make app still appears in the authorized or connected apps list"
+    ],
+    "solutions": [
+      {
+        "solution": "Click Reauthorize on the failing connection in Make > Connections and complete the OAuth2 authorization flow again",
+        "conditions": "Standard fix — works when the account is still active and the Make app authorization was not explicitly revoked",
+        "confidence": 0.92
+      },
+      {
+        "solution": "Delete the existing connection and create a new one from scratch",
+        "conditions": "When Reauthorize fails or the connection state is unrecoverable",
+        "confidence": 0.88
+      },
+      {
+        "solution": "After creating a new connection, update all scenarios that used the old connection to use the new one",
+        "conditions": "Required step after creating a replacement connection",
+        "confidence": 0.9
+      }
+    ],
+    "prevention": [
+      "Use dedicated service accounts or bot accounts for Make connections rather than personal accounts, to avoid disruption from password changes",
+      "Set up Make scenario failure notifications to detect authentication failures immediately when they occur",
+      "Maintain a documented inventory of which accounts are used for each connection"
+    ],
+    "make_context": {
+      "modules": [],
+      "apps": [],
+      "features": [
+        "Connections",
+        "OAuth2",
+        "Reauthorize"
+      ]
+    },
+    "related_errors": [
+      "http-401-unauthorized",
+      "auth-connection-invalid",
+      "auth-api-key-invalid",
+      "http-403-forbidden"
+    ],
+    "search_keywords": [
+      "make OAuth token expired",
+      "make connection reauthorize",
+      "make 401 OAuth",
+      "make invalid grant",
+      "make token expired connection",
+      "make connection broken OAuth",
+      "make OAuth refresh token expired"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Managing connections",
+      "source_url": "https://www.make.com/en/help/connections/managing-connections",
+      "evidence": "Type corrected from make_core to make_core (retained) because the connection management is Make's responsibility, but the token expiry originates from the external service's OAuth2 policy. Origin correctly set to external_service. The previous version's type=make_core is debatable — the connection infrastructure is Make, but the token lifecycle policy is external. Retained make_core because it is surfaced through Make's connection system. The claim that 'many providers expire refresh tokens after 30-90 days' from the previous version was removed as the specific duration varies widely and was not confirmed."
+    },
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.82,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Type corrected from make_core to make_core (retained) because the connection management is Make's responsibility, but the token expiry originates from the external service's OAuth2 policy. Origin correctly set to external_service. The previous version's type=make_core is debatable — the connection infrastructure is Make, but the token lifecycle policy is external. Retained make_core because it is surfaced through Make's connection system. The claim that 'many providers expire refresh tokens after 30-90 days' from the previous version was removed as the specific duration varies widely and was not confirmed.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "Type corrected from make_core to make_core (retained) because the connection management is Make's responsibility, but the token expiry originates from the external service's OAuth2 policy. Origin correctly set to external_service. The previous version's type=make_core is debatable — the connection infrastructure is Make, but the token lifecycle policy is external. Retained make_core because it is surfaced through Make's connection system. The claim that 'many providers expire refresh tokens after 30-90 days' from the previous version was removed as the specific duration varies widely and was not confirmed.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/connections/managing-connections",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Scenario was working for an extended period and suddenly starts failing on every execution",
+      "All modules using the same connection fail simultaneously",
+      "Error occurs consistently, not intermittently",
+      "[observed message variant] \"OAuth access token expired\"",
+      "[observed message variant] \"The access token has expired\"",
+      "[observed message variant] \"Token has expired, please reauthorize\"",
+      "[observed message variant] \"Token is no longer valid\"",
+      "[observed message variant] \"401 Unauthorized\""
+    ],
+    "next_review": "2026-12-01"
+  },
+  {
+    "id": "auth-connection-invalid",
+    "title": "Make connection is invalid or broken — all modules using it fail",
+    "problem": "A Make connection shows as invalid or broken. All scenarios and modules that use this connection fail immediately on execution.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "authentication",
+    "layer": "make_core",
+    "origin": "external_service",
+    "surface": "connection",
+    "severity": "critical",
+    "symptoms": [
+      "A warning or error indicator is visible on the connection in Make > Connections",
+      "All scenarios using this connection fail at the first module that uses it",
+      "Connection verification test returns an error",
+      "The error references the connection explicitly rather than a specific data value"
+    ],
+    "likely_causes": [
+      {
+        "cause": "OAuth2 access and refresh tokens have both expired or been revoked",
+        "confidence": 0.82
+      },
+      {
+        "cause": "API key was deleted or rotated in the external service without updating the Make connection",
+        "confidence": 0.8
+      },
+      {
+        "cause": "The account used to create the connection was deleted or suspended in the external service",
+        "confidence": 0.75
+      },
+      {
+        "cause": "The external service changed its authentication endpoint or API version, breaking existing connections",
+        "confidence": 0.5
+      }
+    ],
+    "diagnosis_steps": [
+      "Go to Make > Connections and find all connections with a warning or error indicator",
+      "Click on the connection and attempt to verify it",
+      "Read the exact error message shown during connection verification",
+      "Log into the external service and verify that the account still exists and is active",
+      "Check whether the Make application still appears in the external service's authorized apps list"
+    ],
+    "solutions": [
+      {
+        "solution": "Attempt to reauthorize the connection by using the Reauthorize or reconnect option in the connection settings",
+        "conditions": "When the issue is an expired OAuth token and the account is still valid",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Generate a new API key in the external service and update or recreate the Make connection with the new key",
+        "conditions": "When the connection uses API key authentication and the key was rotated or deleted",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Delete the connection and create a new one with valid credentials",
+        "conditions": "When reauthorization fails or the connection cannot be recovered",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Use service accounts with stable credentials for Make connections",
+      "Monitor connection health by setting up scenario failure notifications",
+      "Maintain a connection inventory documenting the account and credential type for each connection"
+    ],
+    "make_context": {
+      "modules": [],
+      "apps": [],
+      "features": [
+        "Connections",
+        "Connection management"
+      ]
+    },
+    "related_errors": [
+      "auth-oauth2-token-expired",
+      "http-401-unauthorized",
+      "auth-api-key-invalid"
+    ],
+    "search_keywords": [
+      "make connection invalid",
+      "make connection broken",
+      "make connection error",
+      "make connection not working",
+      "make connection warning icon",
+      "make invalid connection"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Managing connections",
+      "source_url": "https://www.make.com/en/help/connections/managing-connections",
+      "evidence": "This entry partially overlaps with auth-oauth2-token-expired. They are kept separate because: this entry describes the Make-side connection state (generic broken connection) while auth-oauth2-token-expired focuses on the OAuth2 token lifecycle mechanism. The two have different diagnostic paths. A user seeing 'connection is invalid' may not know it is an OAuth issue. Origin corrected to external_service — the root cause is typically external credentials becoming invalid."
+    },
+    "confidence": 0.83,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "This entry partially overlaps with auth-oauth2-token-expired. They are kept separate because: this entry describes the Make-side connection state (generic broken connection) while auth-oauth2-token-expired focuses on the OAuth2 token lifecycle mechanism. The two have different diagnostic paths. A user seeing 'connection is invalid' may not know it is an OAuth issue. Origin corrected to external_service — the root cause is typically external credentials becoming invalid.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "This entry partially overlaps with auth-oauth2-token-expired. They are kept separate because: this entry describes the Make-side connection state (generic broken connection) while auth-oauth2-token-expired focuses on the OAuth2 token lifecycle mechanism. The two have different diagnostic paths. A user seeing 'connection is invalid' may not know it is an OAuth issue. Origin corrected to external_service — the root cause is typically external credentials becoming invalid.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/connections/managing-connections",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "A warning or error indicator is visible on the connection in Make > Connections",
+      "All scenarios using this connection fail at the first module that uses it",
+      "Connection verification test returns an error",
+      "[observed message variant] \"The connection is invalid\"",
+      "[observed message variant] \"Connection is broken\"",
+      "[observed message variant] \"The selected connection is no longer valid\""
+    ],
+    "next_review": "2026-12-01"
+  },
+  {
+    "id": "auth-insufficient-scope",
+    "title": "OAuth2 connection missing required scope for the requested action",
+    "problem": "A Make connection was authorized with a set of OAuth2 scopes that does not include the permission required for a new module or action being added to the scenario. The external API returns 403 Forbidden when the action is attempted.",
+    "error_messages": [
+      "insufficient_scope"
+    ],
+    "error_codes": [
+      "403"
+    ],
+    "category": "authorization",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "connection",
+    "severity": "high",
+    "symptoms": [
+      "A newly added module fails while existing modules using the same connection still work",
+      "The error message references 'scope' or 'permission'",
+      "The error is consistent and not data-dependent",
+      "Error started after adding a new feature or module to the scenario"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The connection was authorized before the new action was added to the scenario, and the new action requires a scope that was not granted at authorization time",
+        "confidence": 0.83
+      },
+      {
+        "cause": "The user did not grant all requested scopes during the OAuth2 authorization flow (some providers allow partial scope acceptance)",
+        "confidence": 0.78
+      }
+    ],
+    "diagnosis_steps": [
+      "Read the error message carefully — it typically identifies the missing scope by name",
+      "Check the external service's API documentation to confirm which scope is required for the failing action",
+      "Go to Make > Connections and review which scopes are shown as granted for this connection",
+      "Check the external service's connected apps settings to see the exact permissions granted to Make"
+    ],
+    "solutions": [
+      {
+        "solution": "Delete the existing connection and create a new one, carefully granting all required scopes during the OAuth2 authorization step — refer to the API documentation to identify the necessary scopes for all actions used in the workflow",
+        "conditions": "When the connection is missing a required scope and re-authorization with updated scopes is needed",
+        "confidence": 0.9
+      }
+    ],
+    "prevention": [
+      "Before creating a Make connection, review the API documentation to identify the scopes required by all modules and actions you plan to use in the workflow",
+      "Grant the scopes required by all planned modules and actions — not broader, not narrower",
+      "Test new modules against the existing connection before going to production to detect scope issues early"
+    ],
+    "make_context": {
+      "modules": [],
+      "apps": [],
+      "features": [
+        "Connections",
+        "OAuth2 scopes",
+        "Authorization"
+      ]
+    },
+    "related_errors": [
+      "http-403-forbidden",
+      "auth-oauth2-token-expired",
+      "auth-connection-invalid"
+    ],
+    "search_keywords": [
+      "make OAuth scope missing",
+      "make insufficient scope",
+      "make scope not granted",
+      "make 403 scope",
+      "make OAuth2 permission missing",
+      "make connection scope insufficient",
+      "make reauthorize scope"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Connections and OAuth2",
+      "source_url": "https://www.make.com/en/help/connections/managing-connections",
+      "evidence": "OAuth2 scope management by Make connections is documented. The specific claim that some providers allow partial scope acceptance during authorization is correct for some providers (Google, for example) but not all — this was originally stated as a general rule and is now framed as a possibility. The previous prevention advice ('grant broadest reasonable scopes') has been corrected — granting broader scopes than needed is a security risk and is inconsistent with the principle of least privilege."
+    },
+    "confidence": 0.82,
+    "verification_status": "partially_verified",
+    "quality_score": 0.78,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "OAuth2 scope management by Make connections is documented. The specific claim that some providers allow partial scope acceptance during authorization is correct for some providers (Google, for example) but not all — this was originally stated as a general rule and is now framed as a possibility. The previous prevention advice ('grant broadest reasonable scopes') has been corrected — granting broader scopes than needed is a security risk and is inconsistent with the principle of least privilege.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "OAuth2 scope management by Make connections is documented. The specific claim that some providers allow partial scope acceptance during authorization is correct for some providers (Google, for example) but not all — this was originally stated as a general rule and is now framed as a possibility. The previous prevention advice ('grant broadest reasonable scopes') has been corrected — granting broader scopes than needed is a security risk and is inconsistent with the principle of least privilege.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/connections/managing-connections",
+        "confidence": 0.87
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "A newly added module fails while existing modules using the same connection still work",
+      "The error message references 'scope' or 'permission'",
+      "The error is consistent and not data-dependent",
+      "[observed message variant] \"Insufficient scope\"",
+      "[observed message variant] \"Missing required scope\"",
+      "[observed message variant] \"The application does not have permission to perform this action\"",
+      "[observed message variant] \"scope not granted\""
+    ],
+    "next_review": "2026-12-01"
+  },
+  {
+    "id": "auth-api-key-invalid",
+    "title": "API Key authentication failure",
+    "problem": "A Make module using API Key authentication fails because the API key configured in the Make connection is invalid, has been rotated, deleted, has expired (if the provider supports key expiry), or does not have the required permissions for the API endpoint being called.",
+    "error_messages": [],
+    "error_codes": [
+      "401",
+      "403"
+    ],
+    "category": "authentication",
+    "layer": "make_core",
+    "origin": "external_service",
+    "surface": "connection",
+    "severity": "critical",
+    "symptoms": [
+      "Module fails immediately on every execution",
+      "All modules in the scenario using this API key fail simultaneously",
+      "Error started after a key rotation or account change in the external service",
+      "A newly created API key still causes failure"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The API key was deleted or regenerated in the external service's dashboard without updating the Make connection",
+        "confidence": 0.88
+      },
+      {
+        "cause": "The API key value was entered incorrectly in the Make connection (extra whitespace, truncation)",
+        "confidence": 0.8
+      },
+      {
+        "cause": "The API key does not have the required permissions or scopes for the endpoint being called",
+        "confidence": 0.75
+      },
+      {
+        "cause": "The API key is being passed in the wrong location for this specific API (wrong header name, or should be a query parameter instead)",
+        "confidence": 0.68
+      }
+    ],
+    "diagnosis_steps": [
+      "Go to Make > Connections and find the API key connection",
+      "Verify the API key value by copying it fresh from the external service's dashboard to eliminate copy-paste errors",
+      "Test the API key directly using Postman or curl to confirm it works outside of Make",
+      "Verify the correct header name or query parameter name for the API key in the external service's API documentation",
+      "Check whether the API key has the required permissions in the external service's dashboard"
+    ],
+    "solutions": [
+      {
+        "solution": "Delete the Make connection and create a new one with the current, valid API key copied fresh from the external service dashboard",
+        "conditions": "When the key was rotated or was entered with an error",
+        "confidence": 0.92
+      },
+      {
+        "solution": "Generate a new API key with the correct permissions in the external service and update the Make connection with it",
+        "conditions": "When the existing key was deleted or has insufficient permissions",
+        "confidence": 0.9
+      },
+      {
+        "solution": "Verify the API key placement: check whether the key should be in the Authorization header, a custom header (e.g., X-API-Key), or as a query parameter, and correct the HTTP module or connection configuration",
+        "conditions": "When using the HTTP module directly with manual header configuration and the key location may be wrong",
+        "confidence": 0.82
+      }
+    ],
+    "prevention": [
+      "Store API keys in Make connections rather than hardcoded in HTTP module headers or body",
+      "Document API key rotation procedures and update Make connections immediately after any rotation",
+      "Test the API key in Postman before entering it in Make to confirm it is valid"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP"
+      ],
+      "apps": [],
+      "features": [
+        "Connections",
+        "API Key authentication",
+        "HTTP headers"
+      ]
+    },
+    "related_errors": [
+      "http-401-unauthorized",
+      "auth-oauth2-token-expired",
+      "auth-connection-invalid",
+      "http-403-forbidden"
+    ],
+    "search_keywords": [
+      "make API key invalid",
+      "make API key error",
+      "make authentication API key",
+      "make API key not working",
+      "make connection API key",
+      "make API key 401",
+      "make API key wrong"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Connections",
+      "source_url": "https://www.make.com/en/help/connections/managing-connections",
+      "evidence": "API key connection management in Make is documented. Origin corrected to external_service — the 401/403 is returned by the external service when it rejects the key. The previous version cited 'API key expired' as an error message — removed because not all providers support key expiry, and it was presented as a general message without source confirmation."
+    },
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.82,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "API key connection management in Make is documented. Origin corrected to external_service — the 401/403 is returned by the external service when it rejects the key. The previous version cited 'API key expired' as an error message — removed because not all providers support key expiry, and it was presented as a general message without source confirmation.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "API key connection management in Make is documented. Origin corrected to external_service — the 401/403 is returned by the external service when it rejects the key. The previous version cited 'API key expired' as an error message — removed because not all providers support key expiry, and it was presented as a general message without source confirmation.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/connections/managing-connections",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Module fails immediately on every execution",
+      "All modules in the scenario using this API key fail simultaneously",
+      "Error started after a key rotation or account change in the external service",
+      "[observed message variant] \"Invalid API key\"",
+      "[observed message variant] \"API key not found\"",
+      "[observed message variant] \"Unauthorized — invalid API key\""
+    ],
+    "next_review": "2026-12-01"
+  }
+]

@@ -1,0 +1,16 @@
+.git
+.env
+.env.*
+!.env.example
+**/*.sqlite3
+**/*.sqlite3-*
+**/*.dump
+**/*.pem
+**/*.key
+backups/
+.venv*
+.flowfix*
+**/__pycache__
+**/*.pyc
+verification/latest
+*.zip

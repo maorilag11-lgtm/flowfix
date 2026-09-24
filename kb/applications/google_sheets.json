@@ -1,0 +1,334 @@
+[
+  {
+    "id": "gsheets-required-field-empty",
+    "title": "Google Sheets — Add a Row fails with empty required field",
+    "problem": "The Make Google Sheets > Add a Row module fails because a cell in the spreadsheet is mapped to an empty or null value. Google Sheets may enforce required columns or the cell reference is invalid.",
+    "error_messages": [],
+    "error_codes": ["400"],
+    "category": "validation",
+    "layer": "external_api",
+    "origin": "data",
+    "surface": "module",
+    "severity": "medium",
+    "symptoms": [
+      "Google Sheets Add a Row module fails for some records but succeeds for others",
+      "The failing records have an empty or null value in a field mapped to the spreadsheet",
+      "Row is not added to the spreadsheet for the failing record"
+    ],
+    "likely_causes": [
+      {"cause": "A column mapped to the Google Sheets row contains a null or empty value from the source bundle", "confidence": 0.85},
+      {"cause": "The spreadsheet has data validation rules on a column that reject empty or invalid values", "confidence": 0.72}
+    ],
+    "diagnosis_steps": [
+      "Inspect the input bundle of the Google Sheets module for the failing record",
+      "Identify which column field has an empty or null value",
+      "Check whether the spreadsheet has data validation rules on that column",
+      "Add an ifempty() guard or a default value for the failing field"
+    ],
+    "solutions": [
+      {
+        "solution": "Use ifempty(1.field; 'default') in the mapping for any field that can be null or empty",
+        "conditions": "When empty values are acceptable but need a placeholder in Google Sheets",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Add a filter before the Google Sheets module to skip records where required fields are absent",
+        "conditions": "When records with missing data should not be added to the sheet",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Map all Google Sheets columns with ifempty() guards for optional source fields",
+      "Check the spreadsheet's data validation rules before building the Make scenario"
+    ],
+    "make_context": {
+      "apps": ["Google Sheets"],
+      "modules": ["Google Sheets > Add a Row"],
+      "features": ["Mapping", "ifempty()", "Data validation"]
+    },
+    "related_errors": ["make-core-mapping-empty-value", "http-400-bad-request"],
+    "search_keywords": ["make google sheets add row empty", "make google sheets required field", "make google sheets null value", "make google sheets mapping empty"],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Google Sheets module",
+      "source_url": "https://www.make.com/en/help/apps/google-sheets",
+      "evidence": "Google Sheets Add a Row module is documented in Make Help Center. Empty field handling is consistent with general Make mapping behavior."
+    },
+    "evidence": [
+      {
+        "claim": "Make's Google Sheets > Add a Row module maps source bundle fields to spreadsheet columns",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/google-sheets",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": ["Source module (CRM, HTTP, etc.)", "Google Sheets > Add a Row"],
+      "sequence": ["source returns records", "some records have empty optional fields", "Google Sheets module fails or adds row with invalid data"],
+      "conditions": ["Optional source field absent for some records", "No ifempty() guard on the column mapping"]
+    },
+    "diagnostic_signals": [
+      "Google Sheets Add Row fails for some records but not others",
+      "Failing records have empty mapped fields in the bundle inspector",
+      "Works after adding ifempty() to the mapping"
+    ],
+    "confidence": 0.80,
+    "verification_status": "partially_verified",
+    "quality_score": 0.78,
+    "last_verified": "2026-09-02",
+    "next_review": "2026-12-01",
+    "needs_reverification": false,
+    "audit_notes": "Google Sheets module documented in Make. Empty field behavior is consistent with Make's general mapping model. Data validation rule enforcement is Google Sheets-side and not specifically documented in Make."
+  },
+
+  {
+    "id": "gsheets-search-rows-returns-0",
+    "title": "Google Sheets — Search Rows returns 0 results for existing data",
+    "problem": "The Make Google Sheets > Search Rows module returns 0 results even though matching rows exist in the spreadsheet. This causes downstream modules to receive no data.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "mapping",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "Search Rows returns 0 bundles despite matching rows being present in the spreadsheet",
+      "The scenario completes with no output",
+      "Search works when tested manually with the same criteria"
+    ],
+    "likely_causes": [
+      {"cause": "The column used for the search filter does not match the header row label exactly — Make's Search Rows is case-sensitive and space-sensitive for column matching", "confidence": 0.85},
+      {"cause": "The search value contains leading/trailing spaces or different casing than the spreadsheet data", "confidence": 0.80},
+      {"cause": "The spreadsheet range is not set correctly — rows outside the defined range are not searched", "confidence": 0.72}
+    ],
+    "diagnosis_steps": [
+      "Open the Google Sheets module and check the column filter — verify the column header label matches exactly (including spaces and casing)",
+      "Inspect the search value — check for leading/trailing spaces using the trim() function",
+      "Verify the sheet name and range are correctly configured to include all rows",
+      "Test the search manually in Google Sheets to confirm the rows are findable"
+    ],
+    "solutions": [
+      {
+        "solution": "Use trim() on the search value to remove leading/trailing spaces: {{trim(1.search_value)}}",
+        "conditions": "When spaces in the search value prevent matching",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Use lower() on both the search value and ensure the spreadsheet data is consistent in casing, or use a case-insensitive search approach",
+        "conditions": "When casing differences prevent matching",
+        "confidence": 0.82
+      },
+      {
+        "solution": "Verify the range configuration in the Search Rows module — ensure it includes all rows in the spreadsheet",
+        "conditions": "When the range is too narrow and excludes rows that should be searched",
+        "confidence": 0.80
+      }
+    ],
+    "prevention": [
+      "Use trim() on search values that come from user input or external systems",
+      "Verify the column header labels match exactly before building the scenario"
+    ],
+    "make_context": {
+      "apps": ["Google Sheets"],
+      "modules": ["Google Sheets > Search Rows"],
+      "features": ["Search", "Column filter", "trim()", "Range"]
+    },
+    "related_errors": ["make-core-filter-blocks-all", "make-core-mapping-empty-value", "mapping-null-propagation"],
+    "search_keywords": ["make google sheets search rows 0", "make google sheets not finding rows", "make google sheets search not working", "make google sheets search empty result"],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Google Sheets module",
+      "source_url": "https://www.make.com/en/help/apps/google-sheets",
+      "evidence": "Google Sheets Search Rows module documentation describes column filter matching. Case and space sensitivity is consistent with Google Sheets API behavior."
+    },
+    "evidence": [
+      {
+        "claim": "Make's Google Sheets > Search Rows module filters rows based on column values — the column header must match exactly",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/google-sheets",
+        "confidence": 0.82
+      }
+    ],
+    "workflow_pattern": {
+      "modules": ["Google Sheets > Search Rows", "Iterator", "Action modules"],
+      "sequence": ["search criteria set", "search returns 0 results", "iterator receives empty array", "downstream modules do not execute"],
+      "conditions": ["Search value has spaces or wrong casing", "Column header mismatch", "Range too narrow"]
+    },
+    "diagnostic_signals": [
+      "Search Rows returns 0 bundles despite matching data existing in the spreadsheet",
+      "Running the scenario manually with Run once also returns 0",
+      "Search value may contain spaces or have different casing than spreadsheet data"
+    ],
+    "confidence": 0.80,
+    "verification_status": "partially_verified",
+    "quality_score": 0.78,
+    "last_verified": "2026-09-02",
+    "next_review": "2026-12-01",
+    "needs_reverification": false,
+    "audit_notes": "Search Rows module documented in Make. Case/space sensitivity is consistent with Google Sheets API behavior and widely reported in Make Community. Specific Make documentation on this exact behavior was not found verbatim."
+  },
+
+  {
+    "id": "gsheets-update-row-not-found",
+    "title": "Google Sheets — Update a Row fails because row number not found",
+    "problem": "The Make Google Sheets > Update a Row module requires a specific row number to update. If the row number is incorrect, hardcoded, or the row was deleted, the update fails or updates the wrong row.",
+    "error_messages": [],
+    "error_codes": ["404"],
+    "category": "mapping",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "Update a Row module fails or updates the wrong row",
+      "A hardcoded row number is used instead of a dynamically found row number",
+      "The row number was found in a previous step but the row was deleted before the update ran"
+    ],
+    "likely_causes": [
+      {"cause": "A hardcoded row number is used — it refers to a row that no longer exists or is not the intended target", "confidence": 0.85},
+      {"cause": "The row number from Search Rows is not correctly mapped to the Update Row module", "confidence": 0.82},
+      {"cause": "Rows were inserted or deleted in the spreadsheet between the search and the update, shifting row numbers", "confidence": 0.75}
+    ],
+    "diagnosis_steps": [
+      "Check the row number field in the Update a Row module — is it hardcoded or dynamically mapped?",
+      "If dynamically mapped, trace where the row number comes from (typically Google Sheets > Search Rows output)",
+      "Inspect the actual row number value in the execution bundle"
+    ],
+    "solutions": [
+      {
+        "solution": "Use Google Sheets > Search Rows to find the row, then map the row number from the search result to the Update a Row module",
+        "conditions": "When using a hardcoded row number — replace with dynamic row number from Search Rows",
+        "confidence": 0.90
+      },
+      {
+        "solution": "Add a filter after Search Rows to verify a row was found (results > 0) before attempting the update",
+        "conditions": "When Search Rows might return 0 results and Update Row should not run in that case",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Never hardcode row numbers in production scenarios — always use a Search Rows step to find the row dynamically",
+      "Add a filter after Search Rows to handle the case where no row is found"
+    ],
+    "make_context": {
+      "apps": ["Google Sheets"],
+      "modules": ["Google Sheets > Update a Row", "Google Sheets > Search Rows"],
+      "features": ["Row number", "Dynamic mapping", "Search and update pattern"]
+    },
+    "related_errors": ["gsheets-search-rows-returns-0", "http-404-not-found"],
+    "search_keywords": ["make google sheets update row not found", "make google sheets update wrong row", "make google sheets row number", "make google sheets search then update"],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Google Sheets module",
+      "source_url": "https://www.make.com/en/help/apps/google-sheets",
+      "evidence": "Google Sheets Update a Row requires a row number. The Search Rows + Update Row pattern is the standard Make approach for conditional updates."
+    },
+    "evidence": [
+      {
+        "claim": "Make's Google Sheets > Update a Row module requires a row number to identify which row to update",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/google-sheets",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": ["Google Sheets > Search Rows", "Google Sheets > Update a Row"],
+      "sequence": ["search for row by value", "get row number from search result", "update the row using the row number"],
+      "conditions": ["Row number must be dynamically obtained from Search Rows"]
+    },
+    "diagnostic_signals": [
+      "Update Row module fails or updates wrong row",
+      "Row number is hardcoded or not mapped from Search Rows output",
+      "Rows were added/deleted in the spreadsheet between the search and update"
+    ],
+    "confidence": 0.82,
+    "verification_status": "partially_verified",
+    "quality_score": 0.80,
+    "last_verified": "2026-09-02",
+    "next_review": "2026-12-01",
+    "needs_reverification": false,
+    "audit_notes": "Update a Row requiring a row number is confirmed in Make documentation. The Search + Update pattern is a documented best practice. Row shifting from insertions/deletions is a Google Sheets API behavior."
+  },
+
+  {
+    "id": "gsheets-quota-exceeded",
+    "title": "Google Sheets — API quota exceeded (429 or quota error)",
+    "problem": "When a Make scenario makes many Google Sheets API calls in a short time — typically through an Iterator — the Google Sheets API quota is exceeded. Google returns a 429 or quota-related error.",
+    "error_messages": [],
+    "error_codes": ["429"],
+    "category": "rate_limit",
+    "layer": "external_api",
+    "origin": "external_service",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "Google Sheets module fails with a 429 or quota error when processing many rows",
+      "Error occurs consistently when the Iterator processes a large number of records",
+      "Error does not occur when the same scenario runs on a small number of records"
+    ],
+    "likely_causes": [
+      {"cause": "An Iterator is calling a Google Sheets module for each record without a delay, exceeding the Google Sheets API per-minute write quota", "confidence": 0.88}
+    ],
+    "diagnosis_steps": [
+      "Count how many records the Iterator processes per execution",
+      "Check Google Sheets API quota limits for your account type in Google Cloud Console",
+      "Add a Sleep module inside the Iterator loop and retest"
+    ],
+    "solutions": [
+      {
+        "solution": "Add a Tools > Sleep module inside the Iterator loop with a delay calculated from the Google Sheets API quota: if the limit is 300 writes/minute, add a 200ms delay between each write",
+        "conditions": "When an Iterator makes per-record calls to Google Sheets at high volume",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Use Google Sheets > Add Multiple Rows or batch update approaches to reduce the number of API calls",
+        "conditions": "When the use case supports batching rows into a single API call",
+        "confidence": 0.82
+      }
+    ],
+    "prevention": [
+      "Calculate the theoretical API call rate before deploying an Iterator that calls Google Sheets per record",
+      "Prefer batch operations (Add Multiple Rows) over per-record operations in Iterator loops"
+    ],
+    "make_context": {
+      "apps": ["Google Sheets"],
+      "modules": ["Google Sheets > Add a Row", "Google Sheets > Update a Row", "Tools > Sleep"],
+      "features": ["Rate limiting", "Iterator", "Batch operations", "Sleep"]
+    },
+    "related_errors": ["http-429-rate-limit", "make-core-quota-operations-exhausted"],
+    "search_keywords": ["make google sheets quota", "make google sheets 429", "make google sheets rate limit", "make google sheets too many requests", "make google sheets iterator slow"],
+    "origin_details": {
+      "source_type": "api_documentation",
+      "source_name": "Google Sheets API — Usage limits",
+      "source_url": "https://developers.google.com/sheets/api/limits",
+      "confidence": 0.85,
+      "evidence": "Google Sheets API enforces per-minute write quotas documented in Google's API usage limits page."
+    },
+    "evidence": [
+      {
+        "claim": "Google Sheets API enforces per-minute read/write quotas — exceeding them results in 429 responses",
+        "source_type": "api_documentation",
+        "source_url": "https://developers.google.com/sheets/api/limits",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": ["List source (large dataset)", "Iterator", "Google Sheets > Add a Row (per record)"],
+      "sequence": ["iterator starts processing large dataset", "Google Sheets module called per record without delay", "quota exceeded", "module fails"],
+      "conditions": ["High-volume Iterator calling Google Sheets per record", "No Sleep delay between calls"]
+    },
+    "diagnostic_signals": [
+      "Google Sheets module fails with 429 or quota error",
+      "Error occurs for large datasets but not small ones",
+      "Error appears after N records are processed (where N corresponds to quota limit)"
+    ],
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.83,
+    "last_verified": "2026-09-02",
+    "next_review": "2026-12-01",
+    "needs_reverification": false,
+    "audit_notes": "Google Sheets API quota limits are documented. Make's Sleep module as a rate-limit mitigation is confirmed. Specific quota values may change — not included to avoid stale data."
+  }
+]

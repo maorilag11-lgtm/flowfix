@@ -1,0 +1,228 @@
+[
+  {
+    "id": "aggregator-empty-input-continues",
+    "title": "Aggregator receives 0 bundles — continues execution with empty result",
+    "problem": "When 0 bundles reach an Aggregator and 'Stop processing after an empty aggregation' is OFF (the default), Make produces an empty aggregation result and passes it downstream. Downstream modules may silently receive an empty array or empty text, producing incorrect output without throwing an error.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "aggregator",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "aggregator",
+    "severity": "medium",
+    "symptoms": [
+      "Aggregator outputs an empty result (empty array [], empty string, or 0) but no error is thrown",
+      "Downstream module (email, API write, report) executes with empty data",
+      "Scenario completes successfully but produces incorrect or blank output"
+    ],
+    "likely_causes": [
+      {
+        "cause": "Upstream search or list module returned 0 records for this execution",
+        "confidence": 0.88
+      },
+      {
+        "cause": "A filter between the source and the Aggregator rejected all bundles",
+        "confidence": 0.8
+      },
+      {
+        "cause": "'Stop processing after an empty aggregation' is disabled — the default Make behavior",
+        "confidence": 0.92
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the execution and check how many bundles the module feeding the Iterator produced",
+      "Verify whether 'Stop processing after an empty aggregation' is disabled in the Aggregator settings",
+      "Add a filter after the Aggregator to check the output length before passing to downstream modules",
+      "Check whether a filter before the Aggregator rejected all bundles"
+    ],
+    "solutions": [
+      {
+        "solution": "Enable 'Stop processing after an empty aggregation' in the Aggregator settings if downstream modules should not run when the result is empty",
+        "conditions": "When receiving empty aggregation should halt the scenario — this is the cleaner approach",
+        "confidence": 0.92
+      },
+      {
+        "solution": "Add a filter after the Aggregator checking that the result length is greater than 0 before passing to downstream modules",
+        "conditions": "When 'Stop processing' cannot be enabled and downstream modules must be guarded",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Always handle the 0-result case after list or search modules before passing data into an Iterator + Aggregator chain",
+      "Test the scenario explicitly with queries that return 0 results to verify graceful handling"
+    ],
+    "make_context": {
+      "modules": [
+        "Flow Control > Array Aggregator",
+        "Flow Control > Text Aggregator",
+        "Flow Control > Numeric Aggregator",
+        "Filter"
+      ],
+      "apps": [],
+      "features": [
+        "Aggregator",
+        "Iterator",
+        "Empty result handling"
+      ]
+    },
+    "related_errors": [
+      "aggregator-empty-input-stops",
+      "make-core-iterator-array-required",
+      "make-core-filter-blocks-all"
+    ],
+    "search_keywords": [
+      "make aggregator empty",
+      "make aggregator 0 bundles",
+      "make aggregator continues empty",
+      "make stop processing empty aggregation"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Aggregators",
+      "source_url": "https://www.make.com/en/help/modules/aggregator",
+      "evidence": "Aggregator behavior confirmed in Make documentation. The silent nature of empty output (no error thrown) is inferred from Make's execution model and consistently reported in community. Not explicitly stated as a documented behavior in official source."
+    },
+    "confidence": 0.83,
+    "verification_status": "partially_verified",
+    "quality_score": 0.87,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "The 'Stop processing after an empty aggregation' option is confirmed in Make documentation. The default behavior (continue with empty result) is confirmed. Entry split from the original vague entry to distinguish the two distinct behaviors.",
+    "evidence": [
+      {
+        "claim": "Make Aggregators continue execution by default when 0 bundles are received, producing an empty aggregation result",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/modules/aggregator",
+        "confidence": 0.9
+      },
+      {
+        "claim": "'Stop processing after an empty aggregation' is a configurable option in Make Aggregator modules",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/modules/aggregator",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Iterator or List module",
+        "Aggregator",
+        "Email or API write module"
+      ],
+      "sequence": [
+        "source returns 0 results",
+        "iterator receives empty array",
+        "aggregator produces empty output",
+        "downstream executes on empty data"
+      ],
+      "conditions": [
+        "Stop processing after empty aggregation = OFF"
+      ]
+    },
+    "diagnostic_signals": [
+      "Aggregator shows 0 bundles processed in execution history",
+      "Scenario completes with green status but target system shows no new data",
+      "Downstream module executed despite upstream returning 0 results"
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "aggregator-empty-input-stops",
+    "title": "Aggregator stops processing on empty input — 'Stop processing after empty aggregation' enabled",
+    "problem": "When 'Stop processing after an empty aggregation' is enabled in a Make Aggregator module and 0 bundles reach it, the Aggregator produces no output bundle at all and stops the processing route. Downstream modules do not execute. This is the intended behavior but may be unexpected if not configured deliberately.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "aggregator",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "aggregator",
+    "severity": "low",
+    "symptoms": [
+      "Downstream modules do not execute after an Aggregator that received 0 bundles",
+      "Execution history shows the Aggregator processed 0 bundles and the scenario stopped cleanly",
+      "No error is thrown — the behavior is intentional"
+    ],
+    "likely_causes": [
+      {
+        "cause": "'Stop processing after an empty aggregation' is enabled and the upstream produced 0 results",
+        "confidence": 0.92
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the Aggregator module settings and check whether 'Stop processing after an empty aggregation' is enabled",
+      "Check the upstream module to confirm whether 0 results is the expected behavior or an upstream error"
+    ],
+    "solutions": [
+      {
+        "solution": "If downstream processing is required even when the aggregation is empty, disable 'Stop processing after an empty aggregation' and add a filter or Router to handle the empty case explicitly",
+        "conditions": "When the stop behavior is unintentional and downstream should still run",
+        "confidence": 0.9
+      }
+    ],
+    "prevention": [
+      "Always handle the 0-result case after list or search modules before passing data into an Iterator + Aggregator chain",
+      "Test the scenario explicitly with queries that return 0 results to verify graceful handling"
+    ],
+    "make_context": {
+      "modules": [
+        "Flow Control > Array Aggregator",
+        "Flow Control > Text Aggregator",
+        "Flow Control > Numeric Aggregator",
+        "Filter"
+      ],
+      "apps": [],
+      "features": [
+        "Aggregator",
+        "Iterator",
+        "Empty result handling"
+      ]
+    },
+    "related_errors": [
+      "aggregator-empty-input-continues",
+      "make-core-iterator-array-required"
+    ],
+    "search_keywords": [
+      "make aggregator stops empty",
+      "make stop processing empty aggregation",
+      "make aggregator 0 bundles stops"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Aggregators",
+      "source_url": "https://www.make.com/en/help/modules/aggregator",
+      "evidence": "Aggregator behavior confirmed in Make documentation. The silent nature of empty output (no error thrown) is inferred from Make's execution model and consistently reported in community. Not explicitly stated as a documented behavior in official source."
+    },
+    "confidence": 0.83,
+    "verification_status": "partially_verified",
+    "quality_score": 0.88,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Behavior confirmed in Make Aggregator documentation. Split from original vague entry.",
+    "evidence": [
+      {
+        "claim": "'Stop processing after an empty aggregation' is a documented option in Make Aggregator modules that halts the route when 0 bundles are aggregated",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/modules/aggregator",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Iterator or List module",
+        "Aggregator"
+      ],
+      "sequence": [
+        "source returns 0 results",
+        "aggregator receives 0 bundles",
+        "processing stops"
+      ],
+      "conditions": [
+        "Stop processing after empty aggregation = ON"
+      ]
+    },
+    "diagnostic_signals": [
+      "Aggregator shows 0 bundles, downstream modules did not execute",
+      "Scenario completed successfully with no output and no error"
+    ],
+    "next_review": "2027-03-01"
+  }
+]

@@ -1,0 +1,465 @@
+[
+  {
+    "id": "error-handler-not-triggering",
+    "title": "Error Handler route does not activate on module failure",
+    "problem": "An Error Handler is attached to a module but does not activate when the module fails. The scenario stops with an error instead of routing to the error handler path.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "error_handling",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "execution",
+    "severity": "high",
+    "symptoms": [
+      "Scenario fails and stops at a module even though an Error Handler is attached",
+      "The Error Handler route does not appear to execute",
+      "Execution history shows failure at the module, not at a downstream Error Handler module"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The Error Handler is attached to the wrong module — it is attached to a downstream module instead of the one that is failing",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Identify the module producing the error and inspect its error-handler route and filters.",
+      "Check whether the error occurs before module execution and whether the chosen handler supports the intended behavior."
+    ],
+    "solutions": [
+      {
+        "solution": "Attach the Error Handler directly to the module that fails, not to a downstream module. Right-click the failing module and select 'Add error handler'.",
+        "conditions": "When the Error Handler is attached to the wrong module",
+        "confidence": 0.9
+      },
+      {
+        "solution": "Before using Rollback, inspect transaction support and the auto-commit setting; nontransactional actions cannot be undone.",
+        "conditions": "Rollback is being considered after reviewing the actual failure.",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Test the Error Handler explicitly by using 'Run once' with data that will trigger the error",
+      "Review Make's error types documentation to understand which directives apply to each error type"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Error Handler"
+      ],
+      "features": [
+        "Error handling",
+        "Retry",
+        "Resume",
+        "Rollback",
+        "Skip",
+        "Commit"
+      ]
+    },
+    "related_errors": [
+      "make-core-incomplete-execution",
+      "error-handler-wrong-directive"
+    ],
+    "search_keywords": [
+      "make error handler not working",
+      "make error handler not triggered",
+      "make error handler not activating",
+      "make break directive",
+      "make resume directive",
+      "make rollback directive"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Rollback error handler",
+      "source_url": "https://help.make.com/rollback-error-handler",
+      "evidence": "Rollback depends on transaction support and auto-commit."
+    },
+    "confidence": 0.82,
+    "verification_status": "partially_verified",
+    "quality_score": 0.79,
+    "last_verified": "2026-09-08",
+    "needs_reverification": false,
+    "audit_notes": "Removed unsupported claims about Ignore preventing route activation and universal rollback. Documentary review only; no verified real-case outcome.",
+    "evidence": [
+      {
+        "claim": "Rollback cannot reverse nontransactional module actions.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/rollback-error-handler",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Error Handler"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Scenario fails and stops at a module even though an Error Handler is attached",
+      "The Error Handler route does not appear to execute",
+      "Execution history shows failure at the module, not at a downstream Error Handler module"
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "error-directive-break",
+    "title": "Retry error handler (formerly Break) — stored failed bundle",
+    "problem": "Retry stores the failed bundle for manual or configured automatic completion; other bundles can continue.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "error_handling",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "execution",
+    "severity": "medium",
+    "symptoms": [
+      "Retry error handler (formerly Break) — stored failed bundle"
+    ],
+    "likely_causes": [
+      {
+        "cause": "Retry stores the failed bundle for manual or configured automatic completion; other bundles can continue.",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Inspect the failed bundle, storage setting and automatic-completion configuration. Review previous writes before retrying."
+    ],
+    "solutions": [
+      {
+        "solution": "Enable incomplete-execution storage and select manual or automatic completion deliberately.",
+        "conditions": "Only when retaining failed work is intended; correct persistent invalid data before reprocessing.",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [],
+    "make_context": {
+      "apps": [],
+      "modules": [],
+      "features": [
+        "Retry",
+        "Break (legacy name)"
+      ]
+    },
+    "related_errors": [
+      "make-core-incomplete-execution",
+      "error-handler-not-triggering",
+      "error-directive-resume"
+    ],
+    "search_keywords": [
+      "make break directive",
+      "make retry error handler",
+      "make incomplete execution break"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center",
+      "source_url": "https://help.make.com/fix-missing-data-errors"
+    },
+    "confidence": 0.8,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-08",
+    "needs_reverification": false,
+    "audit_notes": "V1.4.1 editorial revision, documentation checked; no resolved real-world case. Previous inaccurate explanation replaced. Existing ID retained for compatibility.",
+    "evidence": [
+      {
+        "claim": "Retry stores the failed bundle for manual or configured automatic completion; other bundles can continue.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/retry-error-handler",
+        "confidence": 0.9
+      },
+      {
+        "claim": "Break is the earlier name of Retry.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/fix-missing-data-errors",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "make break directive",
+      "make retry error handler",
+      "make incomplete execution break"
+    ],
+    "next_review": "2026-12-08"
+  },
+  {
+    "id": "error-directive-resume",
+    "title": "Resume directive — execution continues after error with a fallback value",
+    "problem": "The Resume directive is configured on an Error Handler. When the module fails, Make continues execution from the next module using a fallback value defined in the Resume configuration. If the fallback value is incorrectly configured, downstream modules may receive unexpected data.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "error_handling",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "execution",
+    "severity": "medium",
+    "symptoms": [
+      "Scenario continues after a module error but downstream data is incorrect or empty",
+      "The failing module's output is replaced by the Resume fallback value, which may be null or incorrectly typed",
+      "The execution completes successfully but the result is wrong"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The Resume fallback value is not configured or is empty — downstream modules receive null or undefined",
+        "confidence": 0.82
+      },
+      {
+        "cause": "The Resume fallback value type does not match what downstream modules expect",
+        "confidence": 0.78
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the Error Handler attached to the failing module",
+      "Check the Resume directive configuration — verify the fallback value or bundle is correctly defined",
+      "Run the scenario with a case that triggers the error and inspect the bundle passed to downstream modules"
+    ],
+    "solutions": [
+      {
+        "solution": "Configure the Resume fallback value to provide a structurally correct and typed output that downstream modules can process",
+        "conditions": "When the Resume fallback is empty or typed incorrectly",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Add a Router after the resuming module to check for the fallback indicator and handle the error case differently from the success case",
+        "conditions": "When the error path and success path require different downstream handling",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [
+      "Always configure a meaningful fallback value in the Resume directive",
+      "Test the Resume path explicitly with data that triggers the error"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Error Handler",
+        "Flow Control > Router"
+      ],
+      "features": [
+        "Resume directive",
+        "Error handling",
+        "Fallback value"
+      ]
+    },
+    "related_errors": [
+      "error-directive-break",
+      "error-handler-not-triggering",
+      "make-core-mapping-empty-value"
+    ],
+    "search_keywords": [
+      "make resume directive",
+      "make error handler resume",
+      "make continue after error",
+      "make fallback value error",
+      "make error resume execution"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Error handling directives",
+      "source_url": "https://www.make.com/en/help/errors/directives-for-handling-errors",
+      "evidence": "Resume directive is documented in Make Help Center."
+    },
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.82,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Resume directive confirmed in Make documentation. Specific behavior of empty fallback value (producing null downstream) is inferred from Make's execution model — not explicitly stated in source.",
+    "evidence": [
+      {
+        "claim": "Resume directive is documented in Make Help Center.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/errors/directives-for-handling-errors",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Error Handler",
+        "Flow Control > Router"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Scenario continues after a module error but downstream data is incorrect or empty",
+      "The failing module's output is replaced by the Resume fallback value, which may be null or incorrectly typed",
+      "The execution completes successfully but the result is wrong"
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "error-type-data-error",
+    "title": "DataError — rejected data or incompatible function input",
+    "problem": "DataError can indicate third-party validation rejection or an incompatible function argument.",
+    "error_messages": [
+      "DataError"
+    ],
+    "error_codes": [
+      "DataError"
+    ],
+    "category": "error_handling",
+    "layer": "make_core",
+    "origin": "data",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "DataError — rejected data or incompatible function input"
+    ],
+    "likely_causes": [
+      {
+        "cause": "DataError can indicate third-party validation rejection or an incompatible function argument.",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Compare the exact error with the mapped value and the function or receiving API contract. Distinguish BundleValidationError."
+    ],
+    "solutions": [
+      {
+        "solution": "Correct the value or conversion identified by that comparison.",
+        "conditions": "Only after identifying the violated contract; a missing field alone does not establish DataError.",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [],
+    "make_context": {
+      "apps": [],
+      "modules": [],
+      "features": [
+        "DataError"
+      ]
+    },
+    "related_errors": [
+      "make-core-mapping-empty-value",
+      "make-core-wrong-data-type",
+      "error-type-connection-error"
+    ],
+    "search_keywords": [
+      "dataerror"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center",
+      "source_url": "https://help.make.com/fix-errors-and-warnings"
+    },
+    "confidence": 0.8,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-08",
+    "needs_reverification": false,
+    "audit_notes": "V1.4.1 editorial revision, documentation checked; no resolved real-world case. Previous inaccurate explanation replaced. Existing ID retained for compatibility.",
+    "evidence": [
+      {
+        "claim": "DataError can indicate third-party validation rejection or an incompatible function argument.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/fix-errors-and-warnings",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "dataerror"
+    ],
+    "next_review": "2026-12-08"
+  },
+  {
+    "id": "error-type-connection-error",
+    "title": "ConnectionError — unavailable external service",
+    "problem": "ConnectionError can accompany an unavailable service and HTTP 503 or 504; it is not restricted to missing HTTP responses.",
+    "error_messages": [
+      "ConnectionError",
+      "ECONNREFUSED",
+      "ENOTFOUND"
+    ],
+    "error_codes": [
+      "ECONNREFUSED",
+      "ENOTFOUND"
+    ],
+    "category": "connection",
+    "layer": "external_api",
+    "origin": "external_service",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "ConnectionError — unavailable external service"
+    ],
+    "likely_causes": [
+      {
+        "cause": "ConnectionError can accompany an unavailable service and HTTP 503 or 504; it is not restricted to missing HTTP responses.",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Inspect the provider status, exact error and execution settings. Check whether earlier writes completed."
+    ],
+    "solutions": [
+      {
+        "solution": "Review delayed retry settings and incomplete-execution storage.",
+        "conditions": "Only for a confirmed transient failure and when repeating the operation is safe.",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "HTTP"
+      ],
+      "features": [
+        "ConnectionError"
+      ]
+    },
+    "related_errors": [
+      "make-core-operation-timeout",
+      "http-503-service-unavailable",
+      "error-type-data-error"
+    ],
+    "search_keywords": [
+      "connectionerror",
+      "make connection error",
+      "make ECONNREFUSED",
+      "make ENOTFOUND"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center",
+      "source_url": "https://help.make.com/fix-connection-errors"
+    },
+    "confidence": 0.8,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-08",
+    "needs_reverification": false,
+    "audit_notes": "V1.4.1 editorial revision, documentation checked; no resolved real-world case. Previous inaccurate explanation replaced. Existing ID retained for compatibility.",
+    "evidence": [
+      {
+        "claim": "ConnectionError can accompany an unavailable service and HTTP 503 or 504; it is not restricted to missing HTTP responses.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/fix-connection-errors",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "connectionerror",
+      "make connection error",
+      "make ECONNREFUSED",
+      "make ENOTFOUND"
+    ],
+    "next_review": "2026-12-08"
+  }
+]

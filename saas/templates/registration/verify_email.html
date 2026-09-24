@@ -1,0 +1,18 @@
+{% extends 'registration/account_status.html' %}
+{% block title %}Confirmer mon email{% endblock %}
+{% block content %}
+<p class="form-kicker">SÉCURITÉ DU COMPTE</p>
+{% if verified %}
+<h1>Votre adresse est confirmée.</h1><p>Vous pouvez activer votre essai, rejoindre une équipe ou souscrire une offre.</p>
+{% else %}
+<h1>Confirmez votre adresse email.</h1><p>Cette étape protège l’accès à votre équipe et l’attribution de vos offres. Votre premier diagnostic gratuit reste disponible.</p>
+{% endif %}
+{% if message %}<p role="status">{{ message }}</p>{% endif %}
+{% if confirm_link %}
+<form method="post">{% csrf_token %}<p>Confirmez l’adresse du compte auquel vous êtes actuellement connecté. Si le lien concerne un autre compte, connectez-vous d’abord à celui-ci.</p><button class="submit" type="submit">Confirmer mon adresse</button></form>
+<p><a href="/verify-email/">Demander un nouveau lien</a></p>
+{% elif not verified %}
+<form method="post">{% csrf_token %}<button class="submit" type="submit">Envoyer le lien de confirmation</button></form><p>Le lien est valable 24 heures. Un nouvel envoi remplace le précédent.</p>
+{% endif %}
+<p><a href="/app/#settings">Retour à Mon accès</a></p>
+{% endblock %}

@@ -1,0 +1,16 @@
+.flowfix-data/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+*.sqlite3
+*.sqlite3-*
+*.dump
+*.pem
+*.key
+*.zip
+backups/
+dist/
+.venv*
+.flowfix-saas.sqlite3*

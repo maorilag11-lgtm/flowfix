@@ -1,0 +1,209 @@
+[
+  {
+    "id": "scheduling-scenario-not-running",
+    "title": "Scheduled scenario does not run at expected time",
+    "problem": "A Make scenario set to run on a schedule does not execute at the expected time or misses scheduled runs.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "scheduling",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "scheduler",
+    "severity": "high",
+    "symptoms": [
+      "Scenario execution history shows gaps where expected scheduled runs did not occur",
+      "Scenario is active but has not run for a longer time than the configured schedule",
+      "Scheduled run is delayed compared to the configured time"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The scenario is inactive — scheduled scenarios only run when the scenario is active",
+        "confidence": 0.92
+      },
+      {
+        "cause": "The operations quota was exhausted, preventing scheduled executions from starting",
+        "confidence": 0.85
+      },
+      {
+        "cause": "Make experienced a platform-level delay or incident affecting scheduled scenario execution",
+        "confidence": 0.6
+      },
+      {
+        "cause": "The scenario's scheduling configuration was not saved correctly after the last change",
+        "confidence": 0.65
+      }
+    ],
+    "diagnosis_steps": [
+      "Verify that the scenario is active — the toggle must be ON",
+      "Check Make Dashboard > Usage to confirm the operations quota is not exhausted",
+      "Check Make's status page for any recent platform incidents that may have affected scheduling",
+      "Open the scenario's scheduling configuration and verify the schedule is set correctly (correct time zone, interval, specific days if configured)",
+      "Check the execution history for any error on the last attempted run"
+    ],
+    "solutions": [
+      {
+        "solution": "Activate the scenario if it was inactive",
+        "conditions": "When the scenario was deactivated — the most common cause",
+        "confidence": 0.95
+      },
+      {
+        "solution": "Resolve the operations quota issue (upgrade plan or pause non-critical scenarios) to allow scheduled runs to resume",
+        "conditions": "When the operations quota was exhausted",
+        "confidence": 0.9
+      },
+      {
+        "solution": "Review and resave the scheduling configuration, paying attention to time zone settings",
+        "conditions": "When the schedule appears configured but runs do not occur at the expected time",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [
+      "Set up scenario failure notifications to detect when scheduled scenarios stop running",
+      "Monitor operations quota usage to prevent exhaustion from stopping scheduled scenarios"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [],
+      "features": [
+        "Scheduling",
+        "Scenario activation",
+        "Operations quota"
+      ]
+    },
+    "related_errors": [
+      "make-core-quota-operations-exhausted",
+      "make-core-incomplete-execution"
+    ],
+    "search_keywords": [
+      "make scheduled scenario not running",
+      "make scenario not executing",
+      "make schedule not working",
+      "make scenario missed run",
+      "make scheduled trigger not firing"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Scheduling",
+      "source_url": "https://www.make.com/en/help/scenarios/scheduling",
+      "evidence": "Make scheduling requires scenario to be active. Operations quota affects all executions including scheduled ones."
+    },
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.82,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Scenario must be active for scheduling to work is confirmed in Make documentation. Operations quota blocking scheduled runs is a confirmed Make behavior. Platform delays are possible but not documented as a specific scenario type.",
+    "evidence": [
+      {
+        "claim": "Make scheduling requires scenario to be active. Operations quota affects all executions including scheduled ones.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/scenarios/scheduling",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Scenario execution history shows gaps where expected scheduled runs did not occur",
+      "Scenario is active but has not run for a longer time than the configured schedule",
+      "Scheduled run is delayed compared to the configured time"
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "scheduling-timezone-mismatch",
+    "title": "Scheduled scenario runs at wrong time — time zone mismatch",
+    "problem": "A Make scenario is configured to run at a specific time but executes at a different clock time. The discrepancy is caused by a mismatch between the time zone configured in Make's scheduling and the expected local time.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "scheduling",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "scheduler",
+    "severity": "low",
+    "symptoms": [
+      "Scenario runs at a consistent but unexpected time (e.g., 2 hours earlier or later than expected)",
+      "The time offset corresponds to a time zone difference",
+      "The discrepancy changes during daylight saving time transitions"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The scheduling time zone in Make is set to a different zone than the intended local time zone",
+        "confidence": 0.9
+      },
+      {
+        "cause": "Daylight saving time transition caused a one-hour shift in the effective run time",
+        "confidence": 0.78
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the scenario's scheduling configuration",
+      "Check the time zone setting in the schedule",
+      "Compare the configured time zone with the intended local time zone",
+      "Calculate the offset between the configured time zone and the expected execution time"
+    ],
+    "solutions": [
+      {
+        "solution": "Update the scheduling time zone to the correct local time zone, or adjust the scheduled time to account for the offset",
+        "conditions": "When the wrong time zone was selected during configuration",
+        "confidence": 0.92
+      }
+    ],
+    "prevention": [
+      "Always explicitly set the time zone in scheduling configuration — do not rely on defaults",
+      "Document the intended time zone for each scheduled scenario"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [],
+      "features": [
+        "Scheduling",
+        "Time zone"
+      ]
+    },
+    "related_errors": [
+      "scheduling-scenario-not-running"
+    ],
+    "search_keywords": [
+      "make scheduling timezone",
+      "make wrong time zone",
+      "make scenario runs wrong time",
+      "make schedule time offset",
+      "make timezone scheduling"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Scheduling",
+      "source_url": "https://www.make.com/en/help/scenarios/scheduling",
+      "evidence": "Make scheduling allows time zone selection — confirmed in Make documentation."
+    },
+    "confidence": 0.88,
+    "verification_status": "partially_verified",
+    "quality_score": 0.85,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Time zone setting in Make scheduling is confirmed. The daylight saving time effect is standard time zone behavior and not Make-specific.",
+    "evidence": [
+      {
+        "claim": "Make scheduling allows time zone selection — confirmed in Make documentation.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/scenarios/scheduling",
+        "confidence": 0.93
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Scenario runs at a consistent but unexpected time (e.g., 2 hours earlier or later than expected)",
+      "The time offset corresponds to a time zone difference",
+      "The discrepancy changes during daylight saving time transitions"
+    ],
+    "next_review": "2027-03-01"
+  }
+]

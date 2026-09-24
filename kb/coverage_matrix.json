@@ -1,0 +1,324 @@
+[
+  {
+    "category": "HTTP",
+    "target_entries": 15,
+    "current_entries": 9,
+    "coverage_percent": 60,
+    "priority": "critical",
+    "status": "in_progress",
+    "files": [
+      "protocols/http.json"
+    ],
+    "priority_patterns": 15,
+    "coverage_label": "substantial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Authentication",
+    "target_entries": 10,
+    "current_entries": 4,
+    "coverage_percent": 40,
+    "priority": "critical",
+    "status": "in_progress",
+    "files": [
+      "protocols/oauth.json"
+    ],
+    "priority_patterns": 10,
+    "coverage_label": "partial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Mapping",
+    "target_entries": 12,
+    "current_entries": 10,
+    "coverage_percent": 83,
+    "priority": "critical",
+    "status": "in_progress",
+    "files": [
+      "make_core/mapping.json"
+    ],
+    "priority_patterns": 12,
+    "coverage_label": "substantial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Webhooks",
+    "target_entries": 10,
+    "current_entries": 6,
+    "coverage_percent": 60,
+    "priority": "critical",
+    "status": "in_progress",
+    "files": [
+      "make_core/webhooks.json"
+    ],
+    "priority_patterns": 10,
+    "coverage_label": "substantial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Error Handling",
+    "target_entries": 10,
+    "current_entries": 5,
+    "coverage_percent": 50,
+    "priority": "high",
+    "status": "in_progress",
+    "files": [
+      "make_core/error_handling.json"
+    ],
+    "priority_patterns": 10,
+    "coverage_label": "partial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Iterators",
+    "target_entries": 6,
+    "current_entries": 2,
+    "coverage_percent": 33,
+    "priority": "high",
+    "status": "in_progress",
+    "files": [
+      "make_core/iterators.json"
+    ],
+    "priority_patterns": 6,
+    "coverage_label": "partial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Aggregators",
+    "target_entries": 5,
+    "current_entries": 2,
+    "coverage_percent": 40,
+    "priority": "high",
+    "status": "in_progress",
+    "files": [
+      "make_core/aggregators.json"
+    ],
+    "priority_patterns": 5,
+    "coverage_label": "partial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Filters",
+    "target_entries": 6,
+    "current_entries": 5,
+    "coverage_percent": 83,
+    "priority": "high",
+    "status": "in_progress",
+    "files": [
+      "make_core/filters.json"
+    ],
+    "priority_patterns": 6,
+    "coverage_label": "substantial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Routers",
+    "target_entries": 5,
+    "current_entries": 2,
+    "coverage_percent": 40,
+    "priority": "high",
+    "status": "in_progress",
+    "files": [
+      "make_core/routers.json"
+    ],
+    "priority_patterns": 5,
+    "coverage_label": "partial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "JSON",
+    "target_entries": 6,
+    "current_entries": 2,
+    "coverage_percent": 33,
+    "priority": "high",
+    "status": "in_progress",
+    "files": [
+      "make_core/json.json"
+    ],
+    "priority_patterns": 6,
+    "coverage_label": "partial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Scenarios",
+    "target_entries": 8,
+    "current_entries": 4,
+    "coverage_percent": 50,
+    "priority": "high",
+    "status": "in_progress",
+    "files": [
+      "make_core/scenarios.json"
+    ],
+    "priority_patterns": 8,
+    "coverage_label": "partial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Scheduling",
+    "target_entries": 5,
+    "current_entries": 2,
+    "coverage_percent": 40,
+    "priority": "medium",
+    "status": "in_progress",
+    "files": [
+      "make_core/scheduling.json"
+    ],
+    "priority_patterns": 5,
+    "coverage_label": "partial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Gmail",
+    "target_entries": 10,
+    "current_entries": 4,
+    "coverage_percent": 40,
+    "priority": "high",
+    "status": "in_progress",
+    "files": [
+      "applications/gmail.json"
+    ],
+    "priority_patterns": 10,
+    "coverage_label": "partial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Google Sheets",
+    "target_entries": 10,
+    "current_entries": 4,
+    "coverage_percent": 40,
+    "priority": "high",
+    "status": "in_progress",
+    "files": [
+      "applications/google_sheets.json"
+    ],
+    "priority_patterns": 10,
+    "coverage_label": "partial",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Google Drive",
+    "target_entries": 6,
+    "current_entries": 0,
+    "coverage_percent": 0,
+    "priority": "medium",
+    "status": "not_started",
+    "files": [
+      "applications/google_drive.json"
+    ],
+    "priority_patterns": 6,
+    "coverage_label": "not_started",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "HubSpot",
+    "target_entries": 8,
+    "current_entries": 0,
+    "coverage_percent": 0,
+    "priority": "high",
+    "status": "not_started",
+    "files": [
+      "applications/hubspot.json"
+    ],
+    "priority_patterns": 8,
+    "coverage_label": "not_started",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Slack",
+    "target_entries": 6,
+    "current_entries": 0,
+    "coverage_percent": 0,
+    "priority": "medium",
+    "status": "not_started",
+    "files": [
+      "applications/slack.json"
+    ],
+    "priority_patterns": 6,
+    "coverage_label": "not_started",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Notion",
+    "target_entries": 6,
+    "current_entries": 0,
+    "coverage_percent": 0,
+    "priority": "medium",
+    "status": "not_started",
+    "files": [
+      "applications/notion.json"
+    ],
+    "priority_patterns": 6,
+    "coverage_label": "not_started",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Airtable",
+    "target_entries": 6,
+    "current_entries": 0,
+    "coverage_percent": 0,
+    "priority": "medium",
+    "status": "not_started",
+    "files": [
+      "applications/airtable.json"
+    ],
+    "priority_patterns": 6,
+    "coverage_label": "not_started",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "OpenAI",
+    "target_entries": 6,
+    "current_entries": 0,
+    "coverage_percent": 0,
+    "priority": "medium",
+    "status": "not_started",
+    "files": [
+      "applications/openai.json"
+    ],
+    "priority_patterns": 6,
+    "coverage_label": "not_started",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Shopify",
+    "target_entries": 6,
+    "current_entries": 0,
+    "coverage_percent": 0,
+    "priority": "medium",
+    "status": "not_started",
+    "files": [
+      "applications/shopify.json"
+    ],
+    "priority_patterns": 6,
+    "coverage_label": "not_started",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Real World Cases",
+    "target_entries": 20,
+    "current_entries": 0,
+    "coverage_percent": 0,
+    "priority": "high",
+    "status": "not_started",
+    "files": [
+      "real_world_cases/cases.json"
+    ],
+    "priority_patterns": 20,
+    "coverage_label": "not_started",
+    "target_note": "Internal coverage goal — not a canonical count of all possible errors in this domain"
+  },
+  {
+    "category": "Native diagnostics — lot 1",
+    "target_entries": 12,
+    "current_entries": 6,
+    "coverage_percent": 50,
+    "priority": "high",
+    "status": "in_progress",
+    "files": [
+      "make_core/native_diagnostics.json"
+    ],
+    "priority_patterns": 12,
+    "coverage_label": "partial",
+    "target_note": "Editorial backlog target, not coverage of all Make errors."
+  }
+]

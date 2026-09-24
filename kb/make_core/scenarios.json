@@ -1,0 +1,482 @@
+[
+  {
+    "id": "make-core-incomplete-execution",
+    "title": "Incomplete execution awaiting completion",
+    "problem": "Stored incomplete executions may require manual completion or qualify for automatic retries.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "error_handling",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "execution",
+    "severity": "high",
+    "symptoms": [
+      "An incomplete execution remains pending."
+    ],
+    "likely_causes": [
+      {
+        "cause": "Completion depends on the error type and scenario settings.",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Inspect the error, storage and completion settings; review previous writes."
+    ],
+    "solutions": [
+      {
+        "solution": "Choose manual or automatic completion after checking retry eligibility and duplicate-write risk.",
+        "conditions": "An incomplete execution is stored and its failure has been examined.",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [
+      "Monitor pending executions."
+    ],
+    "make_context": {
+      "modules": [
+        "Error Handler",
+        "Tools > Set Variables"
+      ],
+      "apps": [],
+      "features": [
+        "Error handling",
+        "Incomplete executions",
+        "Execution history"
+      ]
+    },
+    "related_errors": [
+      "make-core-operation-timeout",
+      "make-core-scenario-cycle-detected"
+    ],
+    "search_keywords": [
+      "make incomplete execution",
+      "make scenario incomplete",
+      "make execution interrupted",
+      "make error handler",
+      "make reprocess incomplete",
+      "incomplete execution stored make"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center",
+      "source_url": "https://help.make.com/retry-error-handler",
+      "evidence": "ConnectionError and RateLimitError can be retried automatically without a Retry handler when incomplete-execution storage is enabled."
+    },
+    "confidence": 0.88,
+    "verification_status": "partially_verified",
+    "quality_score": 0.85,
+    "last_verified": "2026-09-08",
+    "needs_reverification": false,
+    "audit_notes": "Documentary correction 2026-09-08; no verified real-case resolution.",
+    "evidence": [
+      {
+        "claim": "ConnectionError and RateLimitError can be retried automatically without a Retry handler when incomplete-execution storage is enabled.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/retry-error-handler",
+        "confidence": 0.85
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Failing module"
+      ],
+      "sequence": [
+        "Failure",
+        "Stored incomplete execution"
+      ],
+      "conditions": [
+        "Incomplete-execution storage enabled"
+      ]
+    },
+    "diagnostic_signals": [
+      "Incomplete execution pending"
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "make-core-operation-timeout",
+    "title": "Scenario operation timed out",
+    "problem": "A Make module does not receive a response from an external service within Make's per-operation time limit. Make interrupts the execution. The timeout limit is enforced by Make's execution engine, but the root cause is typically the external service's response latency.",
+    "error_messages": [
+      "ETIMEDOUT"
+    ],
+    "error_codes": [
+      "ETIMEDOUT"
+    ],
+    "category": "timeout",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "execution",
+    "severity": "high",
+    "symptoms": [
+      "Module shows a timeout-related error in execution history",
+      "Scenario stops at a specific HTTP or integration module",
+      "Error occurs consistently on large payloads or slow APIs",
+      "Error is intermittent on unstable external services"
+    ],
+    "likely_causes": [
+      {
+        "cause": "External API is slow or overloaded and does not respond within Make's timeout window",
+        "confidence": 0.85
+      },
+      {
+        "cause": "Large file upload or download exceeds Make's response time window",
+        "confidence": 0.75
+      },
+      {
+        "cause": "Unstable network or DNS resolution failure on the external service",
+        "confidence": 0.65
+      },
+      {
+        "cause": "External service processes a heavy task synchronously instead of returning a quick response",
+        "confidence": 0.7
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the failing execution and identify the exact module that timed out",
+      "Test the external API endpoint independently (Postman, curl) to measure its actual response time",
+      "Check the external service's status page for ongoing incidents",
+      "Reduce the payload size if the request involves file transfer or large JSON bodies and retest",
+      "Determine whether the error is consistent (service systematically too slow) or intermittent (flaky network or transient load)"
+    ],
+    "solutions": [
+      {
+        "solution": "Add an Error Handler on the timing-out module with a Repeater configured for 3-5 retries with increasing delay intervals to automatically retry after transient timeouts",
+        "conditions": "When the timeout is intermittent and the external service is normally responsive",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Split large requests into smaller batches using a Repeater or Iterator to reduce per-request processing time on the external service",
+        "conditions": "When the timeout is caused by a large payload sent in a single request",
+        "confidence": 0.8
+      },
+      {
+        "solution": "Adopt a webhook callback pattern: send the request asynchronously and configure the external service to call back a Make webhook when processing is complete",
+        "conditions": "When the external service supports callbacks and processing inherently takes longer than Make's timeout allows",
+        "confidence": 0.75
+      }
+    ],
+    "prevention": [
+      "Attach an Error Handler with retry logic to HTTP modules calling slow external APIs",
+      "Prefer asynchronous webhook callback patterns for long-running external processes",
+      "Paginate or batch large requests instead of sending them in a single call"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP",
+        "Error Handler",
+        "Tools > Sleep",
+        "Flow Control > Repeater"
+      ],
+      "apps": [],
+      "features": [
+        "Error handling",
+        "Retry",
+        "HTTP request"
+      ]
+    },
+    "related_errors": [
+      "make-core-incomplete-execution",
+      "http-500-internal-server-error",
+      "http-503-service-unavailable"
+    ],
+    "search_keywords": [
+      "make operation timed out",
+      "make timeout error",
+      "make ETIMEDOUT",
+      "make scenario timeout",
+      "make connection timed out",
+      "make module timeout",
+      "make HTTP timeout"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Error types",
+      "source_url": "https://www.make.com/en/help/errors/types-of-errors",
+      "evidence": "Make does enforce per-operation timeouts (documented), and ETIMEDOUT is commonly reported. The exact timeout value (~40s) cited in previous version was not confirmed in official documentation — removed. Retry recommendations are logical but not specifically prescribed by Make docs for this exact error."
+    },
+    "confidence": 0.82,
+    "verification_status": "partially_verified",
+    "quality_score": 0.78,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Make does enforce per-operation timeouts (documented), and ETIMEDOUT is commonly reported. The exact timeout value (~40s) cited in previous version was not confirmed in official documentation — removed. Retry recommendations are logical but not specifically prescribed by Make docs for this exact error.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "Make does enforce per-operation timeouts (documented), and ETIMEDOUT is commonly reported. The exact timeout value (~40s) cited in previous version was not confirmed in official documentation — removed. Retry recommendations are logical but not specifically prescribed by Make docs for this exact error.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/errors/types-of-errors",
+        "confidence": 0.87
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP",
+        "Error Handler",
+        "Tools > Sleep",
+        "Flow Control > Repeater"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Module shows a timeout-related error in execution history",
+      "Scenario stops at a specific HTTP or integration module",
+      "Error occurs consistently on large payloads or slow APIs",
+      "[observed message variant] \"Operation timed out\"",
+      "[observed message variant] \"The connection timed out\"",
+      "[observed message variant] \"Read timed out\""
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "make-core-quota-operations-exhausted",
+    "title": "Monthly operations quota exhausted",
+    "problem": "The Make account's monthly operations quota is fully consumed before the end of the billing period, causing all active scenarios to stop executing until the quota resets or is increased.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "quota",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "scenario",
+    "severity": "critical",
+    "symptoms": [
+      "All scenarios stop executing suddenly",
+      "Make dashboard shows operations counter at or near the plan maximum",
+      "Scenario executions show quota-related failure status",
+      "Scheduled scenarios stop triggering"
+    ],
+    "likely_causes": [
+      {
+        "cause": "A scenario with an Iterator or Repeater processing unexpectedly large volumes consumed operations at a high rate",
+        "confidence": 0.82
+      },
+      {
+        "cause": "A webhook trigger received a flood of events from an external system",
+        "confidence": 0.78
+      },
+      {
+        "cause": "A test or development scenario was left active in production mode",
+        "confidence": 0.72
+      },
+      {
+        "cause": "The plan's quota was underestimated for the actual sustained usage volume",
+        "confidence": 0.68
+      }
+    ],
+    "diagnosis_steps": [
+      "Go to Make Dashboard > Usage to see total operations consumption and the breakdown by scenario",
+      "Sort scenarios by operations consumed to identify the top consumers",
+      "Open the execution history of the top consumers and look for unexpected high-volume or runaway runs",
+      "Check whether a webhook trigger received an abnormal number of events recently",
+      "Look for active scenarios that were intended for testing only"
+    ],
+    "solutions": [
+      {
+        "solution": "Pause all non-critical scenarios immediately to stop further operations consumption",
+        "conditions": "Emergency response when quota is exhausted and critical scenarios must resume",
+        "confidence": 0.92
+      },
+      {
+        "solution": "Upgrade the Make plan or purchase additional operations to restore execution capacity",
+        "conditions": "When the volume is legitimate and the plan quota is insufficient",
+        "confidence": 0.92
+      },
+      {
+        "solution": "Add filters on webhook triggers to reject irrelevant events before they trigger scenario execution",
+        "conditions": "When a webhook event flood caused the exhaustion",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Reduce the frequency of scheduled scenarios or consolidate multiple scenarios into one to lower total operations count",
+        "conditions": "When over-scheduling or redundant scenario architecture caused the exhaustion",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [
+      "Monitor operations usage regularly in the Make dashboard",
+      "Add filters on webhook triggers to reject irrelevant events",
+      "Deactivate test or development scenarios immediately after use"
+    ],
+    "make_context": {
+      "modules": [],
+      "apps": [],
+      "features": [
+        "Operations quota",
+        "Scenario scheduling",
+        "Dashboard usage",
+        "Plan management"
+      ]
+    },
+    "related_errors": [
+      "make-core-incomplete-execution",
+      "make-core-scenario-cycle-detected"
+    ],
+    "search_keywords": [
+      "make operations limit",
+      "make quota exhausted",
+      "make plan limit reached",
+      "make operations exceeded",
+      "make scenarios stopped quota",
+      "make monthly limit",
+      "make upgrade plan operations"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Plans and operations",
+      "source_url": "https://www.make.com/en/help/general/subscriptions-and-billing",
+      "evidence": "Operations quota existence and behavior confirmed via Make pricing/billing documentation. Exact error messages not individually verified in a live environment — marked partially_verified. Dashboard usage breakdown claimed is consistent with Make's known product features."
+    },
+    "confidence": 0.88,
+    "verification_status": "partially_verified",
+    "quality_score": 0.86,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Operations quota existence and behavior confirmed via Make pricing/billing documentation. Exact error messages not individually verified in a live environment — marked partially_verified. Dashboard usage breakdown claimed is consistent with Make's known product features.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "Operations quota existence and behavior confirmed via Make pricing/billing documentation. Exact error messages not individually verified in a live environment — marked partially_verified. Dashboard usage breakdown claimed is consistent with Make's known product features.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/general/subscriptions-and-billing",
+        "confidence": 0.93
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "All scenarios stop executing suddenly",
+      "Make dashboard shows operations counter at or near the plan maximum",
+      "Scenario executions show quota-related failure status",
+      "[observed message variant] \"Your plan's operations limit has been reached\"",
+      "[observed message variant] \"Operations limit exceeded\""
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "make-core-scenario-cycle-detected",
+    "title": "Scenario triggers itself — potential infinite loop",
+    "problem": "A Make scenario, through its write actions, triggers its own execution again, creating a cycle. This rapidly exhausts the operations quota and may cause duplicate writes to external systems.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "scenario",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "scenario",
+    "severity": "critical",
+    "symptoms": [
+      "Operations counter increases extremely rapidly in a short time window",
+      "Scenario execution history shows many identical executions within seconds",
+      "Make sends an operations quota warning very shortly after the scenario starts",
+      "External system shows repeated duplicate record writes"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The scenario triggered by a webhook writes to the same service that is the source of the webhook trigger, creating a feedback loop",
+        "confidence": 0.85
+      },
+      {
+        "cause": "Scenario A triggers Scenario B which triggers Scenario A — cross-scenario loop",
+        "confidence": 0.78
+      },
+      {
+        "cause": "A Watch trigger is on the same resource the scenario modifies — updating a record triggers the watch event again",
+        "confidence": 0.78
+      }
+    ],
+    "diagnosis_steps": [
+      "Check the execution history — if executions are happening at extremely high frequency within seconds, a cycle is very likely",
+      "Map the full trigger chain: identify what external event triggers the scenario, and what the scenario writes to",
+      "Determine whether the scenario's write actions could emit an event that re-triggers the scenario's trigger",
+      "Check for cross-scenario trigger chains that could form a cycle"
+    ],
+    "solutions": [
+      {
+        "solution": "Add a dedicated field (e.g., 'make_processed') to the source system and set it during the scenario run. Add a filter at the start of the scenario to skip records where this flag is already set",
+        "conditions": "When the source system supports custom fields and the field can be written by Make",
+        "confidence": 0.82
+      },
+      {
+        "solution": "Use a Make Data Store to record IDs of processed records, and add a filter at the start of the scenario to skip already-processed IDs",
+        "conditions": "When the source system cannot be modified with a custom field",
+        "confidence": 0.8
+      },
+      {
+        "solution": "Change from an instant watch trigger to a scheduled polling trigger to reduce the feedback loop frequency",
+        "conditions": "When instant triggering is not required and a processing delay is acceptable",
+        "confidence": 0.72
+      }
+    ],
+    "prevention": [
+      "Before deploying a scenario, explicitly map the full data flow and identify any write-to-trigger-source cycles",
+      "Use processed flags in source systems to prevent reprocessing of records already handled by Make",
+      "Monitor operations usage closely after deploying any new webhook-triggered scenario"
+    ],
+    "make_context": {
+      "modules": [
+        "Webhooks",
+        "Data Store",
+        "Filter",
+        "Flow Control > Router"
+      ],
+      "apps": [],
+      "features": [
+        "Scenario triggers",
+        "Data Store",
+        "Watch triggers",
+        "Webhook triggers"
+      ]
+    },
+    "related_errors": [
+      "make-core-quota-operations-exhausted",
+      "make-core-incomplete-execution"
+    ],
+    "search_keywords": [
+      "make infinite loop",
+      "make scenario loop",
+      "make scenario triggers itself",
+      "make webhook loop",
+      "make operations runaway",
+      "make circular trigger",
+      "make watch trigger loop"
+    ],
+    "origin_details": {
+      "source_type": "community",
+      "source_name": "Make Community — Preventing infinite loops",
+      "source_url": "https://community.make.com",
+      "evidence": "The infinite loop pattern is widely reported in Make community and is a logical consequence of Make's trigger architecture. No official documentation directly addresses cycle detection or prevention — this entry is based on community knowledge and technical inference. The Data Store solution is well-established. Source URL is the community root — no specific thread URL confirmed."
+    },
+    "confidence": 0.75,
+    "verification_status": "community_reported",
+    "quality_score": 0.7,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "The infinite loop pattern is widely reported in Make community and is a logical consequence of Make's trigger architecture. No official documentation directly addresses cycle detection or prevention — this entry is based on community knowledge and technical inference. The Data Store solution is well-established. Source URL is the community root — no specific thread URL confirmed.",
+    "evidence": [
+      {
+        "claim": "The infinite loop pattern is widely reported in Make community and is a logical consequence of Make's trigger architecture. No official documentation directly addresses cycle detection or prevention — this entry is based on community knowledge and technical inference. The Data Store solution is well-established. Source URL is the community root — no specific thread URL confirmed.",
+        "source_type": "community",
+        "source_url": "https://community.make.com",
+        "confidence": 0.8
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Webhooks",
+        "Data Store",
+        "Filter",
+        "Flow Control > Router"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Operations counter increases extremely rapidly in a short time window",
+      "Scenario execution history shows many identical executions within seconds",
+      "Make sends an operations quota warning very shortly after the scenario starts"
+    ],
+    "next_review": "2027-03-01"
+  }
+]

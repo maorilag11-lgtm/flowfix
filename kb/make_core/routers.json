@@ -1,0 +1,218 @@
+[
+  {
+    "id": "router-no-route-matches",
+    "title": "Router — no route filter matches, bundle is dropped silently",
+    "problem": "A Make Router has multiple route branches, each with a filter condition. An incoming bundle does not match any branch condition. Make silently drops the bundle — no error is thrown and no data is processed downstream.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "router",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "router",
+    "severity": "medium",
+    "symptoms": [
+      "Some records are never processed — they disappear after the Router without any error",
+      "Downstream modules in all branches show 0 bundles processed for those records",
+      "Scenario completes successfully but expected output is missing for some records"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The bundle's data does not match any route filter condition — a case that was not anticipated when designing the Router",
+        "confidence": 0.88
+      },
+      {
+        "cause": "A filter condition is case-sensitive and the data value does not match the expected casing",
+        "confidence": 0.8
+      },
+      {
+        "cause": "A new data value or status appeared in the source data that was not covered by existing route conditions",
+        "confidence": 0.78
+      }
+    ],
+    "diagnosis_steps": [
+      "Run the scenario once with 'Run once' using a record that is being dropped",
+      "Inspect the bundle entering the Router and note the exact values of the fields used in route conditions",
+      "Open each route's filter and compare the filter condition against the actual field values",
+      "Check for case mismatches, type mismatches, or unexpected values not covered by existing routes"
+    ],
+    "solutions": [
+      {
+        "solution": "Add a fallback route as the last branch of the Router with no filter condition (or a condition that catches everything) to process unmatched bundles",
+        "conditions": "When unmatched bundles should be handled by a default route rather than silently dropped",
+        "confidence": 0.9
+      },
+      {
+        "solution": "Add the missing data values or cases to the existing route filter conditions",
+        "conditions": "When the data values have expanded and existing conditions need to be updated",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Use lower() on string values in filter conditions to neutralize case sensitivity",
+        "conditions": "When case mismatch is causing the filter to not match",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Always add a fallback route (no filter condition) as the last branch of every Router to catch unexpected values",
+      "Test the Router with edge-case values during development, including values outside the expected set",
+      "Log dropped bundles in the fallback route using a notification or Data Store write"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Flow Control > Router",
+        "Filter"
+      ],
+      "features": [
+        "Router",
+        "Filter conditions",
+        "Fallback route"
+      ]
+    },
+    "related_errors": [
+      "make-core-filter-blocks-all",
+      "make-core-mapping-empty-value"
+    ],
+    "search_keywords": [
+      "make router no route matches",
+      "make router drops bundle",
+      "make router silent drop",
+      "make router fallback",
+      "make router not matching",
+      "make router missing route"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Router",
+      "source_url": "https://www.make.com/en/help/modules/router",
+      "evidence": "Router behavior and filter conditions are documented in Make Help Center."
+    },
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.83,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Router behavior confirmed in Make documentation. Silent drop when no route matches is consistent with how Make filters work. Fallback route pattern is a widely documented Make best practice.",
+    "evidence": [
+      {
+        "claim": "Router behavior and filter conditions are documented in Make Help Center.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/modules/router",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Flow Control > Router",
+        "Filter"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Some records are never processed — they disappear after the Router without any error",
+      "Downstream modules in all branches show 0 bundles processed for those records",
+      "Scenario completes successfully but expected output is missing for some records"
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "router-order-matters",
+    "title": "Router — route order affects which branch receives a bundle when multiple conditions match",
+    "problem": "Make Router evaluates route branches in order from top to bottom and routes the bundle to the first branch whose filter condition matches. When a broader condition appears before a more specific condition, bundles intended for the specific route may be captured by the broader route first. A fallback route (no filter) always captures any bundle not matched by preceding routes.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "router",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "router",
+    "severity": "medium",
+    "symptoms": [
+      "Records are processed by the wrong route branch",
+      "A route that should handle specific cases is never reached",
+      "Results are incorrect but no error is thrown"
+    ],
+    "likely_causes": [
+      {
+        "cause": "A broad or general route condition appears earlier in the Router than a more specific condition — Make routes to the first match",
+        "confidence": 0.88
+      }
+    ],
+    "diagnosis_steps": [
+      "Run the scenario with 'Run once' using a record that should go to the specific route",
+      "Observe which route it actually enters",
+      "Review the route order — identify whether a broader condition higher in the list is matching first"
+    ],
+    "solutions": [
+      {
+        "solution": "Reorder the Router branches so the most specific conditions appear first. Place the fallback route (no filter condition) as the last branch to capture any unmatched bundles.",
+        "conditions": "When route order is causing a bundle to be captured by the wrong branch",
+        "confidence": 0.9
+      }
+    ],
+    "prevention": [
+      "Always place the most specific route conditions first in a Router and use the fallback (no condition) route as the last branch"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Flow Control > Router"
+      ],
+      "features": [
+        "Router",
+        "Route order",
+        "Filter conditions"
+      ]
+    },
+    "related_errors": [
+      "router-no-route-matches",
+      "make-core-filter-blocks-all"
+    ],
+    "search_keywords": [
+      "make router order",
+      "make router wrong route",
+      "make router route order",
+      "make router first match",
+      "make router evaluation order"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Router",
+      "source_url": "https://www.make.com/en/help/modules/router",
+      "evidence": "Make Router evaluates routes in order and routes to the first matching branch — this is documented behavior."
+    },
+    "confidence": 0.88,
+    "verification_status": "partially_verified",
+    "quality_score": 0.85,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Router evaluation order confirmed in Make documentation. Reformulated to avoid absolute claims — the behavior is 'first match wins' which is correct. Added reference to fallback route behavior as documented.",
+    "evidence": [
+      {
+        "claim": "Make Router evaluates routes in order (top to bottom) and routes to the first matching branch",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/modules/router",
+        "confidence": 0.9
+      },
+      {
+        "claim": "A fallback route (no filter) captures all bundles not matched by earlier routes",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/modules/router",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Flow Control > Router"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Records are processed by the wrong route branch",
+      "A route that should handle specific cases is never reached",
+      "Results are incorrect but no error is thrown"
+    ],
+    "next_review": "2027-03-01"
+  }
+]

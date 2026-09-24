@@ -1,0 +1,1248 @@
+[
+  {
+    "id": "make-core-mapping-empty-value",
+    "title": "Mapped field returns empty or undefined value at runtime",
+    "problem": "A module field is mapped to a variable from a previous module, but at runtime that variable is empty, null, or undefined. If the field is required, the module fails. If optional, the module silently sends an empty value to the external service.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "mapping",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "mapping",
+    "severity": "high",
+    "symptoms": [
+      "Module fails with a required field error on a field that appears mapped",
+      "Module silently sends empty or null values to the external service",
+      "Downstream records are created with missing data",
+      "Error is inconsistent — happens only for some records, not all"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The source field is optional in the API response and is absent for some records",
+        "confidence": 0.88
+      },
+      {
+        "cause": "The previous module returned 0 results, making all its output variables undefined",
+        "confidence": 0.85
+      },
+      {
+        "cause": "The mapped path is incorrect (wrong nesting level or wrong field name)",
+        "confidence": 0.78
+      },
+      {
+        "cause": "The field existed during scenario design but the source API changed its response structure",
+        "confidence": 0.65
+      }
+    ],
+    "diagnosis_steps": [
+      "Run the scenario with 'Run once' using a record where the error occurs",
+      "Inspect the output bundle of the module that should provide the value",
+      "Verify whether the field appears in the bundle or is absent for this specific record",
+      "Check whether the field path is correctly mapped — the field may be nested differently in some cases",
+      "Compare a failing record against a succeeding record: identify what is structurally different",
+      "Check whether any upstream module could return 0 results (search modules, lookup modules) — if so, all downstream variables are undefined"
+    ],
+    "solutions": [
+      {
+        "solution": "Wrap optional mapped values with ifempty() to provide a fallback: {{ifempty(1.email; 'default@domain.com')}}",
+        "conditions": "When the field is optional and a fallback value is acceptable for the use case",
+        "confidence": 0.92
+      },
+      {
+        "solution": "Add a filter before the failing module checking that the required field exists: use 'Exists' condition on the field",
+        "conditions": "When the record should be skipped entirely if the required field is missing",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Use the get() function to safely access nested properties that may not always exist: {{get(1.data; 'user.email')}}",
+        "conditions": "When the field is accessed through a deeply nested path that may not exist on all records",
+        "confidence": 0.82
+      },
+      {
+        "solution": "Add a Tools > Set Variables module after the source module to normalize all optional fields with explicit default values before downstream modules",
+        "conditions": "When multiple fields need defensive defaults applied in one place",
+        "confidence": 0.82
+      }
+    ],
+    "prevention": [
+      "Treat every optional API field as potentially absent — always add ifempty() guards on optional mappings",
+      "Add filters before modules with required fields to validate data completeness upstream",
+      "Test scenarios explicitly with edge-case records (missing fields, null values, empty strings)"
+    ],
+    "make_context": {
+      "modules": [
+        "Tools > Set Variables",
+        "Filter",
+        "Flow Control > Router"
+      ],
+      "apps": [],
+      "features": [
+        "Mapping",
+        "Functions",
+        "Filters",
+        "ifempty()",
+        "get()"
+      ]
+    },
+    "related_errors": [
+      "make-core-filter-blocks-all",
+      "make-core-wrong-data-type",
+      "http-422-validation-error"
+    ],
+    "search_keywords": [
+      "make mapping empty value",
+      "make required field empty",
+      "make undefined variable",
+      "make null mapping",
+      "make ifempty function",
+      "make missing required field",
+      "make optional field absent"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — General functions (ifempty, get)",
+      "source_url": "https://www.make.com/en/help/functions/general-functions",
+      "evidence": "ifempty() and get() functions confirmed in Make documentation. The behavior of undefined variables when upstream returns 0 results is consistent with Make's execution model and widely reported in community, but exact behavior not explicitly stated in official docs — marked partially_verified."
+    },
+    "confidence": 0.88,
+    "verification_status": "partially_verified",
+    "quality_score": 0.86,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "ifempty() and get() functions confirmed in Make documentation. The behavior of undefined variables when upstream returns 0 results is consistent with Make's execution model and widely reported in community, but exact behavior not explicitly stated in official docs — marked partially_verified.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "ifempty() and get() functions confirmed in Make documentation. The behavior of undefined variables when upstream returns 0 results is consistent with Make's execution model and widely reported in community, but exact behavior not explicitly stated in official docs — marked partially_verified.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/functions/general-functions",
+        "confidence": 0.93
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Any search/lookup module",
+        "Action module (HTTP, Google Sheets, HubSpot, etc.)"
+      ],
+      "sequence": [
+        "source module returns records",
+        "action module maps field from source",
+        "some records have the field absent",
+        "action module fails on required field or sends null"
+      ],
+      "conditions": [
+        "Source field is optional in the API response",
+        "Previous module can return 0 results"
+      ]
+    },
+    "diagnostic_signals": [
+      "Error occurs for some records but not others (data-dependent)",
+      "Required field is mapped but the source field is absent for this record",
+      "Previous search/lookup module may have returned 0 results",
+      "[observed message variant] \"Missing value of required parameter\"",
+      "[observed message variant] \"Required field is empty\"",
+      "[observed message variant] \"Value is required\""
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "make-core-wrong-data-type",
+    "title": "Data type mismatch in module field",
+    "problem": "Make passes a value of an incorrect type to a module field or external API. The target module or external API rejects the value with a validation or type error.",
+    "error_messages": [],
+    "error_codes": [
+      "422"
+    ],
+    "category": "data_type",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "mapping",
+    "severity": "medium",
+    "symptoms": [
+      "Module fails with a type or validation error",
+      "Date fields are rejected despite appearing correctly formatted visually",
+      "Number fields fail when the value contains a comma decimal separator",
+      "Boolean fields fail when passed as the string 'true' or 'false'"
+    ],
+    "likely_causes": [
+      {
+        "cause": "A date returned as an ISO string is not in the exact format required by the target API or module",
+        "confidence": 0.82
+      },
+      {
+        "cause": "A number is returned with a locale-specific decimal separator (comma) instead of a period",
+        "confidence": 0.78
+      },
+      {
+        "cause": "A boolean value is serialized as the string 'true' or 'false' instead of a native boolean",
+        "confidence": 0.75
+      },
+      {
+        "cause": "An array is passed where a single value is expected, or a single value where an array is expected",
+        "confidence": 0.72
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the failing module and inspect the input bundle in the execution details",
+      "Identify the type tag shown for the problematic field (Text, Number, Boolean, Date, Array, Collection)",
+      "Compare with the type expected by the module's field or the target API documentation",
+      "Test the relevant conversion function (formatDate, parseNumber, etc.) in the Make formula editor with a sample value"
+    ],
+    "solutions": [
+      {
+        "solution": "Use formatDate() to convert dates to the exact format required by the target: {{formatDate(1.date; 'YYYY-MM-DD')}}",
+        "conditions": "When a date is passed in a format not accepted by the target module or API",
+        "confidence": 0.9
+      },
+      {
+        "solution": "Use parseNumber() to convert locale-formatted numbers: {{parseNumber(1.amount; ',')}}",
+        "conditions": "When a number uses a comma as decimal separator but the API expects a period",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Use the if() function to convert string booleans to native booleans: {{if(1.active = 'true'; true; false)}}",
+        "conditions": "When a boolean is stored as the string 'true' or 'false'",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Use toString() or toNumber() for direct type coercion when the conversion is straightforward",
+        "conditions": "For simple type conversions where no formatting transformation is needed",
+        "confidence": 0.82
+      }
+    ],
+    "prevention": [
+      "Inspect bundle value types in the bundle inspector before mapping to modules with strict type requirements",
+      "Add a Set Variables module to normalize data types before critical API modules",
+      "Test with edge-case values during development (locale-formatted numbers, different date formats)"
+    ],
+    "make_context": {
+      "modules": [
+        "Tools > Set Variables",
+        "HTTP"
+      ],
+      "apps": [],
+      "features": [
+        "Functions",
+        "formatDate()",
+        "parseNumber()",
+        "toString()",
+        "toNumber()",
+        "Mapping"
+      ]
+    },
+    "related_errors": [
+      "make-core-mapping-empty-value",
+      "http-422-validation-error",
+      "make-core-json-parse-error"
+    ],
+    "search_keywords": [
+      "make data type mismatch",
+      "make wrong type",
+      "make invalid date format",
+      "make formatDate",
+      "make parseNumber",
+      "make string to number",
+      "make boolean string",
+      "make type conversion error"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Data types",
+      "source_url": "https://www.make.com/en/help/mapping/data-types",
+      "evidence": "Type conversion functions confirmed in Make documentation. Error message 'Cannot convert value to expected type' is plausible but not verified from an official source — marked partially_verified. The general problem of type mismatches is well-established in Make's execution model."
+    },
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.84,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Type conversion functions confirmed in Make documentation. Error message 'Cannot convert value to expected type' is plausible but not verified from an official source — marked partially_verified. The general problem of type mismatches is well-established in Make's execution model.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "Type conversion functions confirmed in Make documentation. Error message 'Cannot convert value to expected type' is plausible but not verified from an official source — marked partially_verified. The general problem of type mismatches is well-established in Make's execution model.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/mapping/data-types",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Any source module",
+        "HTTP or integration module with strict type requirements"
+      ],
+      "sequence": [
+        "source module returns value",
+        "value type does not match target field type",
+        "target API or module rejects with type/validation error"
+      ],
+      "conditions": [
+        "Target API expects number but receives string",
+        "Date format mismatch between source and target"
+      ]
+    },
+    "diagnostic_signals": [
+      "API returns 422 or type error",
+      "Value appears correct visually but is the wrong JSON type",
+      "Date field rejected despite appearing correctly formatted",
+      "[observed message variant] \"Invalid data type\"",
+      "[observed message variant] \"Cannot convert value to expected type\"",
+      "[observed message variant] \"Invalid date format\""
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "make-core-json-parse-error",
+    "title": "JSON parsing or serialization error",
+    "problem": "Make fails to parse a JSON string into a structured data object, or an HTTP module receives a response body that is not valid JSON despite being expected to be.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "json",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "mapping",
+    "severity": "high",
+    "symptoms": [
+      "HTTP module or Webhook module cannot parse the response body into structured fields",
+      "Iterator receives a string instead of an array after a parseJSON() call",
+      "Data appears as raw text instead of structured fields in the bundle inspector",
+      "parseJSON() function throws an error on execution"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The API response body is not valid JSON — it may be an HTML error page, truncated content, or have encoding issues",
+        "confidence": 0.82
+      },
+      {
+        "cause": "The Webhook body type setting does not match the actual incoming payload format (Raw vs JSON vs Form Data)",
+        "confidence": 0.78
+      },
+      {
+        "cause": "The JSON string contains syntax errors such as unescaped special characters or trailing commas",
+        "confidence": 0.72
+      },
+      {
+        "cause": "The Content-Type header of the response does not declare the actual body format",
+        "confidence": 0.65
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the failing execution and inspect the raw response body received by the module",
+      "Paste the body into a JSON validator to identify the exact syntax error location",
+      "Check the Content-Type header of the response — it should be application/json for JSON bodies",
+      "Verify that the Webhook body type setting matches the actual incoming payload format",
+      "Check whether the response is an HTML error page returned instead of JSON (common when APIs return errors in HTML)"
+    ],
+    "solutions": [
+      {
+        "solution": "Verify that the HTTP module has the correct 'Parse response' configuration so Make interprets the body as JSON and creates structured bundle fields",
+        "conditions": "When the body is valid JSON but Make is treating it as raw text",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Switch the Webhook body type setting (Raw / JSON / Form Data) to match the actual incoming payload format",
+        "conditions": "When a webhook receives correct data but the body type setting is misconfigured",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Add an Error Handler on the HTTP module to catch JSON parse failures and route to an alert notification",
+        "conditions": "When the source API occasionally returns invalid JSON and graceful failure handling is needed",
+        "confidence": 0.82
+      }
+    ],
+    "prevention": [
+      "Validate sample JSON responses from the API in a JSON linter during scenario development",
+      "Set the correct body type on webhook triggers before expecting structured field access",
+      "Add Error Handlers on HTTP modules that parse external API responses"
+    ],
+    "make_context": {
+      "modules": [
+        "HTTP",
+        "Webhooks",
+        "Tools > Set Variables",
+        "Flow Control > Iterator"
+      ],
+      "apps": [],
+      "features": [
+        "JSON parsing",
+        "parseJSON()",
+        "Webhook body type",
+        "HTTP response parsing"
+      ]
+    },
+    "related_errors": [
+      "make-core-iterator-array-required",
+      "make-core-wrong-data-type"
+    ],
+    "search_keywords": [
+      "make JSON parse error",
+      "make invalid JSON",
+      "make parseJSON error",
+      "make JSON parsing fails",
+      "make unexpected token JSON",
+      "make webhook JSON error",
+      "make HTTP JSON response error"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — JSON module",
+      "source_url": "https://www.make.com/en/help/apps/json",
+      "evidence": "JSON module and parseJSON() confirmed in Make documentation. Webhook body type configuration confirmed. Specific error messages (e.g., 'Unexpected token in JSON') are plausible but not confirmed verbatim in official docs — marked partially_verified."
+    },
+    "confidence": 0.83,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "JSON module and parseJSON() confirmed in Make documentation. Webhook body type configuration confirmed. Specific error messages (e.g., 'Unexpected token in JSON') are plausible but not confirmed verbatim in official docs — marked partially_verified.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "JSON module and parseJSON() confirmed in Make documentation. Webhook body type configuration confirmed. Specific error messages (e.g., 'Unexpected token in JSON') are plausible but not confirmed verbatim in official docs — marked partially_verified.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/json",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP",
+        "Webhooks",
+        "Tools > Set Variables",
+        "Flow Control > Iterator"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "HTTP module or Webhook module cannot parse the response body into structured fields",
+      "Iterator receives a string instead of an array after a parseJSON() call",
+      "Data appears as raw text instead of structured fields in the bundle inspector",
+      "[observed message variant] \"Invalid JSON\"",
+      "[observed message variant] \"JSON parse error\"",
+      "[observed message variant] \"Unexpected token in JSON\"",
+      "[observed message variant] \"Cannot parse JSON\""
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "mapping-collection-vs-array",
+    "title": "Collection mapped where Array is expected — or Array mapped where Collection is expected",
+    "problem": "Make distinguishes between Arrays (ordered lists of items, iterable) and Collections (key-value objects, not directly iterable). Mapping a Collection where an Array is expected — or vice versa — causes downstream modules to fail or produce incorrect output.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "mapping",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "mapping",
+    "severity": "high",
+    "symptoms": [
+      "Iterator fails or produces a single unexpected bundle instead of multiple item bundles",
+      "Module expecting a list field receives an object and fails",
+      "Bundle inspector shows type 'Collection' where type 'Array' was expected",
+      "Aggregator output is a single merged object instead of a list"
+    ],
+    "likely_causes": [
+      {
+        "cause": "An API response wraps an array inside a parent object (e.g., {items: [...]}) and the mapping targets the parent object instead of the nested array",
+        "confidence": 0.88
+      },
+      {
+        "cause": "The module produces a Collection (object) but downstream expects an Array — a conversion step is missing",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the execution and inspect the bundle type in the bundle inspector — look for the type label (Array vs Collection)",
+      "If the bundle shows 'Collection' where 'Array' is expected, identify the parent object path and map to the specific nested array field",
+      "If the bundle shows 'Array' where 'Collection' is expected, check whether the module is correctly configured to return a single object"
+    ],
+    "solutions": [
+      {
+        "solution": "Map the downstream module or Iterator to the specific nested array field, not the parent wrapper object. For example, map to 1.data.items instead of 1.data.",
+        "conditions": "When an API response wraps the array inside a parent object",
+        "confidence": 0.9
+      },
+      {
+        "solution": "Use the Array Aggregator to convert an iterated set of Collections into a single Array when a module downstream requires an Array input",
+        "conditions": "When individual Collection bundles need to be assembled into an Array",
+        "confidence": 0.82
+      }
+    ],
+    "prevention": [
+      "Always inspect the type tag (Array vs Collection) in the bundle inspector before connecting an Iterator or any module requiring a specific type",
+      "When mapping nested data, navigate through the bundle hierarchy in the mapping panel rather than guessing the path"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Flow Control > Iterator",
+        "Flow Control > Array Aggregator",
+        "Tools > Set Variables"
+      ],
+      "features": [
+        "Mapping",
+        "Data types",
+        "Array",
+        "Collection",
+        "Bundle inspector"
+      ]
+    },
+    "related_errors": [
+      "make-core-iterator-array-required",
+      "iterator-mapping-panel-empty",
+      "aggregator-empty-input-continues"
+    ],
+    "search_keywords": [
+      "make collection vs array",
+      "make array collection mapping",
+      "make iterator collection",
+      "make wrong type collection",
+      "make bundle type mismatch"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Data types",
+      "source_url": "https://www.make.com/en/help/mapping/data-types",
+      "evidence": "Make distinguishes Array and Collection as separate data types with different behaviors. Array is iterable by Iterator; Collection is a key-value structure."
+    },
+    "evidence": [
+      {
+        "claim": "Make's data types include Array (ordered, iterable) and Collection (key-value, not directly iterable) as distinct types",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/mapping/data-types",
+        "confidence": 0.92
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "List/Search module",
+        "Iterator or Array-consuming module"
+      ],
+      "sequence": [
+        "source returns object with nested array",
+        "mapping targets parent object",
+        "Iterator or downstream receives Collection not Array",
+        "failure or wrong output"
+      ],
+      "conditions": [
+        "API response wraps array in a parent object",
+        "Mapping targets wrapper instead of nested array"
+      ]
+    },
+    "diagnostic_signals": [
+      "Bundle inspector shows type 'Collection' on a field expected to be 'Array'",
+      "Iterator produces 1 bundle (the whole object) instead of N bundles (the items)",
+      "[observed message variant] \"Unable to iterate over non-array value\""
+    ],
+    "confidence": 0.88,
+    "verification_status": "partially_verified",
+    "quality_score": 0.86,
+    "last_verified": "2026-09-02",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "Array vs Collection distinction confirmed in Make data types documentation. The nesting issue (API wrapping arrays in objects) is a very common real-world pattern confirmed in community."
+  },
+  {
+    "id": "mapping-null-propagation",
+    "title": "Null value propagates silently through mapping chain",
+    "problem": "A null or undefined value enters a mapping chain and propagates through multiple downstream modules without triggering an error. Each module silently passes null forward until a module that cannot accept null fails — often far from the original source of the null.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "mapping",
+    "layer": "user_configuration",
+    "origin": "data",
+    "surface": "mapping",
+    "severity": "high",
+    "symptoms": [
+      "A module fails with a required-field error but the mapped field appears correct in the mapping panel",
+      "The null originates several modules back — the failing module is not the root cause",
+      "Error is data-dependent — occurs for some records but not others",
+      "Setting a breakpoint (using Run once) shows intermediate bundles contain null for the affected field"
+    ],
+    "likely_causes": [
+      {
+        "cause": "A source field is absent in some API records but present in others — null propagates silently where it is absent",
+        "confidence": 0.88
+      },
+      {
+        "cause": "A module that performs a lookup or search returns 0 results — all downstream mappings from that module become null",
+        "confidence": 0.85
+      },
+      {
+        "cause": "An ifempty() or default value guard is missing on an optional source field",
+        "confidence": 0.82
+      }
+    ],
+    "diagnosis_steps": [
+      "Use 'Run once' with the failing record and inspect each bundle in the execution, starting from the source module",
+      "Trace the null field backward through each module's output bundle until you find where it first becomes null",
+      "Check whether the source API response includes the field for this specific record",
+      "Check whether an upstream search or lookup module returned 0 results, making all its output fields null"
+    ],
+    "solutions": [
+      {
+        "solution": "Add ifempty(mapped_field; fallback_value) at the earliest point in the chain where the field can be null. Do not wait until the failing module to add the guard.",
+        "conditions": "When the null originates from an optional source field",
+        "confidence": 0.9
+      },
+      {
+        "solution": "Add a filter after the search or lookup module to stop processing when 0 results are returned, before the null values reach downstream modules",
+        "conditions": "When the null originates from a module returning 0 results",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Add a Set Variables module immediately after the source module to normalize all potentially-null fields with explicit defaults",
+        "conditions": "When multiple fields can be null and each needs a different default",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Add null guards (ifempty or filter) as early as possible in the chain — at the first module that can produce a null value",
+      "Always handle the 0-results case for search and lookup modules before proceeding to downstream mapping"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Tools > Set Variables",
+        "Filter",
+        "Flow Control > Router"
+      ],
+      "features": [
+        "Mapping",
+        "ifempty()",
+        "Null handling",
+        "Data normalization"
+      ]
+    },
+    "related_errors": [
+      "make-core-mapping-empty-value",
+      "make-core-filter-blocks-all",
+      "aggregator-empty-input-continues"
+    ],
+    "search_keywords": [
+      "make null propagation",
+      "make null mapping",
+      "make null value downstream",
+      "make field null mapping chain",
+      "make ifempty null"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — General functions (ifempty)",
+      "source_url": "https://www.make.com/en/help/functions/general-functions",
+      "evidence": "ifempty() function is documented for handling null/empty values in mappings."
+    },
+    "evidence": [
+      {
+        "claim": "Make's ifempty() function handles null and empty values in mappings by providing a fallback",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/functions/general-functions",
+        "confidence": 0.92
+      },
+      {
+        "claim": "When a module returns 0 results, all mapped output fields from that module are undefined/null in downstream bundles",
+        "source_type": "community",
+        "source_url": "https://community.make.com",
+        "confidence": 0.8
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Source module (optional field)",
+        "Set Variables or Action module",
+        "Action module (required field)"
+      ],
+      "sequence": [
+        "source returns record without optional field",
+        "null propagates through Set Variables",
+        "action module receives null on required field",
+        "error occurs at action module"
+      ],
+      "conditions": [
+        "Optional source field absent for this record",
+        "No ifempty() guard between source and consumer"
+      ]
+    },
+    "diagnostic_signals": [
+      "Error occurs at a module distant from the source of the null",
+      "Same scenario works for some records but not others",
+      "Run once shows null in intermediate bundle for the affected field",
+      "Upstream search module returned 0 results"
+    ],
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.84,
+    "last_verified": "2026-09-02",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "ifempty() confirmed in Make documentation. Null propagation behavior is consistent with Make's execution model and widely reported in community. The pattern of tracing null backward through the chain is a diagnostic approach, not an explicitly documented Make procedure."
+  },
+  {
+    "id": "mapping-date-format-mismatch",
+    "title": "Date format mismatch between source and target module",
+    "problem": "A date value is correctly present in the source module output but is rejected by the target module or external API because the date format does not match what the target expects. Make date handling requires explicit format conversion using formatDate().",
+    "error_messages": [],
+    "error_codes": [
+      "422"
+    ],
+    "category": "mapping",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "mapping",
+    "severity": "medium",
+    "symptoms": [
+      "A date field causes a 422 or validation error at the target API",
+      "The date value appears correct visually in the mapping panel but is rejected",
+      "Different modules return dates in different formats — some accepted, some rejected"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The source module returns a date in ISO 8601 format (e.g., 2026-09-02T10:00:00Z) but the target API expects a different format (e.g., DD/MM/YYYY or Unix timestamp)",
+        "confidence": 0.88
+      },
+      {
+        "cause": "The date value is a string, not a Make Date type — the target module requires a native Date type",
+        "confidence": 0.8
+      },
+      {
+        "cause": "Time zone offset in the date string is not handled by the target API as expected",
+        "confidence": 0.7
+      }
+    ],
+    "diagnosis_steps": [
+      "Inspect the date value in the source bundle — note the exact format and type (Date vs Text)",
+      "Check the target API documentation for the exact date format required",
+      "Test the formatDate() conversion in the Make formula editor with the source value before applying it in the scenario"
+    ],
+    "solutions": [
+      {
+        "solution": "Use formatDate(source_date; 'YYYY-MM-DD') or the required format string to convert the date before passing it to the target module. Refer to Make's formatDate() documentation for format tokens.",
+        "conditions": "When the source and target use different date format strings",
+        "confidence": 0.92
+      },
+      {
+        "solution": "Use parseDate() to convert a date string to a Make Date type first, then formatDate() to output in the target format",
+        "conditions": "When the source value is a string that needs to be parsed before formatting",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Use formatDate(source_date; 'X') to convert to Unix timestamp when the target API requires it",
+        "conditions": "When the target API expects a Unix timestamp",
+        "confidence": 0.88
+      }
+    ],
+    "prevention": [
+      "Always check the target API's date format requirement before mapping date fields",
+      "Use formatDate() explicitly on every date mapping — never assume the source format matches the target"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Tools > Set Variables",
+        "HTTP"
+      ],
+      "features": [
+        "formatDate()",
+        "parseDate()",
+        "Date type",
+        "Mapping"
+      ]
+    },
+    "related_errors": [
+      "make-core-wrong-data-type",
+      "http-422-validation-error"
+    ],
+    "search_keywords": [
+      "make date format",
+      "make formatDate",
+      "make date wrong format",
+      "make date 422",
+      "make date conversion",
+      "make parseDate"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Date and time functions",
+      "source_url": "https://www.make.com/en/help/functions/date-and-time-functions",
+      "evidence": "formatDate() and parseDate() are documented in Make's date and time functions reference."
+    },
+    "evidence": [
+      {
+        "claim": "Make provides formatDate() to convert dates to a specified format string",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/functions/date-and-time-functions",
+        "confidence": 0.95
+      },
+      {
+        "claim": "Make provides parseDate() to parse a date string into a Make Date type",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/functions/date-and-time-functions",
+        "confidence": 0.92
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Source module (date field)",
+        "HTTP or integration module (strict date format)"
+      ],
+      "sequence": [
+        "source returns date in format A",
+        "target expects format B",
+        "mapping sends format A",
+        "target rejects with validation error"
+      ],
+      "conditions": [
+        "No formatDate() conversion between source and target"
+      ]
+    },
+    "diagnostic_signals": [
+      "422 validation error on a date field",
+      "Date value present in source bundle but rejected by target",
+      "Different date-related modules return dates in different formats"
+    ],
+    "confidence": 0.9,
+    "verification_status": "partially_verified",
+    "quality_score": 0.88,
+    "last_verified": "2026-09-02",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "formatDate() and parseDate() confirmed in Make documentation. Date format mismatch is a very common and well-documented class of mapping error."
+  },
+  {
+    "id": "mapping-number-locale-format",
+    "title": "Number formatting mismatch — comma vs period decimal separator",
+    "problem": "A numeric value is returned with a locale-specific decimal separator (comma, e.g. 1,234.56 or 1.234,56) that differs from what the target API or module expects. The target rejects the number or silently truncates it.",
+    "error_messages": [],
+    "error_codes": [
+      "422"
+    ],
+    "category": "mapping",
+    "layer": "user_configuration",
+    "origin": "data",
+    "surface": "mapping",
+    "severity": "medium",
+    "symptoms": [
+      "A number field causes a type or validation error at the target",
+      "A numeric value is silently truncated — 1.234,56 becomes 1 after parsing",
+      "Calculations produce wrong results because a string is passed where a number is expected"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The source system uses a comma as a decimal separator (European locale) but the target API expects a period",
+        "confidence": 0.85
+      },
+      {
+        "cause": "The number is returned as a string with a thousands separator that prevents numeric parsing",
+        "confidence": 0.78
+      }
+    ],
+    "diagnosis_steps": [
+      "Inspect the number value in the source bundle — check whether it is typed as Number or Text",
+      "Check whether the value contains a comma or period as the decimal separator",
+      "Test parseNumber() with the correct separator argument in the formula editor"
+    ],
+    "solutions": [
+      {
+        "solution": "Use parseNumber(source_value; ',') to convert a comma-decimal number to a Make Number type. The second argument specifies the decimal separator used in the source string.",
+        "conditions": "When the source uses comma as decimal separator",
+        "confidence": 0.92
+      },
+      {
+        "solution": "Use the replace() function to remove thousands separators before parseNumber(): replace(source_value; '.'; '') to remove periods as thousands separators before parsing",
+        "conditions": "When the value contains thousands separators that prevent clean parsing",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [
+      "Always inspect the type and format of numeric fields from external sources before mapping to numeric fields",
+      "Apply parseNumber() with the explicit separator argument for any number coming from a non-English locale source"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Tools > Set Variables"
+      ],
+      "features": [
+        "parseNumber()",
+        "replace()",
+        "Number type",
+        "Mapping"
+      ]
+    },
+    "related_errors": [
+      "make-core-wrong-data-type",
+      "mapping-date-format-mismatch"
+    ],
+    "search_keywords": [
+      "make parseNumber",
+      "make number comma decimal",
+      "make number format",
+      "make number locale",
+      "make number string conversion"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Math functions (parseNumber)",
+      "source_url": "https://www.make.com/en/help/functions/math-functions",
+      "evidence": "parseNumber() with decimal separator argument is documented in Make's math functions reference."
+    },
+    "evidence": [
+      {
+        "claim": "Make's parseNumber(value; decimalSeparator) function converts a formatted number string to a numeric type, accepting the decimal separator as an argument",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/functions/math-functions",
+        "confidence": 0.93
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Source module (European locale numeric field)",
+        "HTTP or calculation module"
+      ],
+      "sequence": [
+        "source returns '1.234,56' as string",
+        "mapping sends string directly",
+        "target rejects or silently parses as 1"
+      ],
+      "conditions": [
+        "Source uses comma as decimal separator",
+        "No parseNumber() conversion applied"
+      ]
+    },
+    "diagnostic_signals": [
+      "Numeric field rejected with type or validation error",
+      "Numeric value contains comma — may be a decimal or thousands separator",
+      "Bundle inspector shows type 'Text' on a field expected to be 'Number'"
+    ],
+    "confidence": 0.9,
+    "verification_status": "partially_verified",
+    "quality_score": 0.88,
+    "last_verified": "2026-09-02",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "parseNumber() with separator argument confirmed in Make documentation. European locale numeric format is a common real-world issue."
+  },
+  {
+    "id": "mapping-boolean-string",
+    "title": "Boolean value passed as string 'true'/'false' instead of native boolean",
+    "problem": "A boolean field is returned from a source as the string 'true' or 'false' rather than a native boolean type. The target module or API expects a native boolean and rejects the string value.",
+    "error_messages": [],
+    "error_codes": [
+      "422"
+    ],
+    "category": "mapping",
+    "layer": "user_configuration",
+    "origin": "data",
+    "surface": "mapping",
+    "severity": "medium",
+    "symptoms": [
+      "A boolean/checkbox field at the target receives 'true' or 'false' as text and is rejected",
+      "Bundle inspector shows type 'Text' on a field that should be boolean",
+      "Conditional logic on the field does not work correctly — 'false' (string) evaluates as truthy in some contexts"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The source API serializes booleans as JSON strings rather than native boolean values",
+        "confidence": 0.85
+      },
+      {
+        "cause": "A previous mapping or text transformation converted a boolean to a string",
+        "confidence": 0.75
+      }
+    ],
+    "diagnosis_steps": [
+      "Inspect the field value type in the bundle inspector — confirm it shows 'Text' instead of 'Boolean'",
+      "Check the source API response — is the value 'true'/'false' (string) or true/false (boolean) in the raw JSON?",
+      "If it is a string, use the if() function to convert it before passing to the target"
+    ],
+    "solutions": [
+      {
+        "solution": "Use the if() function to convert string boolean to native boolean: {{if(1.active = 'true'; true; false)}}",
+        "conditions": "When the source returns 'true' or 'false' as a string",
+        "confidence": 0.9
+      }
+    ],
+    "prevention": [
+      "Check the type of boolean fields from external APIs in the bundle inspector before mapping to boolean-type target fields",
+      "Apply if() conversion consistently on any boolean field that arrives as a string"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Tools > Set Variables"
+      ],
+      "features": [
+        "Boolean type",
+        "if() function",
+        "Mapping",
+        "Type conversion"
+      ]
+    },
+    "related_errors": [
+      "make-core-wrong-data-type",
+      "mapping-null-propagation"
+    ],
+    "search_keywords": [
+      "make boolean string",
+      "make true false string",
+      "make boolean type",
+      "make boolean mapping",
+      "make if boolean"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Data types",
+      "source_url": "https://www.make.com/en/help/mapping/data-types",
+      "evidence": "Make distinguishes Boolean as a data type separate from Text. The if() function for conversion is documented in general functions."
+    },
+    "evidence": [
+      {
+        "claim": "Make's Boolean data type is distinct from Text — a string 'true' is not equivalent to a native boolean true",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/mapping/data-types",
+        "confidence": 0.88
+      },
+      {
+        "claim": "The if() function can be used to convert a string boolean to a native boolean in Make mappings",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/functions/general-functions",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Source module (string boolean field)",
+        "Action module (boolean-type field)"
+      ],
+      "sequence": [
+        "source returns 'true' as string",
+        "mapping passes string to boolean field",
+        "target rejects or misinterprets"
+      ],
+      "conditions": [
+        "Source serializes booleans as strings"
+      ]
+    },
+    "diagnostic_signals": [
+      "Bundle inspector shows type 'Text' on a field that should be Boolean",
+      "Conditional logic on a boolean field produces unexpected results",
+      "422 validation error on a boolean/checkbox field"
+    ],
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.84,
+    "last_verified": "2026-09-08",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "Removed an unverified conversion function recommendation. Remaining guidance is conditional and requires verification on the actual input."
+  },
+  {
+    "id": "mapping-variable-scope-lost",
+    "title": "Variable unavailable because of execution order or lifetime",
+    "problem": "Get Variable requires Set Variable to have executed earlier and the variable lifetime to cover the read.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "mapping",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "mapping",
+    "severity": "medium",
+    "symptoms": [
+      "Get Variable returns an unexpected or missing value."
+    ],
+    "likely_causes": [
+      {
+        "cause": "The setter has not run yet, or its lifetime has ended.",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Inspect route order, filters, variable name and lifetime."
+    ],
+    "solutions": [
+      {
+        "solution": "Run the setter before the getter and choose the appropriate cycle or execution lifetime.",
+        "conditions": "The read depends on a scenario variable.",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Check setter execution for every path."
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Tools > Set Variable",
+        "Tools > Get Variable",
+        "Data Store",
+        "Flow Control > Router"
+      ],
+      "features": [
+        "Variables",
+        "Set Variable",
+        "Get Variable",
+        "Router",
+        "Data Store"
+      ]
+    },
+    "related_errors": [
+      "make-core-mapping-empty-value",
+      "router-no-route-matches"
+    ],
+    "search_keywords": [
+      "make variable scope",
+      "make set variable not accessible",
+      "make get variable empty",
+      "make variable router branch",
+      "make variable undefined"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center",
+      "source_url": "https://help.make.com/util",
+      "evidence": "Get Variable can read a variable set on another route if Set Variable executed earlier."
+    },
+    "evidence": [
+      {
+        "claim": "Get Variable can read a variable set on another route if Set Variable executed earlier.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/util",
+        "confidence": 0.85
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Set Variable",
+        "Get Variable"
+      ],
+      "sequence": [
+        "Getter executes before setter"
+      ],
+      "conditions": [
+        "Incorrect execution order"
+      ]
+    },
+    "diagnostic_signals": [
+      "Variable missing at read time"
+    ],
+    "confidence": 0.83,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-08",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "Documentary correction 2026-09-08; no verified real-case resolution."
+  },
+  {
+    "id": "mapping-array-get-by-index",
+    "title": "Accessing array items by index — wrong index or out-of-bounds",
+    "problem": "When accessing a specific item from an array using index notation or the get() function, the wrong index is used (Make arrays are 1-indexed, not 0-indexed) or the index exceeds the array length, returning undefined.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "mapping",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "mapping",
+    "severity": "medium",
+    "symptoms": [
+      "An array item is empty or undefined despite the array containing data",
+      "The first item of an array returns empty when accessed with index 0",
+      "An array access that worked for test data fails for smaller arrays in production"
+    ],
+    "likely_causes": [
+      {
+        "cause": "Using index 0 to access the first array item — Make arrays are 1-indexed (first item = index 1)",
+        "confidence": 0.9
+      },
+      {
+        "cause": "Accessing an index that exceeds the array length for some records (e.g., always accessing item 3 when some records have fewer items)",
+        "confidence": 0.85
+      }
+    ],
+    "diagnosis_steps": [
+      "Check the index being used — for Make's 1-indexed arrays, the first item is at index 1, not 0",
+      "Check the array length in the bundle inspector for the failing record — it may be shorter than expected",
+      "Use the length() function to verify array length before accessing by index"
+    ],
+    "solutions": [
+      {
+        "solution": "Change index 0 to index 1 to access the first array item: {{1.items[1]}} not {{1.items[0]}}",
+        "conditions": "When using index 0 expecting the first item — the most common array indexing mistake",
+        "confidence": 0.95
+      },
+      {
+        "solution": "Use ifempty() with a fallback when the index may not exist: {{ifempty(1.items[3]; 'default')}}",
+        "conditions": "When the array length varies and the index may be out of bounds for some records",
+        "confidence": 0.88
+      }
+    ],
+    "prevention": [
+      "Remember Make arrays are 1-indexed — always use index 1 for the first element",
+      "When accessing a fixed index, verify that all possible records have at least that many items"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Tools > Set Variables"
+      ],
+      "features": [
+        "Array indexing",
+        "get() function",
+        "ifempty()",
+        "Mapping"
+      ]
+    },
+    "related_errors": [
+      "make-core-iterator-array-required",
+      "make-core-mapping-empty-value",
+      "mapping-collection-vs-array"
+    ],
+    "search_keywords": [
+      "make array index",
+      "make array 0 index",
+      "make array first item",
+      "make array 1-indexed",
+      "make get array item",
+      "make array out of bounds"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Arrays",
+      "source_url": "https://www.make.com/en/help/mapping/data-types",
+      "evidence": "Make arrays are 1-indexed. This is a fundamental Make data type behavior."
+    },
+    "evidence": [
+      {
+        "claim": "Make arrays use 1-based indexing — the first element is at index 1, not 0",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/mapping/data-types",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Any module returning array",
+        "Mapping using array index"
+      ],
+      "sequence": [
+        "source returns array",
+        "mapping accesses index 0",
+        "returns undefined",
+        "downstream receives null"
+      ],
+      "conditions": [
+        "Using 0-based indexing assumption on a 1-indexed Make array"
+      ]
+    },
+    "diagnostic_signals": [
+      "First array item returns empty when accessed with index 0",
+      "Array has data but mapped index returns undefined",
+      "Worked in test with large arrays but fails with smaller arrays in production"
+    ],
+    "confidence": 0.88,
+    "verification_status": "partially_verified",
+    "quality_score": 0.86,
+    "last_verified": "2026-09-02",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "1-based array indexing is a fundamental Make behavior confirmed in documentation. Common source of confusion for developers coming from 0-indexed languages."
+  }
+]

@@ -1,0 +1,232 @@
+[
+  {
+    "id": "json-create-invalid-structure",
+    "title": "JSON module creates invalid or malformed JSON",
+    "problem": "The Make JSON > Create JSON module produces output that is not valid JSON, typically because the input data structure contains incompatible types, circular references (not possible in Make), or values that are not JSON-serializable.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "json",
+    "layer": "user_configuration",
+    "origin": "data",
+    "surface": "module",
+    "severity": "medium",
+    "symptoms": [
+      "The JSON module output cannot be parsed by downstream modules",
+      "An HTTP module receiving the JSON output gets a 400 or 422 error from the API",
+      "The JSON string contains escaped characters or structure the receiving API does not accept"
+    ],
+    "likely_causes": [
+      {
+        "cause": "A field mapped to the JSON structure contains a value with an incompatible type (e.g., an array mapped to a field expecting a string)",
+        "confidence": 0.8
+      },
+      {
+        "cause": "Special characters in string values are not properly escaped",
+        "confidence": 0.72
+      },
+      {
+        "cause": "The JSON structure template in the module is incorrectly configured",
+        "confidence": 0.75
+      }
+    ],
+    "diagnosis_steps": [
+      "Inspect the output bundle of the JSON module in a test run — view the raw JSON string produced",
+      "Paste the produced JSON into a JSON validator to identify syntax errors",
+      "Check each mapped field in the JSON module and verify the value types match the expected structure",
+      "Verify that string values containing quotes, backslashes, or newlines are handled correctly"
+    ],
+    "solutions": [
+      {
+        "solution": "Correct the field type mappings in the JSON module — ensure each field receives a value of the correct JSON type (string, number, boolean, array, object)",
+        "conditions": "When type mismatches in mapped fields produce invalid JSON",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Use the toString() function on values that need to be strings to ensure correct serialization",
+        "conditions": "When non-string values are mapped to string fields",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [
+      "Test the JSON module output by inspecting the produced string in a test run before connecting to downstream API modules",
+      "Validate the JSON structure against the receiving API's schema before deploying"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "JSON > Create JSON"
+      ],
+      "features": [
+        "JSON creation",
+        "JSON module"
+      ]
+    },
+    "related_errors": [
+      "make-core-json-parse-error",
+      "make-core-wrong-data-type",
+      "http-400-bad-request"
+    ],
+    "search_keywords": [
+      "make JSON invalid",
+      "make create JSON error",
+      "make JSON module wrong",
+      "make JSON structure invalid",
+      "make JSON serialization"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — JSON module",
+      "source_url": "https://www.make.com/en/help/apps/json",
+      "evidence": "JSON module is documented in Make Help Center."
+    },
+    "confidence": 0.78,
+    "verification_status": "partially_verified",
+    "quality_score": 0.74,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "JSON module existence confirmed in Make documentation. Specific error messages are not individually confirmed — marked partially_verified. The causes are logically sound given JSON serialization rules.\n\nerror_messages cleaned v1.3: kept only verbatim-confirmed messages; unconfirmed formulations moved to diagnostic_signals as '[observed message variant]' entries.",
+    "evidence": [
+      {
+        "claim": "JSON module is documented in Make Help Center.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/json",
+        "confidence": 0.83
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "JSON > Create JSON"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "The JSON module output cannot be parsed by downstream modules",
+      "An HTTP module receiving the JSON output gets a 400 or 422 error from the API",
+      "The JSON string contains escaped characters or structure the receiving API does not accept",
+      "[observed message variant] \"Invalid JSON structure\"",
+      "[observed message variant] \"Cannot serialize value\""
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "json-parse-nested-object",
+    "title": "Deeply nested JSON object cannot be accessed via mapping",
+    "problem": "A Make module receives a JSON response with a deeply nested structure. Accessing a specific value deep in the hierarchy using standard mapping produces an empty value because the path is incorrectly specified or the nesting level exceeds what the mapping panel auto-detects.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "json",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "mapping",
+    "severity": "medium",
+    "symptoms": [
+      "A deeply nested field value appears empty despite the JSON response containing it",
+      "The bundle inspector shows the parent object but not the nested child fields",
+      "Mapping the field produces undefined or null"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The mapping path uses an incorrect nesting notation — the path to the nested value is wrong",
+        "confidence": 0.85
+      },
+      {
+        "cause": "The HTTP module's parse response option does not fully expand deeply nested structures into bundle fields",
+        "confidence": 0.75
+      },
+      {
+        "cause": "The nested value is inside an array and requires array notation or an Iterator to access individual items",
+        "confidence": 0.78
+      }
+    ],
+    "diagnosis_steps": [
+      "In the failing execution, open the bundle inspector on the module receiving the JSON",
+      "Navigate the bundle hierarchy to find the nested field manually",
+      "Note the exact path in dot notation (e.g., response.data.user.address.city)",
+      "Use the get() function with the full path if direct mapping does not work: {{get(1.response; 'data.user.address.city')}}"
+    ],
+    "solutions": [
+      {
+        "solution": "Use the correct nested mapping path by navigating the bundle hierarchy in the mapping panel and selecting the deeply nested field directly",
+        "conditions": "When the field exists in the bundle but the mapping path was incorrect",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Use the get() function with the full dot-notation path to access deeply nested values safely: {{get(1.bundle; 'level1.level2.level3.field')}}",
+        "conditions": "When the mapping panel does not show the deeply nested field or when the path is variable",
+        "confidence": 0.85
+      },
+      {
+        "solution": "If the nested value is inside an array, use an Iterator to expand the array and then access each item's properties individually",
+        "conditions": "When the target value is inside a nested array",
+        "confidence": 0.82
+      }
+    ],
+    "prevention": [
+      "Always inspect the full bundle structure in a test run before building mappings for complex JSON responses",
+      "Use the get() function for deeply nested or variable-path access rather than relying on the auto-detected mapping"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "HTTP",
+        "JSON > Parse JSON",
+        "Flow Control > Iterator"
+      ],
+      "features": [
+        "JSON parsing",
+        "Nested mapping",
+        "get() function",
+        "Bundle inspector"
+      ]
+    },
+    "related_errors": [
+      "make-core-json-parse-error",
+      "make-core-mapping-empty-value",
+      "make-core-iterator-array-required"
+    ],
+    "search_keywords": [
+      "make JSON nested object",
+      "make nested field empty",
+      "make JSON deep path",
+      "make JSON get function",
+      "make JSON nested mapping",
+      "make JSON object mapping"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — General functions (get)",
+      "source_url": "https://www.make.com/en/help/functions/general-functions",
+      "evidence": "The get() function for accessing nested values is documented in Make's general functions reference."
+    },
+    "confidence": 0.83,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "get() function confirmed in Make documentation. Behavior of bundle inspector with deeply nested structures is consistent with Make's architecture and community reports.",
+    "evidence": [
+      {
+        "claim": "The get() function for accessing nested values is documented in Make's general functions reference.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/functions/general-functions",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "HTTP",
+        "JSON > Parse JSON",
+        "Flow Control > Iterator"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "A deeply nested field value appears empty despite the JSON response containing it",
+      "The bundle inspector shows the parent object but not the nested child fields",
+      "Mapping the field produces undefined or null"
+    ],
+    "next_review": "2027-03-01"
+  }
+]

@@ -1,0 +1,554 @@
+[
+  {
+    "id": "make-native-bundlevalidation-required-input",
+    "title": "BundleValidationError — required input absent",
+    "problem": "A mandatory mapped value is missing from the input bundle.",
+    "error_messages": [
+      "BundleValidationError"
+    ],
+    "error_codes": [
+      "BundleValidationError"
+    ],
+    "category": "validation",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "mapping",
+    "severity": "medium",
+    "symptoms": [
+      "BundleValidationError — required input absent"
+    ],
+    "likely_causes": [
+      {
+        "cause": "A mandatory mapped value is missing from the input bundle.",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Check the named field and its upstream value in the failing bundle; compare a successful bundle."
+    ],
+    "solutions": [
+      {
+        "solution": "Correct the mapping or supply the missing business data.",
+        "conditions": "Only after identifying the required field and confirming the intended value; never invent a placeholder.",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [],
+    "make_context": {
+      "apps": [],
+      "modules": [],
+      "features": []
+    },
+    "related_errors": [
+      "make-core-mapping-empty-value",
+      "error-type-data-error"
+    ],
+    "search_keywords": [
+      "bundlevalidationerror",
+      "required input",
+      "champ obligatoire"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center",
+      "source_url": "https://help.make.com/fix-missing-data-errors"
+    },
+    "confidence": 0.8,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-08",
+    "needs_reverification": false,
+    "audit_notes": "Documentation checked; diagnostic procedure is editorial. No resolved production case. Scores are editorial, not measured probabilities. Error types are identifiers, not complete execution messages.",
+    "evidence": [
+      {
+        "claim": "A mandatory mapped value is missing from the input bundle.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/fix-missing-data-errors",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "bundlevalidationerror",
+      "required input",
+      "champ obligatoire"
+    ],
+    "next_review": "2026-12-08"
+  },
+  {
+    "id": "make-native-accountvalidation-initialization",
+    "title": "AccountValidationError — initialization authentication failure",
+    "problem": "Connection authentication fails during initialization; a module error handler cannot catch this phase.",
+    "error_messages": [
+      "AccountValidationError"
+    ],
+    "error_codes": [
+      "AccountValidationError"
+    ],
+    "category": "authentication",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "connection",
+    "severity": "medium",
+    "symptoms": [
+      "AccountValidationError — initialization authentication failure"
+    ],
+    "likely_causes": [
+      {
+        "cause": "Connection authentication fails during initialization; a module error handler cannot catch this phase.",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Request the exact error, initialization phase and connection name without credentials. Compare recent connection changes."
+    ],
+    "solutions": [
+      {
+        "solution": "Review the connection credentials with the account owner; reconnect if invalid.",
+        "conditions": "Only when authentication failure is confirmed; a bare HTTP 401 does not establish initialization failure.",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [],
+    "make_context": {
+      "apps": [],
+      "modules": [],
+      "features": []
+    },
+    "related_errors": [
+      "auth-connection-invalid",
+      "error-handler-not-triggering"
+    ],
+    "search_keywords": [
+      "accountvalidationerror",
+      "initialization authentication",
+      "authentification initialisation"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center",
+      "source_url": "https://help.make.com/fix-errors-and-warnings"
+    },
+    "confidence": 0.8,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-08",
+    "needs_reverification": false,
+    "audit_notes": "Documentation checked; diagnostic procedure is editorial. No resolved production case. Scores are editorial, not measured probabilities. Error types are identifiers, not complete execution messages.",
+    "evidence": [
+      {
+        "claim": "Connection authentication fails during initialization; a module error handler cannot catch this phase.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/fix-errors-and-warnings",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "accountvalidationerror",
+      "initialization authentication",
+      "authentification initialisation"
+    ],
+    "next_review": "2026-12-08"
+  },
+  {
+    "id": "make-native-datastore-renamed-field-inaccessible",
+    "title": "Data store — values inaccessible after field rename",
+    "problem": "Renaming a structure field changes its identifier; existing values can become inaccessible.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "mapping",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "module",
+    "severity": "medium",
+    "symptoms": [
+      "Data store — values inaccessible after field rename"
+    ],
+    "likely_causes": [
+      {
+        "cause": "Renaming a structure field changes its identifier; existing values can become inaccessible.",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Compare old and new field names, labels and a saved record. Request a backup before structural changes."
+    ],
+    "solutions": [
+      {
+        "solution": "Restore access using the original field name, then plan a backed-up migration.",
+        "conditions": "Only for a confirmed field-name change; a label-only change or a different store needs another diagnosis.",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Data store",
+        "datastore"
+      ],
+      "features": []
+    },
+    "related_errors": [
+      "make-core-mapping-empty-value"
+    ],
+    "search_keywords": [
+      "renamed field",
+      "champ renommé",
+      "data store"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center",
+      "source_url": "https://help.make.com/data-stores"
+    },
+    "confidence": 0.8,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-08",
+    "needs_reverification": false,
+    "audit_notes": "Documentation checked; diagnostic procedure is editorial. No resolved production case. Scores are editorial, not measured probabilities. Error types are identifiers, not complete execution messages.",
+    "evidence": [
+      {
+        "claim": "Renaming a structure field changes its identifier; existing values can become inaccessible.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/data-stores",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Data store"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "renamed field",
+      "champ renommé",
+      "data store"
+    ],
+    "next_review": "2026-12-08"
+  },
+  {
+    "id": "make-native-scenario-sequential-incomplete-block",
+    "title": "Scenario — ordered processing waits for incomplete executions",
+    "problem": "Ordered processing can hold new runs while incomplete executions remain unresolved.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "scheduling",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "scenario",
+    "severity": "medium",
+    "symptoms": [
+      "Scenario — ordered processing waits for incomplete executions"
+    ],
+    "likely_causes": [
+      {
+        "cause": "Ordered processing can hold new runs while incomplete executions remain unresolved.",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Inspect the ordering setting, pending executions and their timestamps; distinguish waiting from deactivation."
+    ],
+    "solutions": [
+      {
+        "solution": "Investigate and resolve the blocking incomplete execution manually.",
+        "conditions": "Only when ordered processing and pending executions are confirmed; assess previous writes before retrying.",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [],
+    "make_context": {
+      "apps": [],
+      "modules": [],
+      "features": []
+    },
+    "related_errors": [
+      "make-core-incomplete-execution",
+      "scheduling-scenario-not-running"
+    ],
+    "search_keywords": [
+      "ordered processing",
+      "sequential processing",
+      "traitement séquentiel"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center",
+      "source_url": "https://help.make.com/scenario-settings"
+    },
+    "confidence": 0.8,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-08",
+    "needs_reverification": false,
+    "audit_notes": "Documentation checked; diagnostic procedure is editorial. No resolved production case. Scores are editorial, not measured probabilities. Error types are identifiers, not complete execution messages.",
+    "evidence": [
+      {
+        "claim": "Ordered processing can hold new runs while incomplete executions remain unresolved.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/scenario-settings",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "ordered processing",
+      "sequential processing",
+      "traitement séquentiel"
+    ],
+    "next_review": "2026-12-08",
+    "retrieval_patterns": [
+      {
+        "all_groups": [
+          [
+            "ordered processing",
+            "sequential processing",
+            "process data in order",
+            "traitement séquentiel",
+            "traitement dans l ordre"
+          ],
+          [
+            "incomplete execution",
+            "incomplete executions",
+            "exécution incomplète",
+            "exécutions incomplètes"
+          ],
+          [
+            "waiting",
+            "waits",
+            "blocked",
+            "paused",
+            "bloqué",
+            "bloquée",
+            "en attente",
+            "ne démarre plus"
+          ]
+        ],
+        "exclude": [
+          "not blocked",
+          "no longer",
+          "no incomplete executions",
+          "without incomplete executions",
+          "disabled",
+          "désactivé",
+          "désactivée",
+          "aucune exécution incomplète",
+          "sans exécution incomplète",
+          "pas bloqué",
+          "plus bloqué"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "make-native-first-module-incomplete-not-stored",
+    "title": "First module — failed execution missing from storage",
+    "problem": "A first-module failure is not stored automatically merely by enabling incomplete executions; Retry provides the documented exception.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "error_handling",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "module",
+    "severity": "medium",
+    "symptoms": [
+      "First module — failed execution missing from storage"
+    ],
+    "likely_causes": [
+      {
+        "cause": "A first-module failure is not stored automatically merely by enabling incomplete executions; Retry provides the documented exception.",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Confirm the failing module is first, storage is enabled and available, and inspect its handler."
+    ],
+    "solutions": [
+      {
+        "solution": "Configure a Retry handler on the first module and review its completion settings.",
+        "conditions": "Only for a catchable first-module failure; this does not restore an already absent execution or repair authentication.",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [],
+    "make_context": {
+      "apps": [],
+      "modules": [],
+      "features": []
+    },
+    "related_errors": [
+      "make-core-incomplete-execution",
+      "error-directive-break"
+    ],
+    "search_keywords": [
+      "first module",
+      "premier module",
+      "incomplete execution missing"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center",
+      "source_url": "https://help.make.com/overview-of-error-handling"
+    },
+    "confidence": 0.8,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-08",
+    "needs_reverification": false,
+    "audit_notes": "Documentation checked; diagnostic procedure is editorial. No resolved production case. Scores are editorial, not measured probabilities. Error types are identifiers, not complete execution messages.",
+    "evidence": [
+      {
+        "claim": "A first-module failure is not stored automatically merely by enabling incomplete executions; Retry provides the documented exception.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/overview-of-error-handling",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "first module",
+      "premier module",
+      "incomplete execution missing"
+    ],
+    "next_review": "2026-12-08",
+    "retrieval_patterns": [
+      {
+        "all_groups": [
+          [
+            "first module",
+            "first step",
+            "premier module",
+            "première étape"
+          ],
+          [
+            "incomplete execution",
+            "incomplete executions",
+            "exécution incomplète",
+            "exécutions incomplètes"
+          ],
+          [
+            "missing",
+            "not stored",
+            "not saved",
+            "absent",
+            "absente",
+            "introuvable",
+            "non enregistrée",
+            "non stockée"
+          ]
+        ],
+        "exclude": [
+          "not the first",
+          "pas le premier",
+          "second module",
+          "deuxième module",
+          "storage full",
+          "stockage plein",
+          "quota",
+          "AccountValidationError"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "make-native-aggregator-upstream-fields-unavailable",
+    "title": "Aggregator — upstream fields unavailable downstream",
+    "problem": "Fields inside the aggregation scope are unavailable downstream unless included in the aggregation output.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "aggregation",
+    "layer": "make_core",
+    "origin": "make",
+    "surface": "aggregator",
+    "severity": "medium",
+    "symptoms": [
+      "Aggregator — upstream fields unavailable downstream"
+    ],
+    "likely_causes": [
+      {
+        "cause": "Fields inside the aggregation scope are unavailable downstream unless included in the aggregation output.",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Compare source, aggregation scope, selected fields and output schema with the downstream mapping."
+    ],
+    "solutions": [
+      {
+        "solution": "Include the needed fields in the aggregator setup and map its output.",
+        "conditions": "Only when the required values exist upstream but are omitted from aggregation; verify downstream shape before changing mapping.",
+        "confidence": 0.8
+      }
+    ],
+    "prevention": [],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Aggregator"
+      ],
+      "features": []
+    },
+    "related_errors": [
+      "aggregator-empty-input-continues",
+      "mapping-collection-vs-array"
+    ],
+    "search_keywords": [
+      "after aggregator",
+      "après agrégateur",
+      "aggregated fields"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center",
+      "source_url": "https://help.make.com/aggregator"
+    },
+    "confidence": 0.8,
+    "verification_status": "partially_verified",
+    "quality_score": 0.8,
+    "last_verified": "2026-09-08",
+    "needs_reverification": false,
+    "audit_notes": "Documentation checked; diagnostic procedure is editorial. No resolved production case. Scores are editorial, not measured probabilities. Error types are identifiers, not complete execution messages.",
+    "evidence": [
+      {
+        "claim": "Fields inside the aggregation scope are unavailable downstream unless included in the aggregation output.",
+        "source_type": "official_documentation",
+        "source_url": "https://help.make.com/aggregator",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Aggregator"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "after aggregator",
+      "après agrégateur",
+      "aggregated fields"
+    ],
+    "next_review": "2026-12-08"
+  }
+]

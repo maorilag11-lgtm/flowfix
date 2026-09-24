@@ -1,0 +1,611 @@
+[
+  {
+    "id": "make-core-filter-blocks-all",
+    "title": "Filter silently blocks all bundles",
+    "problem": "A Make filter between two modules has a condition that evaluates to false for all bundles passing through. The scenario executes without error but produces no output downstream — a silent failure.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "filter",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "filter",
+    "severity": "medium",
+    "symptoms": [
+      "Scenario runs successfully (green checkmark) but no data is processed downstream",
+      "Module after the filter shows 0 bundles processed",
+      "No error message is generated — the scenario appears healthy",
+      "Target system shows no new records after execution"
+    ],
+    "likely_causes": [
+      {
+        "cause": "Filter condition compares values of different types (e.g., string '1' vs number 1)",
+        "confidence": 0.82
+      },
+      {
+        "cause": "Filter is case-sensitive and the source value casing does not match the hardcoded comparison value",
+        "confidence": 0.8
+      },
+      {
+        "cause": "The field used in the filter condition is absent or null in all current bundles",
+        "confidence": 0.75
+      },
+      {
+        "cause": "The external API changed the value or format of the filtered field",
+        "confidence": 0.65
+      },
+      {
+        "cause": "Filter references a variable that is empty or undefined at runtime",
+        "confidence": 0.75
+      }
+    ],
+    "diagnosis_steps": [
+      "Run the scenario with 'Run once' and inspect bundle output before the filter",
+      "Note the exact value and type (string, number, boolean) of the field used in the filter",
+      "Compare with the filter condition: are the types identical? Is the casing identical?",
+      "Temporarily set the filter option to allow bundles through when the condition does not match to see what would pass through",
+      "Add a Tools > Set Variables module before the filter to normalize the value (e.g., lower(), toString()) and inspect the result"
+    ],
+    "solutions": [
+      {
+        "solution": "Use the lower() function on string comparisons to neutralize case sensitivity: {{lower(1.status)}} = active",
+        "conditions": "When the filter fails due to case mismatch on a string field",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Use toString() or toNumber() to ensure type consistency before comparison",
+        "conditions": "When the filter fails due to a type mismatch (e.g., string '1' vs number 1)",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Add an 'Exists' condition on the filtered field in addition to the value condition to handle null or absent fields",
+        "conditions": "When the filtered field can be absent or null in some bundles",
+        "confidence": 0.82
+      },
+      {
+        "solution": "Add a parallel Router branch with the inverted filter condition and route rejected bundles to a logger or notification during debugging",
+        "conditions": "During debugging to observe exactly what is being rejected and why",
+        "confidence": 0.82
+      }
+    ],
+    "prevention": [
+      "Always test filters using 'Run once' with real data before deploying",
+      "Normalize string values (lower(), trim()) in a Set Variables module before filtering on them",
+      "Add a diagnostic inverted-filter branch during development to log rejected bundles"
+    ],
+    "make_context": {
+      "modules": [
+        "Filter",
+        "Tools > Set Variables",
+        "Flow Control > Router"
+      ],
+      "apps": [],
+      "features": [
+        "Filters",
+        "Routing",
+        "Data normalization",
+        "lower()",
+        "toString()"
+      ]
+    },
+    "related_errors": [
+      "make-core-mapping-empty-value",
+      "make-core-wrong-data-type"
+    ],
+    "search_keywords": [
+      "make filter not working",
+      "make filter blocks all bundles",
+      "make filter silent error",
+      "make scenario no output",
+      "make filter 0 bundles",
+      "make filter case sensitive",
+      "make filter type mismatch",
+      "make filter stops all data"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Filters",
+      "source_url": "https://www.make.com/en/help/scenarios/filters",
+      "evidence": "Filter behavior is well-documented in Make Help Center. The silent nature of filter rejection (no error thrown) is confirmed conceptually by Make's architecture. Specific case-sensitivity behavior of string comparisons was inferred from Make's general string handling — not found as explicit statement in official docs."
+    },
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.82,
+    "last_verified": "2026-09-02",
+    "needs_reverification": false,
+    "audit_notes": "Filter behavior is well-documented in Make Help Center. The silent nature of filter rejection (no error thrown) is confirmed conceptually by Make's architecture. Specific case-sensitivity behavior of string comparisons was inferred from Make's general string handling — not found as explicit statement in official docs.",
+    "evidence": [
+      {
+        "claim": "Filter behavior is well-documented in Make Help Center. The silent nature of filter rejection (no error thrown) is confirmed conceptually by Make's architecture. Specific case-sensitivity behavior of string comparisons was inferred from Make's general string handling — not found as explicit statement in official docs.",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/scenarios/filters",
+        "confidence": 0.9
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Filter",
+        "Tools > Set Variables",
+        "Flow Control > Router"
+      ],
+      "sequence": [],
+      "conditions": []
+    },
+    "diagnostic_signals": [
+      "Scenario runs successfully (green checkmark) but no data is processed downstream",
+      "Module after the filter shows 0 bundles processed",
+      "No error message is generated — the scenario appears healthy"
+    ],
+    "next_review": "2027-03-01"
+  },
+  {
+    "id": "filter-and-or-logic-error",
+    "title": "Filter AND/OR logic produces unexpected results",
+    "problem": "A Make filter with multiple conditions using AND/OR logic does not evaluate as the user expects. The confusion commonly arises because Make filters conditions within a single filter block as AND, while multiple filter blocks in sequence are evaluated as OR.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "filter",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "filter",
+    "severity": "medium",
+    "symptoms": [
+      "Filter passes bundles that should have been blocked, or blocks bundles that should have passed",
+      "Scenario logic is incorrect but no error is thrown",
+      "Adding more conditions to a filter does not have the expected narrowing effect"
+    ],
+    "likely_causes": [
+      {
+        "cause": "Multiple conditions within a single filter block are evaluated as AND — the user expected OR",
+        "confidence": 0.85
+      },
+      {
+        "cause": "Multiple filter blocks in sequence are evaluated as OR — the user expected AND",
+        "confidence": 0.8
+      }
+    ],
+    "diagnosis_steps": [
+      "Open the filter and count the number of condition blocks and conditions within each block",
+      "Determine whether the intended logic requires AND (all must match) or OR (any must match)",
+      "For AND: put all conditions in a single filter block. For OR: use multiple filter blocks or a Router with one condition per route"
+    ],
+    "solutions": [
+      {
+        "solution": "To require ALL conditions to match (AND): place all conditions within a single filter block using the '+' button to add conditions within the same block",
+        "conditions": "When all conditions must be true simultaneously",
+        "confidence": 0.9
+      },
+      {
+        "solution": "To require ANY condition to match (OR): use multiple filter blocks (each containing one condition) or use a Router with one route per condition, each converging to the same downstream modules",
+        "conditions": "When any one of several conditions being true is sufficient to pass the bundle",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Before building a filter, explicitly define the intended logic: 'all of these must match' (AND) or 'any of these must match' (OR)",
+      "Test filters with at least 3 types of records: one that should pass all conditions, one that fails one condition, and one that fails all conditions"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Filter",
+        "Flow Control > Router"
+      ],
+      "features": [
+        "Filters",
+        "AND logic",
+        "OR logic",
+        "Conditions"
+      ]
+    },
+    "related_errors": [
+      "make-core-filter-blocks-all",
+      "router-no-route-matches"
+    ],
+    "search_keywords": [
+      "make filter AND OR",
+      "make filter logic",
+      "make filter multiple conditions",
+      "make filter not working AND",
+      "make filter OR condition"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Filters",
+      "source_url": "https://www.make.com/en/help/scenarios/filters",
+      "evidence": "Make documentation describes the AND/OR behavior of conditions within and between filter blocks."
+    },
+    "evidence": [
+      {
+        "claim": "In Make, multiple conditions within a single filter block are evaluated as AND; multiple filter blocks are evaluated as OR",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/scenarios/filters",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Any source module",
+        "Filter",
+        "Downstream action"
+      ],
+      "sequence": [
+        "bundle enters filter",
+        "conditions evaluated with AND/OR",
+        "result differs from intention",
+        "wrong bundles pass or are blocked"
+      ],
+      "conditions": [
+        "Multiple conditions with misunderstood AND/OR semantics"
+      ]
+    },
+    "diagnostic_signals": [
+      "Filter is passing bundles that should fail, or blocking bundles that should pass",
+      "Filter has multiple conditions — AND/OR logic may be misunderstood",
+      "Scenario produces wrong output with no error"
+    ],
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.84,
+    "last_verified": "2026-09-02",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "AND/OR behavior within and between filter blocks is documented in Make Help Center. The specific UI description ('+' button for same-block conditions) is consistent with Make's filter interface."
+  },
+  {
+    "id": "filter-numeric-comparison-type",
+    "title": "Filter numeric comparison fails due to string vs number type",
+    "problem": "A filter condition comparing a numeric field uses '=' or '>=' but always evaluates as false because the field value is stored as Text (string) rather than Number. String '10' is not equal to and not greater than number 5 in Make's typed comparison.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "filter",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "filter",
+    "severity": "medium",
+    "symptoms": [
+      "A numeric filter condition never passes any bundles even when values appear correct",
+      "Bundles with a value of '10' fail a '> 5' condition when '10' is stored as text",
+      "Filter works in some scenarios but not others — the difference is the source type"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The filtered field is returned as a Text (string) type by the source module, not as a Number type — string comparison is different from numeric comparison",
+        "confidence": 0.88
+      },
+      {
+        "cause": "The comparison value in the filter is entered as a string instead of a number",
+        "confidence": 0.72
+      }
+    ],
+    "diagnosis_steps": [
+      "Inspect the field type in the bundle inspector — confirm whether it is tagged as 'Number' or 'Text'",
+      "If it is 'Text', add a parseNumber() or toNumber() conversion in a Set Variables module before the filter",
+      "Alternatively, use a text-based comparison operator in the filter if converting to number is not possible"
+    ],
+    "solutions": [
+      {
+        "solution": "Add a Set Variables module before the filter to convert the string field to a number: {{parseNumber(1.amount; '.')}} then filter on the converted variable",
+        "conditions": "When the source field is a string representation of a number",
+        "confidence": 0.9
+      },
+      {
+        "solution": "Use a text comparison operator if numeric comparison is not required — note that text comparison of numbers can produce unexpected ordering ('10' < '9' as text)",
+        "conditions": "When conversion is not possible and approximate behavior is acceptable",
+        "confidence": 0.65
+      }
+    ],
+    "prevention": [
+      "Always check the field type before building numeric filter conditions",
+      "Apply parseNumber() conversion in a Set Variables module immediately after the source module for any field that will be used in numeric comparisons"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Filter",
+        "Tools > Set Variables"
+      ],
+      "features": [
+        "Filters",
+        "parseNumber()",
+        "Type comparison",
+        "Numeric condition"
+      ]
+    },
+    "related_errors": [
+      "make-core-filter-blocks-all",
+      "mapping-number-locale-format",
+      "make-core-wrong-data-type"
+    ],
+    "search_keywords": [
+      "make filter number string",
+      "make filter numeric comparison",
+      "make filter number type",
+      "make filter parseNumber",
+      "make filter greater than not working"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Filters and Data types",
+      "source_url": "https://www.make.com/en/help/scenarios/filters",
+      "evidence": "Make filter conditions are type-aware. Numeric comparisons require Number type fields."
+    },
+    "evidence": [
+      {
+        "claim": "Make filter conditions are type-sensitive — a numeric comparison requires the field to be of Number type, not Text",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/scenarios/filters",
+        "confidence": 0.83
+      },
+      {
+        "claim": "Make's parseNumber() converts string numbers to Number type",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/functions/math-functions",
+        "confidence": 0.93
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Source module (string numeric field)",
+        "Filter (numeric condition)",
+        "Downstream action"
+      ],
+      "sequence": [
+        "source returns '10' as text",
+        "filter '> 5' evaluates on text",
+        "condition fails",
+        "bundle blocked incorrectly"
+      ],
+      "conditions": [
+        "Numeric field stored as Text",
+        "Filter uses numeric comparison operator"
+      ]
+    },
+    "diagnostic_signals": [
+      "Filter numeric condition never passes any bundle",
+      "Bundle inspector shows type 'Text' on the filtered field",
+      "Filter works after adding parseNumber() conversion"
+    ],
+    "confidence": 0.83,
+    "verification_status": "partially_verified",
+    "quality_score": 0.82,
+    "last_verified": "2026-09-02",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "Type-sensitive filter behavior inferred from Make's data type system and confirmed in community. The specific claim about string vs numeric comparison behavior is consistent with Make's typed evaluation model."
+  },
+  {
+    "id": "filter-date-comparison",
+    "title": "Filter date comparison produces unexpected results",
+    "problem": "A filter comparing a date field to a value (before today, after a date, etc.) does not work correctly because the date field is stored as Text rather than as a Make Date type, or the comparison date is not formatted correctly.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "filter",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "filter",
+    "severity": "medium",
+    "symptoms": [
+      "Date-based filter condition passes or blocks all bundles regardless of the date value",
+      "A 'before today' condition is always true or always false",
+      "Date comparison works for some records but fails for others due to inconsistent date formats"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The date field is typed as Text in the bundle — date string comparison does not behave like calendar date comparison",
+        "confidence": 0.85
+      },
+      {
+        "cause": "The comparison value in the filter uses a format that does not match Make's Date type expectations",
+        "confidence": 0.78
+      }
+    ],
+    "diagnosis_steps": [
+      "Check the date field type in the bundle inspector — confirm it is 'Date' not 'Text'",
+      "If it is 'Text', use parseDate() to convert it to a Make Date type before the filter",
+      "Use the now function or a specific date in Make's supported format for the comparison value"
+    ],
+    "solutions": [
+      {
+        "solution": "Add parseDate(1.date_field; 'YYYY-MM-DD') in a Set Variables module before the filter to convert the text date to a Make Date type",
+        "conditions": "When the date field is stored as Text",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Use {{now}} as the comparison value in a 'Date is after' or 'Date is before' filter condition when filtering relative to the current date",
+        "conditions": "When filtering records by their date relative to today",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Always verify date field types before building date-based filter conditions",
+      "Use parseDate() to normalize date values from external sources before filtering"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Filter",
+        "Tools > Set Variables"
+      ],
+      "features": [
+        "Filters",
+        "parseDate()",
+        "Date type",
+        "now",
+        "Date comparison"
+      ]
+    },
+    "related_errors": [
+      "mapping-date-format-mismatch",
+      "make-core-filter-blocks-all"
+    ],
+    "search_keywords": [
+      "make filter date",
+      "make filter date comparison",
+      "make filter before today",
+      "make date filter not working",
+      "make parseDate filter"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Date functions",
+      "source_url": "https://www.make.com/en/help/functions/date-and-time-functions",
+      "evidence": "parseDate() is documented in Make. Date type vs Text type distinction is fundamental to Make's data model."
+    },
+    "evidence": [
+      {
+        "claim": "Make's parseDate() converts a date string to a Date type for use in date-sensitive comparisons",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/functions/date-and-time-functions",
+        "confidence": 0.9
+      },
+      {
+        "claim": "Make provides the 'now' variable for use in date comparisons within filters",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/functions/date-and-time-functions",
+        "confidence": 0.85
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Source module (date as text)",
+        "Filter (date condition)",
+        "Downstream action"
+      ],
+      "sequence": [
+        "source returns date as text string",
+        "filter date comparison on text type",
+        "unexpected evaluation",
+        "wrong bundles pass or blocked"
+      ],
+      "conditions": [
+        "Date field is Text type",
+        "Filter expects Date type for calendar comparison"
+      ]
+    },
+    "diagnostic_signals": [
+      "Date filter passes or blocks all bundles regardless of the date value",
+      "Bundle inspector shows 'Text' type on a date field used in filter",
+      "Filter works after adding parseDate() conversion"
+    ],
+    "confidence": 0.83,
+    "verification_status": "partially_verified",
+    "quality_score": 0.82,
+    "last_verified": "2026-09-02",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "parseDate() and now confirmed in Make documentation. Type-sensitive date filter behavior consistent with Make's typed data model."
+  },
+  {
+    "id": "filter-exists-condition",
+    "title": "Using 'Exists' condition to handle optional or absent fields",
+    "problem": "A filter condition comparing a field value with a specific value fails when the field is absent from some bundles — the comparison evaluates differently than expected for absent fields. The correct approach is to first check field existence using the 'Exists' condition operator.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "filter",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "filter",
+    "severity": "low",
+    "symptoms": [
+      "A filter blocks records where an optional field is absent, even when absent means 'should pass'",
+      "A filter passes records where a required field is absent, which should have been blocked",
+      "Inconsistent filtering behavior for records with different field presence"
+    ],
+    "likely_causes": [
+      {
+        "cause": "The filter condition assumes the field always exists — records without the field behave unexpectedly under value-comparison conditions",
+        "confidence": 0.85
+      },
+      {
+        "cause": "The 'Exists' operator is not used to gate the value comparison when the field is optional",
+        "confidence": 0.82
+      }
+    ],
+    "diagnosis_steps": [
+      "Identify which fields in the filter condition are optional in the source data",
+      "For each optional field, add an 'Exists' condition check before or alongside the value comparison",
+      "Test the filter with records that have the field present, absent, and with an explicit null value"
+    ],
+    "solutions": [
+      {
+        "solution": "Add an 'Exists' filter condition on optional fields before comparing their values. In the same filter block, add 'field' 'Exists' as the first condition and the value comparison as the second — both must be true (AND logic).",
+        "conditions": "When a field is optional and should only be compared when it exists",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Use the 'Does not exist' condition to route or filter out records where a required field is absent",
+        "conditions": "When records missing a required field should be explicitly handled or skipped",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "For every filter condition, ask: 'Can this field be absent?' If yes, add an Exists check",
+      "Test filters with edge-case records: field present, field absent, field present with null value"
+    ],
+    "make_context": {
+      "apps": [],
+      "modules": [
+        "Filter"
+      ],
+      "features": [
+        "Filters",
+        "Exists operator",
+        "Does not exist operator",
+        "Optional field handling"
+      ]
+    },
+    "related_errors": [
+      "make-core-filter-blocks-all",
+      "make-core-mapping-empty-value",
+      "filter-and-or-logic-error"
+    ],
+    "search_keywords": [
+      "make filter exists",
+      "make filter field absent",
+      "make filter optional field",
+      "make filter does not exist",
+      "make filter field missing"
+    ],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Filters",
+      "source_url": "https://www.make.com/en/help/scenarios/filters",
+      "evidence": "Make provides 'Exists' and 'Does not exist' filter operators for handling optional fields."
+    },
+    "evidence": [
+      {
+        "claim": "Make filters include 'Exists' and 'Does not exist' operators for checking field presence",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/scenarios/filters",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": [
+        "Source module (optional field)",
+        "Filter (value condition without Exists check)",
+        "Downstream action"
+      ],
+      "sequence": [
+        "some bundles have field, some do not",
+        "filter evaluates value comparison on absent field",
+        "unexpected result for absent-field records"
+      ],
+      "conditions": [
+        "Optional field not checked with Exists before value comparison"
+      ]
+    },
+    "diagnostic_signals": [
+      "Filter behaves inconsistently — works for some records, not others",
+      "Failing records have an absent or null field used in the filter condition",
+      "Adding an Exists check fixes the behavior"
+    ],
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.84,
+    "last_verified": "2026-09-02",
+    "next_review": "2027-03-01",
+    "needs_reverification": false,
+    "audit_notes": "Exists operator confirmed in Make filter documentation. The evaluation behavior for absent fields is consistent with Make's data model."
+  }
+]

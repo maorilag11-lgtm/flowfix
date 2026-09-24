@@ -1,0 +1,328 @@
+[
+  {
+    "id": "gmail-send-invalid-recipient",
+    "title": "Gmail — Send Email fails with invalid recipient address",
+    "problem": "The Make Gmail > Send an Email module fails because the recipient email address is invalid, empty, or in a format the Gmail API does not accept.",
+    "error_messages": [],
+    "error_codes": ["400"],
+    "category": "validation",
+    "layer": "external_api",
+    "origin": "data",
+    "surface": "module",
+    "severity": "high",
+    "symptoms": [
+      "Gmail module fails with a 400 error when attempting to send an email",
+      "The To field contains an invalid or empty value",
+      "Error is data-dependent — fails for some records but not others"
+    ],
+    "likely_causes": [
+      {"cause": "The email address mapped to the To field is empty for this specific record — the source field is optional or absent", "confidence": 0.88},
+      {"cause": "The email address contains invalid characters, spaces, or an incorrect format", "confidence": 0.80},
+      {"cause": "Multiple email addresses are passed in a format the Gmail module does not accept (e.g., comma-separated when the module expects an array)", "confidence": 0.72}
+    ],
+    "diagnosis_steps": [
+      "Inspect the input bundle of the Gmail module and check the exact value passed to the To field",
+      "Verify the email address format — it must be a valid RFC 5321 email address",
+      "If the To field is mapped from an optional source field, add a filter before the Gmail module to skip records without a valid email",
+      "Check whether the source field can contain multiple addresses and handle them correctly"
+    ],
+    "solutions": [
+      {
+        "solution": "Add a filter before the Gmail module checking that the email field exists and is not empty: condition 'email field' 'Exists' AND 'email field' 'Contains' '@'",
+        "conditions": "When the email field can be absent or empty in some records",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Use ifempty(1.email; '') and add a filter to skip when the result is empty",
+        "conditions": "When the email field is optional",
+        "confidence": 0.85
+      }
+    ],
+    "prevention": [
+      "Always validate email field presence and format before the Gmail module",
+      "Never map an optional field directly to the Gmail To field without an existence check"
+    ],
+    "make_context": {
+      "apps": ["Gmail"],
+      "modules": ["Gmail > Send an Email"],
+      "features": ["Email validation", "Filter", "ifempty()"]
+    },
+    "related_errors": ["make-core-mapping-empty-value", "http-400-bad-request", "filter-exists-condition"],
+    "search_keywords": ["make gmail invalid email", "make gmail send error", "make gmail 400 recipient", "make gmail To field empty", "make gmail invalid recipient"],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Gmail module",
+      "source_url": "https://www.make.com/en/help/apps/gmail",
+      "evidence": "Gmail module requires a valid email address in the To field. Invalid or empty recipients cause the module to fail."
+    },
+    "evidence": [
+      {
+        "claim": "Make's Gmail > Send an Email module requires a valid email address in the To field",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/gmail",
+        "confidence": 0.85
+      },
+      {
+        "claim": "The Gmail API returns a 400 error for invalid recipient email addresses",
+        "source_type": "api_documentation",
+        "source_url": "https://developers.google.com/gmail/api/reference/rest",
+        "confidence": 0.82
+      }
+    ],
+    "workflow_pattern": {
+      "modules": ["Any source module (contact list, CRM, spreadsheet)", "Gmail > Send an Email"],
+      "sequence": ["source returns records", "some records have empty or invalid email", "Gmail module fails on those records"],
+      "conditions": ["Email field is optional in source data", "No email validation before Gmail module"]
+    },
+    "diagnostic_signals": [
+      "Gmail module fails for some records but not others",
+      "To field contains empty string or invalid format",
+      "Error is 400 from Gmail module"
+    ],
+    "confidence": 0.82,
+    "verification_status": "partially_verified",
+    "quality_score": 0.80,
+    "last_verified": "2026-09-02",
+    "next_review": "2026-12-01",
+    "needs_reverification": false,
+    "audit_notes": "Gmail module documented in Make Help Center. Specific error message text not confirmed verbatim — error_messages left empty. Gmail API 400 for invalid recipients is consistent with Gmail API documentation."
+  },
+
+  {
+    "id": "gmail-attachment-size-limit",
+    "title": "Gmail — Email attachment exceeds Gmail size limit",
+    "problem": "The Make Gmail > Send an Email module fails when an attachment exceeds Gmail's size limit (25 MB per email for the Gmail API). The module cannot send the email and returns an error.",
+    "error_messages": [],
+    "error_codes": ["400"],
+    "category": "validation",
+    "layer": "external_api",
+    "origin": "data",
+    "surface": "module",
+    "severity": "medium",
+    "symptoms": [
+      "Gmail module fails specifically when attachments are included",
+      "The error does not occur when the same email is sent without the attachment",
+      "The attachment file size is close to or exceeds 25 MB"
+    ],
+    "likely_causes": [
+      {"cause": "The total email size (including attachment) exceeds Gmail's 25 MB limit for the Gmail API", "confidence": 0.88}
+    ],
+    "diagnosis_steps": [
+      "Check the size of the file being attached",
+      "Calculate the total email size (body + attachment) — base64 encoding adds approximately 33% overhead",
+      "Verify whether the Gmail API limit is 25 MB for the total message size"
+    ],
+    "solutions": [
+      {
+        "solution": "Upload the file to Google Drive and share a link in the email body instead of attaching the file directly",
+        "conditions": "When the attachment exceeds the Gmail size limit and sharing a link is acceptable",
+        "confidence": 0.88
+      },
+      {
+        "solution": "Compress or reduce the file size before attaching if the file can be reduced below the limit",
+        "conditions": "When file compression is acceptable for the use case",
+        "confidence": 0.72
+      }
+    ],
+    "prevention": [
+      "Check file sizes before attaching to Gmail — add a filter to route large files to a Drive-link approach",
+      "Default to Google Drive links for any file that could exceed the size limit"
+    ],
+    "make_context": {
+      "apps": ["Gmail", "Google Drive"],
+      "modules": ["Gmail > Send an Email", "Google Drive > Upload a File"],
+      "features": ["Email attachments", "File size limit"]
+    },
+    "related_errors": ["http-413-payload-too-large"],
+    "search_keywords": ["make gmail attachment too large", "make gmail file size limit", "make gmail 25MB", "make gmail attachment error"],
+    "origin_details": {
+      "source_type": "api_documentation",
+      "source_name": "Gmail API — Message size limits",
+      "source_url": "https://developers.google.com/gmail/api/reference/rest",
+      "evidence": "Gmail API imposes a 25 MB limit on total message size including attachments."
+    },
+    "evidence": [
+      {
+        "claim": "Gmail's API enforces a message size limit of 25 MB, including attachments",
+        "source_type": "api_documentation",
+        "source_url": "https://developers.google.com/gmail/api/reference/rest",
+        "confidence": 0.85
+      }
+    ],
+    "workflow_pattern": {
+      "modules": ["File source module (Google Drive, HTTP, etc.)", "Gmail > Send an Email"],
+      "sequence": ["large file retrieved", "attached to Gmail module", "Gmail API rejects due to size"],
+      "conditions": ["Attachment size exceeds Gmail 25 MB limit"]
+    },
+    "diagnostic_signals": [
+      "Gmail module fails when attachments are present but works without them",
+      "Attachment file size is near or above 25 MB",
+      "400 error from Gmail module with attachment"
+    ],
+    "confidence": 0.82,
+    "verification_status": "partially_verified",
+    "quality_score": 0.78,
+    "last_verified": "2026-09-02",
+    "next_review": "2026-12-01",
+    "needs_reverification": false,
+    "audit_notes": "Gmail 25 MB limit is documented in Gmail API documentation. Make-specific error message not confirmed verbatim. The Google Drive link alternative is a widely recommended pattern."
+  },
+
+  {
+    "id": "gmail-oauth-scope-missing",
+    "title": "Gmail — Make connection missing required Gmail scope",
+    "problem": "A Gmail module attempts an action (e.g., sending email, reading labels, managing drafts) that requires a Gmail OAuth2 scope not granted when the Make connection was created. The module fails with a permission or forbidden error.",
+    "error_messages": [],
+    "error_codes": ["403"],
+    "category": "authorization",
+    "layer": "make_core",
+    "origin": "user",
+    "surface": "connection",
+    "severity": "high",
+    "symptoms": [
+      "A Gmail module fails with a forbidden or permission error",
+      "Other Gmail modules using the same connection work — the issue is specific to one action",
+      "Error started after adding a new Gmail module that uses a different Gmail feature"
+    ],
+    "likely_causes": [
+      {"cause": "The Make Gmail connection was created with limited OAuth2 scopes — the new module requires a scope not granted at connection time", "confidence": 0.85}
+    ],
+    "diagnosis_steps": [
+      "Identify which Gmail operation is failing (send, read, labels, drafts, etc.)",
+      "Check the Gmail API documentation for the OAuth2 scope required for that operation",
+      "Go to Make > Connections and check or recreate the Gmail connection granting all required scopes"
+    ],
+    "solutions": [
+      {
+        "solution": "Delete the existing Gmail connection in Make and recreate it, ensuring all required Gmail OAuth2 scopes are granted during the Google authorization step",
+        "conditions": "When the connection was created with insufficient scopes",
+        "confidence": 0.90
+      }
+    ],
+    "prevention": [
+      "When creating a Gmail connection, grant all scopes needed by all Gmail modules you plan to use",
+      "Test each new Gmail module with the existing connection before deploying to catch scope issues early"
+    ],
+    "make_context": {
+      "apps": ["Gmail"],
+      "modules": ["Gmail > Send an Email", "Gmail > Watch Emails", "Gmail > Create a Draft", "Gmail > List Labels"],
+      "features": ["Connections", "OAuth2 scopes", "Gmail API"]
+    },
+    "related_errors": ["auth-insufficient-scope", "http-403-forbidden"],
+    "search_keywords": ["make gmail permission denied", "make gmail 403", "make gmail scope", "make gmail connection scope", "make gmail forbidden"],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Gmail connection",
+      "source_url": "https://www.make.com/en/help/apps/gmail",
+      "evidence": "Gmail module requires specific OAuth2 scopes depending on the action. Make's Gmail connection must be authorized with the correct scopes."
+    },
+    "evidence": [
+      {
+        "claim": "Different Gmail operations require different OAuth2 scopes — sending requires gmail.send, reading requires gmail.readonly, etc.",
+        "source_type": "api_documentation",
+        "source_url": "https://developers.google.com/gmail/api/auth/scopes",
+        "confidence": 0.88
+      }
+    ],
+    "workflow_pattern": {
+      "modules": ["Gmail module (new action)"],
+      "sequence": ["existing Gmail connection used", "new module requires scope not in connection", "403 forbidden from Gmail API"],
+      "conditions": ["Gmail connection created before adding the new module", "New module requires different OAuth2 scope"]
+    },
+    "diagnostic_signals": [
+      "403 error from a Gmail module",
+      "Other Gmail modules with the same connection work",
+      "New Gmail module added recently"
+    ],
+    "confidence": 0.85,
+    "verification_status": "partially_verified",
+    "quality_score": 0.82,
+    "last_verified": "2026-09-02",
+    "next_review": "2026-12-01",
+    "needs_reverification": false,
+    "audit_notes": "Gmail OAuth2 scopes are documented in Gmail API documentation. Make's connection scope behavior is consistent with auth-insufficient-scope entry."
+  },
+
+  {
+    "id": "gmail-watch-trigger-not-firing",
+    "title": "Gmail Watch Emails trigger not firing on new emails",
+    "problem": "A Make scenario using the Gmail > Watch Emails trigger does not activate when new emails arrive matching the configured filters. The scenario appears active but receives no data.",
+    "error_messages": [],
+    "error_codes": [],
+    "category": "webhook",
+    "layer": "user_configuration",
+    "origin": "user",
+    "surface": "webhook",
+    "severity": "high",
+    "symptoms": [
+      "Scenario using Gmail Watch Emails is active but does not trigger on new emails",
+      "Emails matching the filter are present in Gmail but the scenario did not execute",
+      "The scenario last ran much earlier than expected"
+    ],
+    "likely_causes": [
+      {"cause": "The Gmail label or search filter configured in the Watch module does not match the emails — they arrive in a different label or with different attributes", "confidence": 0.82},
+      {"cause": "Make's Gmail watch trigger uses polling, not push — there is an inherent delay between email arrival and trigger firing based on the scenario schedule", "confidence": 0.85},
+      {"cause": "The scenario is scheduled at a low frequency and emails arrive in between polls", "confidence": 0.78}
+    ],
+    "diagnosis_steps": [
+      "Verify the Gmail label or search filter in the Watch Emails module matches the incoming emails",
+      "Check the scenario schedule — Gmail Watch uses polling, not instant push. The trigger frequency determines the check interval.",
+      "Manually run the scenario with 'Run once' to verify it can find the emails when triggered",
+      "Check whether the emails are in the correct Gmail label and match the search criteria"
+    ],
+    "solutions": [
+      {
+        "solution": "Increase the scenario schedule frequency (e.g., every 1 or 5 minutes) to reduce the delay between email arrival and processing",
+        "conditions": "When the polling delay is the issue and lower latency is required",
+        "confidence": 0.85
+      },
+      {
+        "solution": "Correct the Gmail label or search filter to match the actual labels or attributes of the incoming emails",
+        "conditions": "When the filter does not match the incoming emails",
+        "confidence": 0.88
+      }
+    ],
+    "prevention": [
+      "Test the Watch Emails configuration with 'Run once' before scheduling",
+      "Understand that Gmail Watch is a polling trigger — for near-real-time processing, use the highest practical polling frequency"
+    ],
+    "make_context": {
+      "apps": ["Gmail"],
+      "modules": ["Gmail > Watch Emails"],
+      "features": ["Gmail trigger", "Polling", "Schedule", "Gmail labels", "Gmail search filter"]
+    },
+    "related_errors": ["webhook-no-listening-scenario", "scheduling-scenario-not-running"],
+    "search_keywords": ["make gmail watch emails not triggering", "make gmail watch not working", "make gmail trigger delay", "make gmail polling trigger", "make gmail watch emails"],
+    "origin_details": {
+      "source_type": "official_documentation",
+      "source_name": "Make Help Center — Gmail module",
+      "source_url": "https://www.make.com/en/help/apps/gmail",
+      "evidence": "Gmail Watch Emails is a polling trigger in Make — it checks for new emails at the scenario's scheduled interval, not via push."
+    },
+    "evidence": [
+      {
+        "claim": "Make's Gmail > Watch Emails is a polling trigger — it checks for new emails based on the scenario's execution schedule",
+        "source_type": "official_documentation",
+        "source_url": "https://www.make.com/en/help/apps/gmail",
+        "confidence": 0.85
+      }
+    ],
+    "workflow_pattern": {
+      "modules": ["Gmail > Watch Emails (trigger)"],
+      "sequence": ["email arrives in Gmail", "Make polls at schedule interval", "email found or missed depending on timing"],
+      "conditions": ["Polling interval too long", "Filter does not match incoming email"]
+    },
+    "diagnostic_signals": [
+      "Scenario is active but no recent executions",
+      "Emails matching filter exist in Gmail but scenario did not process them",
+      "Run once manually finds the emails"
+    ],
+    "confidence": 0.82,
+    "verification_status": "partially_verified",
+    "quality_score": 0.80,
+    "last_verified": "2026-09-02",
+    "next_review": "2026-12-01",
+    "needs_reverification": false,
+    "audit_notes": "Gmail Watch as a polling trigger is confirmed in Make documentation. Filter mismatch as a cause is logical and community-confirmed. Specific polling implementation details may vary."
+  }
+]

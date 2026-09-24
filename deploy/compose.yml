@@ -1,0 +1,44 @@
+services:
+  app:
+    build: ..
+    restart: unless-stopped
+    env_file: ../.env
+    environment:
+      FLOWFIX_DEV: '0'
+      POSTGRES_HOST: db
+      TRUST_PROXY: '1'
+      TRUST_CLIENT_IP: '1'
+    depends_on:
+      db:
+        condition: service_healthy
+    expose: ['8000']
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ['no-new-privileges:true']
+    cap_drop: [ALL]
+    mem_limit: 1g
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-flowfix}
+      POSTGRES_USER: ${POSTGRES_USER:-flowfix}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes: [database:/var/lib/postgresql/data]
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  proxy:
+    image: caddy:2
+    restart: unless-stopped
+    environment:
+      FLOWFIX_DOMAIN: ${FLOWFIX_DOMAIN:?Set FLOWFIX_DOMAIN}
+    ports: ['80:80', '443:443']
+    volumes: ['./Caddyfile:/etc/caddy/Caddyfile:ro', 'caddy_data:/data', 'caddy_config:/config']
+    depends_on: [app]
+volumes:
+  database:
+  caddy_data:
+  caddy_config:
