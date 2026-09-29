@@ -6,7 +6,8 @@ class Account(models.Model):
     user=models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     verified_email=models.EmailField(blank=True,default='')
     email_verified_at=models.DateTimeField(null=True,blank=True)
-    display_name=models.CharField(max_length=60,default='Utilisateur')
+    language=models.CharField(max_length=2,choices=[("en","English"),("fr","Français")],default="en")
+    display_name=models.CharField(max_length=60,default='User')
     beta_until=models.DateTimeField(null=True)
     customer=models.CharField(max_length=100,null=True,unique=True)
     subscription=models.CharField(max_length=100,blank=True)
@@ -20,7 +21,7 @@ class Account(models.Model):
     usage_month=models.CharField(max_length=7,blank=True)
     usage=models.PositiveIntegerField(default=0)
     retention_days=models.PositiveIntegerField(null=True,blank=True)
-    free_remaining=models.PositiveSmallIntegerField(default=1)
+    free_remaining=models.PositiveSmallIntegerField(default=3)
     agency_trial_started=models.DateTimeField(null=True,blank=True)
     agency_trial_until=models.DateTimeField(null=True,blank=True)
 class Analysis(models.Model):

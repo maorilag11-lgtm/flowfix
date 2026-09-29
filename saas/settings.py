@@ -6,6 +6,8 @@ SECRET_KEY=os.getenv('DJANGO_SECRET_KEY','development-only-do-not-deploy' if DEB
 if not SECRET_KEY:raise RuntimeError('DJANGO_SECRET_KEY is required')
 ALLOWED_HOSTS=[h.strip() for h in os.getenv('DJANGO_ALLOWED_HOSTS','127.0.0.1,localhost' if DEBUG else '').split(',') if h.strip()]
 PUBLIC_URL=os.getenv('PUBLIC_URL','http://127.0.0.1:8767' if DEBUG else '').rstrip('/')
+# Adresse du site commercial, distincte de PUBLIC_URL (application).
+MARKETING_URL=os.getenv('MARKETING_URL','http://127.0.0.1:8770/' if DEBUG else '/').strip() or '/'
 from .security_config import postgres_url_config
 _postgres_url=postgres_url_config(os.environ['DATABASE_URL']) if os.getenv('DATABASE_URL') else None
 if not DEBUG and (not PUBLIC_URL.startswith('https://') or not (_postgres_url or os.getenv('POSTGRES_HOST'))):raise RuntimeError('Production requires HTTPS PUBLIC_URL and PostgreSQL')
@@ -13,16 +15,17 @@ if not DEBUG:
     from .security_config import validate_production
     validate_production(SECRET_KEY,ALLOWED_HOSTS,PUBLIC_URL)
 INSTALLED_APPS=['django.contrib.auth','django.contrib.contenttypes','django.contrib.sessions','django.contrib.messages','saas']
-MIDDLEWARE=['django.middleware.security.SecurityMiddleware','django.contrib.sessions.middleware.SessionMiddleware','django.middleware.common.CommonMiddleware','django.middleware.csrf.CsrfViewMiddleware','django.contrib.auth.middleware.AuthenticationMiddleware','django.contrib.messages.middleware.MessageMiddleware','django.middleware.clickjacking.XFrameOptionsMiddleware','saas.middleware.Headers']
+MIDDLEWARE=['django.middleware.security.SecurityMiddleware','django.contrib.sessions.middleware.SessionMiddleware','django.middleware.common.CommonMiddleware','django.middleware.csrf.CsrfViewMiddleware','django.contrib.auth.middleware.AuthenticationMiddleware','saas.localization.LanguageMiddleware','django.contrib.messages.middleware.MessageMiddleware','django.middleware.clickjacking.XFrameOptionsMiddleware','saas.middleware.Headers']
 ROOT_URLCONF='saas.urls'
-TEMPLATES=[{'BACKEND':'django.template.backends.django.DjangoTemplates','DIRS':[BASE_DIR/'saas/templates'],'APP_DIRS':True,'OPTIONS':{'context_processors':['django.template.context_processors.request','django.contrib.auth.context_processors.auth','django.contrib.messages.context_processors.messages']}}]
+TEMPLATES=[{'BACKEND':'django.template.backends.django.DjangoTemplates','DIRS':[BASE_DIR/'saas/templates'],'APP_DIRS':False,'OPTIONS':{'loaders':['saas.localization.Loader','django.template.loaders.app_directories.Loader'],'context_processors':['django.template.context_processors.request','django.contrib.auth.context_processors.auth','django.contrib.messages.context_processors.messages']}}]
 WSGI_APPLICATION='saas.wsgi.application'
 DATABASES={'default':{'ENGINE':'django.db.backends.sqlite3','NAME':BASE_DIR/'.flowfix-saas.sqlite3','OPTIONS':{'timeout':20}}}
 if not _postgres_url and os.getenv('POSTGRES_HOST'):DATABASES={'default':{'ENGINE':'django.db.backends.postgresql','HOST':os.environ['POSTGRES_HOST'],'NAME':os.getenv('POSTGRES_DB','flowfix'),'USER':os.getenv('POSTGRES_USER','flowfix'),'PASSWORD':os.environ['POSTGRES_PASSWORD'],'PORT':os.getenv('POSTGRES_PORT','5432'),'CONN_MAX_AGE':60}}
 if _postgres_url:DATABASES={'default':_postgres_url}
 AUTH_PASSWORD_VALIDATORS=[{'NAME':'django.contrib.auth.password_validation.'+n} for n in ['UserAttributeSimilarityValidator','MinimumLengthValidator','CommonPasswordValidator','NumericPasswordValidator']]
 PASSWORD_HASHERS=['django.contrib.auth.hashers.PBKDF2PasswordHasher']
-LANGUAGE_CODE='fr-fr'
+LANGUAGE_CODE='en'
+LANGUAGES=[('en','English'),('fr','Français')]
 TIME_ZONE='UTC'
 USE_TZ=True
 DEFAULT_AUTO_FIELD='django.db.models.BigAutoField'
@@ -68,3 +71,6 @@ for _plan in ['SOLO','AGENCY','ENTERPRISE']:
         globals()[_key]=os.getenv(_key,'')
 
 STRIPE_LTD_WEBHOOK_SECRET=os.getenv('STRIPE_LTD_WEBHOOK_SECRET','')
+
+# The public discovery offer is now 3 free analyses; existing trials remain valid.
+AGENCY_TRIAL_ENABLED=False

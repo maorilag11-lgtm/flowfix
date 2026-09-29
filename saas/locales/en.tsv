@@ -1,0 +1,846 @@
+Tableau de bord	Dashboard
+Nouvelle analyse	New analysis
+Historique	History
+Retours	Feedback
+Paramètres	Settings
+ESPACE DE TRAVAIL	WORKSPACE
+Comprenez l’erreur.	Understand the error.
+Vérifiez la solution.	Verify the fix.
+Retrouvez les causes possibles et les contrôles utiles pour débloquer vos scénarios Make.	Find possible causes and practical checks to unblock your Make scenarios.
+Mon accès	My access
+Utilisateur	User
+Bêta privée	Private beta
+Analyses privées	Private analyses
+Analyses gratuites	Free analyses
+Analyses gratuites utilisées	Free analyses used
+Accès expiré	Access expired
+Essai 14 jours	14-day trial
+Agence	Agency
+Entreprise	Enterprise
+Profil	Profile
+Nom affiché	Display name
+Votre nom dans l’espace de travail.	Your name in the workspace.
+Enregistrer	Save
+Abonnement et facturation	Subscription and billing
+Équipe et espaces clients	Team and client workspaces
+Confirmer mon adresse email	Verify my email address
+Adresse email confirmée.	Email address verified.
+Confirmez votre adresse email pour activer un essai, rejoindre une équipe ou souscrire.	Verify your email address to join a team or subscribe.
+Se déconnecter	Sign out
+Supprimer mon compte	Delete my account
+Gérer les analyses hors fenêtre	Manage older analyses
+Données et limites de la bêta	Data and beta limitations
+Historique sans limite de durée dans cette offre.	This plan has no history time limit.
+Vos analyses sont enregistrées sur le serveur et accessibles à votre compte. Retirez les données sensibles inutiles avant import.	Your analyses are stored on the server and accessible from your account. Remove unnecessary sensitive data before importing.
+ diagnostics décomptés ce mois-ci. Les résultats non concluants ne consomment aucun crédit.	 diagnostics counted this month. Inconclusive results do not use credits.
+ analyses gratuites restantes sur 3, sans carte bancaire.	 of 3 free analyses remaining. No card required.
+ analyses gratuites restantes sur 3. Un résultat non concluant ne consomme pas de crédit.	 of 3 free analyses remaining. Inconclusive results do not use credits.
+Vos 3 analyses gratuites sont utilisées. Passez à Solo à 49 € HT/mois pour continuer.	You have used your 3 free analyses. Continue with Solo at €49/month excluding tax.
+Vos 3 analyses offertes sont utilisées	You have used your 3 free analyses
+Votre résultat et votre historique restent accessibles. Continuez avec Solo : 100 diagnostics concluants par mois calendaire, à 49 € HT/mois.	Your result and history remain accessible. Continue with Solo: 100 conclusive diagnostics per calendar month for €49/month excluding tax.
+Continuer avec Solo · 49 € HT/mois	Continue with Solo · €49/month excl. tax
+Découvrir Solo →	Explore Solo →
+Découvrir Solo	Explore Solo
+Les paiements sont désactivés pendant la préparation de la bêta.	Payments are disabled while we prepare the beta.
+Diagnostics inclus sans quota mensuel.	Diagnostics included without a monthly quota.
+Historique consultable pendant 	History is available for 
+ jours après création. Exportez vos rapports avant cette échéance.	 days after creation. Export your reports before that date.
+Stockage sur le serveur · Retirez les données sensibles inutiles avant import.	Server storage · Remove unnecessary sensitive data before importing.
+Résultat à vérifier	Result to verify
+Résolu — déclaré par vous	Resolved — reported by you
+Partiellement résolu — déclaré par vous	Partially resolved — reported by you
+Non résolu — déclaré par vous	Unresolved — reported by you
+Confiance élevée	High confidence
+Confiance moyenne	Medium confidence
+Confiance faible	Low confidence
+Confiance indéterminée	Unknown confidence
+Ajoutez le Blueprint de votre scénario.	Add your scenario Blueprint.
+Le fichier JSON permet de comprendre les modules et leurs liens.	The JSON file helps explain the modules and their connections.
+Quel est le message d’erreur exact ?	What is the exact error message?
+Copiez le message depuis Make.	Copy the message from Make.
+Quel est l’identifiant du module en erreur ?	What is the failing module ID?
+Indiquez son numéro dans le Blueprint, par exemple 5.	Enter its number in the Blueprint, for example 5.
+Quel est le corps de la réponse HTTP ?	What is the HTTP response body?
+Copiez la réponse reçue, après retrait des données sensibles inutiles.	Copy the response after removing unnecessary sensitive data.
+Quelles données le module a-t-il reçues ?	What data did the module receive?
+Ajoutez le bundle d’entrée concerné.	Add the relevant input bundle.
+Précisez le contexte de l’exécution.	Describe the execution context.
+Décrivez le résultat attendu et ce qui s’est produit.	Describe the expected result and what actually happened.
+Reconnectez-vous.	Please sign in again.
+Reconnectez-vous pour continuer.	Sign in again to continue.
+Erreur de communication.	Communication error.
+Traitement en cours…	Processing…
+Opération terminée.	Done.
+Mis à jour le 	Updated on 
+. Les propositions sont à vérifier et à appliquer manuellement dans Make.	. Verify and apply the suggestions manually in Make.
+[Hypothèse parmi plusieurs]	[One of several hypotheses]
+Les éléments disponibles ne permettent pas encore de proposer un diagnostic.	The available evidence is not sufficient for a diagnosis yet.
+Aucun constat suffisamment précis à ce stade.	No sufficiently specific observations yet.
+ Les clarifications disponibles sont épuisées : une vérification humaine reste nécessaire.	 All available clarification steps have been used. Human review is still needed.
+Dans Make, ouvrez le menu du scénario puis Export Blueprint. Ajoutez le fichier .json ci-dessous.	In Make, open the scenario menu and select Export Blueprint. Add the .json file below.
+Piste documentaire	Documentation lead
+Condition à vérifier : 	Condition to verify: 
+Complétez les informations pour obtenir des vérifications ciblées.	Add more information for targeted checks.
+Supprimer cette analyse et ses réponses enregistrées ?	Delete this analysis and its saved answers?
+Les diagnostics non concluants ne sont pas décomptés.	Inconclusive diagnostics do not use credits.
+Votre accès est terminé. Vos analyses restent consultables.	Your access has ended. You can still view your analyses.
+Espace partagé en lecture seule. Vous pouvez consulter et exporter les analyses.	Read-only shared workspace. You can view and export analyses.
+Personnel — privé	Personal — private
+Espace inaccessible	Workspace unavailable
+Espace de travail 	Workspace 
+Gérer l’équipe	Manage team
+Quitter les modifications en cours ?	Discard your unsaved changes?
+ (lecture seule)	 (read-only)
+Analyses récentes	Recent analyses
+Analyses	Analyses
+Résolues selon vos retours	Resolved according to your feedback
+Aucune activité.	No activity yet.
+Aucune analyse correspondante.	No matching analyses.
+Vos résultats déclarés. Ouvrez une analyse pour renseigner votre retour.	Your reported results. Open an analysis to leave feedback.
+Analyse créée.	Analysis created.
+Réponse de clarification enregistrée	Clarification answer saved
+Données modifiées, diagnostic recalculé	Data updated, diagnosis recalculated
+Exemples fictifs pour explorer le diagnostic. Ils ne prouvent pas une résolution en production.	Synthetic examples to explore diagnostics. They are not evidence of a production fix.
+Blueprint de démonstration fictif	Synthetic demo Blueprint
+Blueprint fictif chargé	Synthetic Blueprint loaded
+Exemple fictif chargé. Cliquez sur Analyser pour créer une analyse.	Synthetic example loaded. Click Analyze to create an analysis.
+Aucun Blueprint	No Blueprint
+Choisir un fichier JSON	Choose a JSON file
+Déposez un fichier ou parcourez vos fichiers	Drop a file or browse your files
+Le Blueprint dépasse 1 Mo.	The Blueprint exceeds 1 MB.
+Blueprint invalide : fichier JSON de 1 Mo maximum.	Invalid Blueprint: use a JSON file up to 1 MB.
+Blueprint sauvegardé après masquage	Blueprint saved after redaction
+Données sauvegardées après masquage	Data saved after redaction
+Traçage non disponible	Tracing unavailable
+Hypothèse à vérifier	Hypothesis to verify
+À vérifier	To verify
+Autres hypothèses	Other hypotheses
+Plusieurs hypothèses restent ouvertes	Several hypotheses remain possible
+Piste faiblement étayée	Weakly supported hypothesis
+Des éléments se contredisent	Some evidence is contradictory
+Une vérification humaine est nécessaire.	Human review is required.
+Une preuve complémentaire est nécessaire.	Additional evidence is required.
+Une clarification est nécessaire avant de conclure.	Clarification is needed before reaching a conclusion.
+Les conditions des conseils doivent être vérifiées sur votre cas.	Verify that the advice applies to your specific case.
+Aucune source associée pour le moment.	No linked source yet.
+Analyser	Analyze
+ Analyser	 Analyze
+ Recalculer	 Recalculate
+Chargement…	Loading…
+Chargement de votre compte…	Loading your account…
+01 — VOTRE OFFRE	01 — YOUR PLAN
+02 — RÉCAPITULATIF	02 — SUMMARY
+MOINS DE DEBUG. PLUS DE FLOW.	LESS DEBUGGING. MORE FLOW.
+Votre prochain scénario.	Your next scenario.
+Sans le prochain blocage.	Without the next roadblock.
+Un diagnostic Make expliqué, des pistes de correction concrètes.	Clear Make diagnostics and practical ways to fix issues.
+Choisissez l’espace qui accompagne votre façon de travailler.	Choose the plan that fits the way you work.
+Choisir un abonnement	Choose a subscription
+Facturation mensuelle	Monthly billing
+Pour vos propres scénarios	For your own scenarios
+Pour vos équipes et vos clients	For your team and clients
+HT / mois	excl. tax / month
+49 € HT	€49 excl. tax
+ HT	 excl. tax
+100 diagnostics concluants / mois calendaire	100 conclusive diagnostics / calendar month
+1 utilisateur	1 user
+5 utilisateurs au total	5 users in total
+20 utilisateurs au total	20 users in total
+Historique consultable sur 30 jours	30-day history
+Résultats non concluants non décomptés	Inconclusive results do not use credits
+Diagnostics sans quota mensuel	No monthly diagnostic quota
+Espaces clients et travail en équipe	Client workspaces and teamwork
+Espaces clients et rôles d’équipe	Client workspaces and team roles
+Fenêtre d’historique configurable sur demande	History window configurable on request
+Historique sans limite de durée	No history time limit
+Vous gardez la main dans Make.	You stay in control in Make.
+FlowFix analyse les informations fournies et vous guide. Les corrections restent à appliquer et à vérifier dans votre scénario.	FlowFix analyzes the information you provide and guides you. Apply and verify corrections in your scenario yourself.
+Votre abonnement — FlowFix	Your subscription — FlowFix
+Votre abonnement	Your subscription
+Votre abonnement 	Your subscription 
+Votre compte FlowFix	Your FlowFix account
+Abonnement mensuel	Monthly subscription
+Taxes applicables	Applicable taxes
+Calculées au paiement	Calculated at checkout
+Par mois, hors taxes	Per month, excluding tax
+Renouvellement automatique chaque mois. Résiliation depuis votre espace de facturation, effective à la fin de la période payée.	Renews automatically each month. Cancel in your billing portal, effective at the end of the paid period.
+Confirmer mon adresse email →	Verify my email address →
+Gérer mon abonnement et mes factures	Manage my subscription and invoices
+Paiement sécurisé par Stripe	Secure payment by Stripe
+Vos coordonnées bancaires ne passent pas par FlowFix.	Your card details are never processed by FlowFix.
+Besoin d’aide avant de choisir ?	Need help choosing?
+Contactez-nous ↗	Contact us ↗
+Confidentialité	Privacy
+← Retour à mon espace	← Back to my workspace
+Abonnement déjà enregistré	Subscription already registered
+Confirmez votre email	Verify your email
+Paiement bientôt disponible	Payments coming soon
+Continuer vers le paiement →	Continue to checkout →
+Adresse de paiement refusée.	Payment address rejected.
+Connexion sécurisée à Stripe…	Connecting securely to Stripe…
+Service indisponible. Réessayez.	Service unavailable. Please try again.
+Vérification de votre paiement auprès de Stripe…	Verifying your payment with Stripe…
+ est actif. Vous pouvez retrouver vos diagnostics dans votre espace.	 is active. Your diagnostics are available in your workspace.
+Ce paiement n’est pas terminé. Aucun nouvel accès payant n’a été activé.	This payment is incomplete. No new paid access has been activated.
+Confirmation en cours. Votre accès sera activé dès confirmation du paiement par Stripe.	Confirmation pending. Access will activate once Stripe confirms your payment.
+Le paiement est encore en cours de confirmation. Vous pouvez revenir ici plus tard ; l’activation se fera automatiquement après confirmation.	Payment confirmation is still pending. You can return later; access will activate automatically after confirmation.
+Abonnement 	Subscription 
+ actif jusqu’au 	 active until 
+. Gérez les factures et la résiliation dans le portail Stripe.	. Manage invoices and cancellation in the Stripe portal.
+Vous avez quitté le paiement. Aucun nouvel abonnement n’a été activé.	You left checkout. No new subscription was activated.
+Les offres sont prêtes. Le paiement ouvrira après la configuration et les tests Stripe.	Plans are ready. Payments will open after Stripe setup and testing.
+Choisissez votre offre. Les taxes et le total exact seront présentés avant confirmation dans Stripe.	Choose your plan. Taxes and the exact total will be shown before confirmation in Stripe.
+Connexion	Sign in
+Créer un compte	Create an account
+Créer mon compte	Create my account
+Se connecter	Sign in
+Mot de passe	Password
+Mot de passe oublié ?	Forgot password?
+Confirmer le mot de passe	Confirm password
+Afficher le mot de passe	Show password
+Masquer le mot de passe	Hide password
+Adresse email	Email address
+vous@entreprise.fr	you@company.com
+Retour à l’accueil	Back to home
+FlowFix — retour à la page de vente	FlowFix — back to the website
+Le debugger spécialisé Make	The specialist debugger for Make
+Accès à FlowFix	Access FlowFix
+MOINS DE FLOU. UNE PROCHAINE ÉTAPE.	LESS GUESSWORK. A CLEAR NEXT STEP.
+Reprenez vos	Get back to your
+analyses.	analyses.
+Comprenez	Understand
+vos	your
+erreurs.	errors.
+Une erreur Make, le bon contexte,	A Make error, the right context,
+des pistes pour comprendre le blocage	insights into what is blocking you
+et savoir quoi vérifier ensuite.	and what to check next.
+FlowFix vous guide.	FlowFix guides you.
+Choisir un formulaire	Choose a form
+REPRENEZ LÀ OÙ VOUS EN ÉTIEZ	PICK UP WHERE YOU LEFT OFF
+Retrouvez vos diagnostics.	Your diagnostics, all in one place.
+Vos analyses et vos vérifications, au même endroit.	Your analyses and checks, together in one workspace.
+Nouveau sur FlowFix ?	New to FlowFix?
+Conseils pour un mot de passe valide	Password guidelines
+VOTRE PREMIER PAS AVEC FLOWFIX	YOUR FIRST STEP WITH FLOWFIX
+Créez votre compte.	Create your account.
+Analysez votre premier problème Make, sans carte bancaire.	Analyze your first Make issue. No card required.
+J’ai lu les	I have read the
+informations sur mes données et les limites de FlowFix	information about my data and FlowFix limitations
+3 analyses gratuites à la création du compte. Les résultats non concluants ne consomment pas de crédit.	3 free analyses when you create an account. Inconclusive results do not use credits.
+Vous avez déjà un compte ?	Already have an account?
+FLOWFIX / VOTRE ESPACE	FLOWFIX / YOUR WORKSPACE
+Comprendre.	Understand.
+Avancer.	Move forward.
+COMPRENDRE. VÉRIFIER. AVANCER.	UNDERSTAND. VERIFY. MOVE FORWARD.
+Des pistes expliquées. Des vérifications concrètes. Vous gardez le contrôle.	Clear insights. Practical checks. You stay in control.
+FlowFix est indépendant et n’est pas affilié à Make.	FlowFix is independent and is not affiliated with Make.
+Données & limites	Data & limitations
+Accès bêta-testeur	Beta tester access
+ACCÈS BÊTA-TESTEUR	BETA TESTER ACCESS
+Activer mon invitation	Activate my invitation
+Activez votre invitation.	Activate your invitation.
+Utilisez l’adresse destinataire de votre invitation.	Use the email address your invitation was sent to.
+Code d’invitation	Invitation code
+Le code reçu avec votre invitation	The code sent with your invitation
+Continuer avec Google	Continue with Google
+Bientôt	Coming soon
+ou avec votre email	or with your email
+Un instant…	One moment…
+SÉCURITÉ DU COMPTE	ACCOUNT SECURITY
+Vérifiez votre messagerie	Check your inbox
+Réinitialiser votre mot de passe	Reset your password
+Envoyer le lien	Send link
+Choisissez un nouveau mot de passe	Choose a new password
+Mot de passe modifié	Password updated
+Si un compte correspond à cette adresse, un lien de réinitialisation vous a été envoyé.	If an account matches this address, a reset link has been sent.
+Ce lien est invalide ou expiré.	This link is invalid or expired.
+Demander un nouveau lien	Request a new link
+Demander un autre lien	Request another link
+Pour réinitialiser votre mot de passe FlowFix, ouvrez ce lien :	To reset your FlowFix password, open this link:
+Si vous n’avez pas demandé cette action, ignorez ce message.	If you did not request this, ignore this message.
+Confirmez votre adresse email.	Verify your email address.
+Cette étape protège l’accès à votre équipe et l’attribution de vos offres. Vos analyses gratuites restent disponibles.	This protects your team access and plan activation. Your free analyses remain available.
+Envoyer le lien de confirmation	Send verification link
+Le lien est valable 24 heures. Un nouvel envoi remplace le précédent.	The link is valid for 24 hours. Sending a new one replaces the previous link.
+Confirmer mon adresse	Verify my address
+Confirmer mon email	Verify my email
+Votre adresse est confirmée.	Your address is verified.
+Retour à Mon accès	Back to My access
+Mon panneau	My dashboard
+Votre accès	Your access
+Votre compte	Your account
+VOTRE ESPACE FLOWFIX	YOUR FLOWFIX WORKSPACE
+Vos analyses restent accessibles.	Your analyses remain accessible.
+Vos analyses gratuites ont été utilisées ou votre accès est arrivé à échéance. Retrouvez vos analyses et les options disponibles depuis votre panneau.	Your free analyses have been used or your access has expired. Your analyses and available options remain in your dashboard.
+Continuez depuis Mon accès	Continue from My access
+Continuez avec Solo à 49 € HT/mois : 100 diagnostics concluants par mois calendaire. Aucun abonnement ne démarre sans votre paiement.	Continue with Solo at €49/month excluding tax: 100 conclusive diagnostics per calendar month. No subscription starts without your payment.
+Langue	Language
+Enregistrer la langue	Save language
+Collez votre erreur	Paste your error
+Collez votre erreur ou décrivez le blocage. Nous vous guidons pour la suite.	Paste your error or describe what is blocked. We will guide you from there.
+Un message d’erreur ou vos propres mots suffisent pour commencer.	An error message or your own description is enough to start.
+Erreur ou blocage dans Make	Make error or issue
+Pas de message d’erreur ? Décrivez ce qui ne fonctionne pas.	No error message? Describe what is not working.
+Blueprint, exécution ou description	Blueprint, execution or description
+Ajouter du contexte	Add context
+Ajouter des précisions sans Blueprint	Add details without a Blueprint
+Ajoutez ce que vous avez : détail de l’erreur, données reçues ou description.	Add what you have: error details, received data or a description.
+Charger un exemple	Load an example
+Options avancées	Advanced options
+Module en erreur	Failing module
+Corps de la réponse HTTP	HTTP response body
+Données reçues par le module	Data received by the module
+Contexte d’exécution	Execution context
+Description du scénario	Scenario description
+Décrivez le fonctionnement attendu…	Describe the expected behavior…
+Décrivez le fonctionnement attendu.	Describe the expected behavior.
+Déposez votre fichier ici	Drop your file here
+ou parcourez vos fichiers	or browse your files
+Dans Make : menu du scénario → Export Blueprint.	In Make: scenario menu → Export Blueprint.
+Ajoutez le message exact et le Blueprint quand vous le pouvez.	Include the exact message and Blueprint when possible.
+FlowFix ne modifie jamais votre scénario Make automatiquement.	FlowFix never modifies your Make scenario automatically.
+Décrivez le blocage	Describe the issue
+Structure fournie	Provided structure
+Suivez la prochaine étape	Follow the next step
+FlowFix propose une vérification ou vous demande une précision.	FlowFix suggests a check or asks for more context.
+Vérifiez les pistes proposées et appliquez les corrections dans Make.	Check the proposed explanations and apply corrections in Make.
+Tout voir	View all
+Exemples de diagnostic	Diagnostic examples
+Exemples indisponibles.	Examples unavailable.
+— facultatif	— optional
+ANALYSE ENREGISTRÉE	SAVED ANALYSIS
+Modifier	Edit
+Modifier cette analyse	Edit this analysis
+Exporter	Export
+Supprimer	Delete
+Comprendre ce diagnostic	Understand this diagnosis
+Votre prochaine action	Your next action
+Ce qui pourrait bloquer	What might be blocking you
+Pour affiner	To refine the diagnosis
+Voir les vérifications et les corrections détaillées	View detailed checks and fixes
+Vos contrôles	Your checks
+Éléments observés	Observed evidence
+Documentation et sources	Documentation and sources
+PRÉCISONS LE CONTEXTE	LET’S CLARIFY THE CONTEXT
+Votre réponse	Your answer
+Continuer l’analyse	Continue analysis
+Blueprint pour la clarification	Blueprint for clarification
+Vos retours	Your feedback
+Avez-vous testé dans Make ?	Have you tested in Make?
+Quel résultat avez-vous obtenu ?	What result did you get?
+✓ Oui, c’est résolu	✓ Yes, it is resolved
+Partiellement résolu	Partially resolved
+Toujours bloqué	Still blocked
+Préciser mon retour (facultatif)	Add feedback details (optional)
+Correction réellement appliquée	Correction actually applied
+Qu’avez-vous changé dans Make ?	What did you change in Make?
+Résultat observé	Observed result
+Historique de cette analyse	Analysis history
+Votre mot de passe	Your password
+Confirmer la suppression	Confirm deletion
+Supprimer définitivement mon compte	Permanently delete my account
+Cette action supprime le compte et toutes ses analyses. Exportez vos rapports avant de continuer.	This deletes your account and all its analyses. Export your reports before continuing.
+Annuler	Cancel
+Affiner avec plus d’informations (facultatif)	Refine with more information (optional)
+Démonstrations fictives	Synthetic demos
+Exemple fictif	Synthetic example
+Date inconnue	Unknown date
+date inconnue	unknown date
+Ancien résultat non archivé pour cette révision antérieure à la mise à jour.	The previous result was not archived for this revision created before the update.
+Consulter la réponse enregistrée	View the saved response
+Preuves archivées · 	Archived evidence · 
+Ces preuves restent séparées du dossier actuel.	This evidence stays separate from the current case.
+Le JSON contient une clé dupliquée : 	The JSON contains a duplicate key: 
+Le JSON est trop imbriqué.	The JSON is nested too deeply.
+Correction précise d’un champ JSON (facultatif)	Precise correction of a JSON field (optional)
+Pour un champ statique signalé comme JSON invalide. Le chemin vient du Blueprint ; il peut différer du libellé affiché dans Make.	For a static field reported as invalid JSON. The path comes from the Blueprint and may differ from the label shown in Make.
+Champ du module sélectionné	Selected module field
+Ajoutez un Blueprint et sélectionnez le module	Add a Blueprint and select the module
+Ajoutez un Blueprint puis choisissez le module	Add a Blueprint, then choose the module
+Chemins issus du Blueprint, pas des libellés Make vérifiés.	Paths from the Blueprint, not verified Make UI labels.
+Origine de la valeur	Value origin
+Texte statique, sans mapping	Static text, no mapping
+Valeur issue d’un mapping	Mapped value
+Non précisée	Not specified
+Non précisé	Not specified
+Source indiquant que ce champ attend du JSON	Source showing this field expects JSON
+Documentation précise, description du champ ou erreur explicite	Specific documentation, field description or explicit error
+Source de l’erreur de syntaxe JSON	Source of the JSON syntax error
+Ces éléments sont vos observations déclarées. FlowFix ne vérifie pas l’exécution dans Make et ne modifie pas le scénario.	These are your reported observations. FlowFix does not verify execution in Make or modify the scenario.
+Examiner les données en amont (facultatif)	Examine upstream data (optional)
+Examiner les données en amont	Examine upstream data
+Pour comparer une donnée observée à une exigence explicite : présence, type, null ou tableau non vide. Importez le Blueprint et sélectionnez le module en erreur ci-dessus. FlowFix utilise uniquement les références de mapping qu’il reconnaît.	Compare observed data with an explicit requirement: presence, type, null or a non-empty array. Import the Blueprint and select the failing module above. FlowFix only uses mapping references it recognizes.
+1 · Choisissez la donnée à examiner	1 · Choose the data to examine
+Mapping explicite du module en erreur	Explicit mapping of the failing module
+Aucune relation ne sera inventée si le mapping n’est pas reconnu.	No relationship is invented if the mapping is not recognized.
+Sélectionnez une référence de mapping	Select a mapping reference
+Sélectionnez explicitement le module en erreur.	Explicitly select the failing module.
+Sélectionnez à nouveau le mapping du module en erreur.	Select the failing module mapping again.
+2 · Situez votre observation	2 · Identify your observation
+Exécution	Execution
+Version du scénario (facultatif)	Scenario version (optional)
+Bundle de sortie du module source	Source module output bundle
+Bundle reçu par le module en erreur	Bundle received by the failing module
+Origine de la preuve	Evidence origin
+Origine inconnue	Unknown origin
+Historique de l’exécution concernée	History of the relevant execution
+Nouvelle reproduction	New reproduction
+Date de l’observation dans Make (facultatif)	Observation date in Make (optional)
+Référence de l’historique ou des journaux consultés	Reference to the history or logs consulted
+Utilisez la date de la donnée observée, avec son fuseau horaire (Z ou +02:00), pas la date de saisie. Si elle est inconnue, laissez vide. Une reproduction doit utiliser son propre identifiant d’exécution et son propre message d’erreur. Ne mélangez pas les deux exécutions.	Use the data observation date, including its time zone (Z or +02:00), not the entry date. Leave blank if unknown. A reproduction must use its own execution ID and error message. Do not mix executions.
+Méthode de rapprochement	Matching method
+Lien vérifié dans l’historique Make	Link verified in Make history
+Clé de corrélation vérifiée dans les deux bundles	Correlation key verified in both bundles
+Vérification manuelle documentée	Documented manual verification
+Exécution du bundle cible	Target bundle execution
+Clé de corrélation (uniquement pour cette méthode)	Correlation key (for this method only)
+Référence non sensible commune aux deux bundles	Non-sensitive reference shared by both bundles
+Comment avez-vous vérifié cette correspondance ?	How did you verify this match?
+Deux bundles portant le même numéro ne prouvent pas qu’ils se correspondent. Précisez ce qui établit le lien.	Two bundles with the same number do not prove a match. Specify what establishes the link.
+Sortie du module source	Source module output
+Objet JSON à la racine de la sortie	JSON object at the output root
+Collez le JSON réellement observé, sans données sensibles inutiles.	Paste the JSON actually observed, without unnecessary sensitive data.
+Source de cette observation	Source of this observation
+Référence de la sortie ou du journal consulté	Reference to the output or log consulted
+Cette sortie est-elle complète ?	Is this output complete?
+Objet complet à cette racine	Complete object at this root
+Extrait seulement	Excerpt only
+Des données ont-elles été masquées ou retirées ?	Has data been redacted or removed?
+Non, clés et valeurs conservées	No, keys and values preserved
+Des valeurs ont été masquées	Some values were redacted
+Des clés ont été masquées ou retirées	Some keys were redacted or removed
+3 · Indiquez ce que le module attend	3 · Specify what the module expects
+Source confirmant toutes les exigences sélectionnées	Source confirming all selected requirements
+Documentation ou description du champ	Documentation or field description
+Type attendu	Expected type
+Texte	Text
+Nombre	Number
+Booléen	Boolean
+Tableau	Array
+Objet	Object
+Ne cochez que les exigences confirmées par votre source. Un champ obligatoire peut autoriser null ; un tableau vide peut être valide. Le type est comparé sans conversion automatique.	Only select requirements confirmed by your source. A required field may allow null; an empty array may be valid. Types are compared without automatic conversion.
+Le tableau doit contenir au moins un élément (type Tableau requis).	The array must contain at least one item (Array type required).
+Pour exiger un tableau non vide, choisissez le type Tableau.	To require a non-empty array, choose Array type.
+Oui, explicitement autorisée	Yes, explicitly allowed
+Non, explicitement interdite	No, explicitly forbidden
+Dossier multi-étapes et contrôles des opérateurs (avancé)	Multi-step evidence and operator checks (advanced)
+Dossier de preuves JSON	JSON evidence dossier
+Utiliser ce dossier structuré	Use this structured dossier
+Collez votre root_cause_context avec observations, expectations, correlations, transitions et operator_checks.	Paste your root_cause_context with observations, expectations, correlations, transitions and operator_checks.
+Ajoutez plusieurs observations de la même exécution, leurs liens explicites et les exigences à vérifier. Le dossier ci-dessous remplace le formulaire simple pour cette analyse. Aucun lien de données n’est déduit d’un nom de champ identique.	Add observations from the same execution, their explicit links and requirements. This dossier replaces the simple form for this analysis. Matching field names do not establish a data relationship.
+Les filtres sont comparés à une attente explicite de passage ou blocage. Les contrôles de cardinalité exigent un ensemble complet de bundles ; les groupes d’agrégation doivent être identifiés. Les expressions Make ne sont pas exécutées.	Filters are compared with an explicit pass/block expectation. Cardinality checks require a complete bundle set; aggregation groups must be identified. Make expressions are not executed.
+Ce dossier contient plusieurs preuves. Elles seront conservées intégralement.	This dossier contains multiple pieces of evidence. They will all be preserved.
+Remplacer ce dossier par une nouvelle observation	Replace this dossier with a new observation
+Les preuves enregistrées sont conservées intégralement. Une modification archive les données et le résultat précédents dans l’historique. Pour une nouvelle reproduction, renseignez son exécution et son erreur sans réutiliser les preuves de l’ancienne panne.	Saved evidence is preserved in full. Editing archives the previous data and result. For a new reproduction, enter its execution and error without reusing evidence from the earlier failure.
+Charger une démonstration fictive dans une nouvelle analyse	Load a synthetic demo in a new analysis
+Remplace le brouillon courant. Ne modifie aucune analyse enregistrée. Adaptez ensuite le Blueprint, les observations et les sources à votre cas réel.	Replaces the current draft, without changing saved analyses. Adapt the Blueprint, observations and sources to your actual case.
+Chaîne de deux dépendances	Two-dependency chain
+Filtre : passage contraire à l’attente	Filter: unexpected pass
+Iterator : nombre de bundles inattendu	Iterator: unexpected bundle count
+Aggregator : élément manquant dans un groupe	Aggregator: missing item in a group
+TRAÇAGE DES DONNÉES	DATA TRACING
+Traçage des données	Data tracing
+Chemins de données observés	Observed data paths
+Voir les chemins et les preuves	View paths and evidence
+Ajouter mes observations de ce champ	Add my observations of this field
+Ajoutez les valeurs observées. FlowFix ne les récupère pas dans Make.	Add observed values. FlowFix does not fetch them from Make.
+Compléter les preuves	Add evidence
+Traçage : 	Tracing: 
+Écart au contrat observé	Observed contract mismatch
+Écart constaté sur une dépendance	Mismatch observed on a dependency
+Écart à vérifier.	Mismatch to verify.
+Aucun écart observé sur les contrôles fournis	No mismatch observed in the supplied checks
+Origine amont non établie	Upstream origin not established
+Pistes en amont à vérifier	Upstream leads to verify
+Des preuves se contredisent	Conflicting evidence
+Preuves contradictoires	Conflicting evidence
+Preuves insuffisantes	Insufficient evidence
+Preuve à préciser.	Evidence needs clarification.
+Symptôme signalé au module 	Symptom reported at module 
+Premier écart observé sur ce chemin : module 	First observed mismatch on this path: module 
+. Champ cible : 	. Target field: 
+. Type attendu : 	. Expected type: 
+Champ source : 	Source field: 
+Type observé : 	Observed type: 
+Nombre observé : 	Observed count: 
+Résultat observé : 	Observed result: 
+ · Attendu : 	 · Expected: 
+ · Observation : 	 · Observation: 
+État : 	Status: 
+Confiance du constat local : 	Local finding confidence: 
+Chemin d’exécution explicite : 	Explicit execution path: 
+Contrôles locaux des opérateurs	Local operator checks
+Opérateur	Operator
+L’origine avant le périmètre observé reste inconnue. Aucun changement n’est appliqué dans Make.	The origin before the observed scope remains unknown. No changes are applied in Make.
+Cette lecture repose sur les preuves fournies. Elle ne confirme pas l’origine première de la panne.	This reading is based on the supplied evidence. It does not confirm the root cause of the failure.
+Contrôle limité aux preuves et au contrat déclarés. Il ne prouve pas l’origine de la panne.	This check is limited to the declared evidence and contract. It does not prove the failure origin.
+Comparez la sortie enregistrée de la source avec l’entrée du module cible. Vérifiez l’exigence avant de corriger le mapping ou la source ; aucune valeur de remplacement n’est déduite.	Compare the saved source output with the target input. Verify the requirement before editing the mapping or source; no replacement value is inferred.
+Dépendance de données, pas nécessairement une connexion directe d’exécution.	Data dependency, not necessarily a direct execution connection.
+Aucun écart n’est démontré avec cette observation et les exigences fournies. Cela ne valide pas le scénario.	No mismatch is demonstrated by this observation and the supplied requirements. This does not validate the scenario.
+La remontée s’arrête : une preuve intermédiaire manque ou une limite a été atteinte.	Tracing stops here: intermediate evidence is missing or a limit was reached.
+Constat local conservé, mais aucune conclusion globale en raison des contradictions.	The local finding is retained, but contradictions prevent an overall conclusion.
+Le périmètre observé commence ici ; l’origine antérieure reste inconnue.	The observed scope starts here; its earlier origin is unknown.
+La valeur observée est null ; l’attente fournie interdit explicitement null.	The observed value is null; the supplied requirement explicitly forbids null.
+Le champ est absent alors que sa présence est explicitement exigée.	The field is absent although it is explicitly required.
+Le tableau observé contient 0 élément ; l’attente fournie en exige au moins 1.	The observed array has 0 items; the requirement specifies at least 1.
+Le contrat exige un tableau ; la donnée observée ne correspond pas.	The contract requires an array; the observed data does not match.
+Le type d’un champ de sortie ne correspond pas à l’attente.	An output field type does not match the expected type.
+Le nombre observé diffère du nombre attendu dans ce périmètre.	The observed count differs from the expected count in this scope.
+Le passage ou blocage observé diffère de l’attente déclarée.	The observed pass/block result differs from the declared expectation.
+Un champ de sortie obligatoire est absent.	A required output field is absent.
+Un champ de sortie vaut null alors que cela est interdit.	An output field is null although this is forbidden.
+Un tableau de sortie est vide alors que cela est interdit.	An output array is empty although this is forbidden.
+Les données ne démontrent pas l’absence du champ requis.	The data does not demonstrate the required field is absent.
+Trop de dépendances pour conclure dans ce périmètre.	Too many dependencies to reach a conclusion in this scope.
+Une référence de module reste inconnue ou ambiguë.	A module reference remains unknown or ambiguous.
+Vérifiez les observations, leur cohérence et la complétude du périmètre.	Check the observations, consistency and completeness of the scope.
+Vérifiez le format des preuves fournies.	Check the format of the supplied evidence.
+Vérifiez quels bundles source et cible se correspondent.	Check which source and target bundles match.
+Résolvez les contradictions avant de retenir une conclusion ou modifier le scénario.	Resolve contradictions before reaching a conclusion or editing the scenario.
+Aucun mapping direct pris en charge ne permet cette comparaison.	No supported direct mapping allows this comparison.
+Aucun mapping direct reconnu pour ce module. Ajoutez le Blueprint et choisissez le module ; les expressions calculées ne sont pas prises en charge.	No recognized direct mapping for this module. Add the Blueprint and choose the module; calculated expressions are not supported.
+La limite de comparaison a été atteinte.	The comparison limit was reached.
+La limite de frontières a été atteinte.	The boundary limit was reached.
+Limites des preuves d’exécution	Execution evidence limitations
+Exécution examinée : 	Execution examined: 
+ · Exécution cible 	 · Target execution 
+ · Bundle cible 	 · Target bundle 
+Liens déclarés pour les bundles fournis. 	Declared links for the supplied bundles. 
+Rapprochement déclaré : 	Declared matching: 
+Origine historique ou reproduction non précisée.	History or reproduction origin not specified.
+Date d’observation inconnue.	Observation date unknown.
+Exécution reprise du dossier, non précisée sur l’observation.	Execution taken from the dossier, not specified on the observation.
+Ancienne déclaration de correspondance : méthode et exécution cible non détaillées.	Legacy matching declaration: method and target execution not specified.
+Les bundles source et cible appartiennent à des exécutions différentes. Conservez-les dans des dossiers séparés.	Source and target bundles belong to different executions. Keep them in separate dossiers.
+Collez un objet JSON à la racine de la sortie.	Paste a JSON object at the output root.
+Ajoutez la sortie du module source.	Add the source module output.
+Précisez au moins une exigence à vérifier ou désactivez le traçage.	Specify at least one requirement or disable tracing.
+Précisez l’exigence du champ cible et sa source.	Specify the target field requirement and its source.
+Indiquez une date ISO complète avec fuseau, par exemple 2026-09-24T14:30:00+02:00.	Enter a complete ISO date with a time zone, for example 2026-09-24T14:30:00+02:00.
+présent	present
+absent dans l’observation complète	absent from the complete observation
+présent avec la valeur null	present with a null value
+présent avec un tableau vide	present with an empty array
+présent avec une chaîne vide	present with an empty string
+observation non fournie à ce chemin	no observation at this path
+observation partielle	partial observation
+masqué ou masquage inconnu	redacted or redaction unknown
+élevée	high
+modérée	moderate
+indéterminée	unknown
+non précisé	not specified
+Source non précisée	Source not specified
+exécution inconnue	unknown execution
+Déclaration fournie	Supplied declaration
+historique Make	Make history
+clé commune	shared key
+vérification manuelle	manual verification
+ancienne déclaration	legacy declaration
+reprise du dossier	taken from the dossier
+booléen	boolean
+la sortie JSON	the JSON output
+le bundle cible	the target bundle
+le bundle source	the source bundle
+l’exécution du bundle cible	the target bundle execution
+l’identifiant d’exécution	the execution ID
+la clé de corrélation	the correlation key
+la méthode de rapprochement	the matching method
+la source de correspondance des bundles	the bundle matching source
+la source de la sortie	the output source
+la source des exigences sélectionnées	the source of the selected requirements
+un mapping explicite	an explicit mapping
+ est nécessaire. Ouvrez « Examiner les données en amont ».	 is required. Open “Examine upstream data”.
+. Ce constat reste limité aux champs et aux preuves fournis.	. This finding is limited to the supplied fields and evidence.
+ piste(s) conservée(s), sans cause unique désignée.	 candidate(s) retained, without identifying a single cause.
+Votre équipe et vos espaces clients	Your team and client workspaces
+← Retour au panneau	← Back to dashboard
+Espaces clients	Client workspaces
+Rejoindre une équipe	Join a team
+Connectez-vous avec l’adresse destinataire de l’invitation, puis saisissez le code reçu.	Sign in with the invited email address, then enter the invitation code.
+Rejoindre	Join
+Créer un espace	Create a workspace
+Nom de l’espace	Workspace name
+Ex. Client — boutique en ligne	E.g. Client — online store
+Rôle	Role
+Éditeur	Editor
+Lecture seule	Read only
+Créer l’invitation	Create invitation
+Code à transmettre une seule fois	Code to share once
+Propriétaire	Owner
+Votre équipe : 	Your team: 
+ membre(s), 	 member(s), 
+ invitation(s) en attente · 	 pending invitation(s) · 
+ siège(s) disponibles dans l’offre.	 seat(s) available in this plan.
+Confirmer : 	Confirm: 
+Rôle : 	Role: 
+Supprimer cet espace	Delete this workspace
+Créez votre premier espace client avec le formulaire ci-dessus.	Create your first client workspace using the form above.
+Aucun espace partagé. Activez votre essai dans les paramètres pour en créer un.	No shared workspace. Choose a team plan in settings to create one.
+Révoquer l’accès	Revoke access
+ · Invitation en attente jusqu’au 	 · Invitation pending until 
+Annuler l’invitation	Cancel invitation
+Les invitations réservent un siège pendant 7 jours. Le propriétaire occupe un siège. L’essai inclut 5 sièges.	Invitations reserve a seat for 7 days. The owner occupies one seat. The Agency plan includes 5 seats.
+Les membres accèdent aux espaces partagés de cette équipe. Vos analyses personnelles restent privées. Un éditeur peut analyser et ajouter des retours ; un lecteur peut consulter et exporter. Seul le propriétaire supprime les analyses partagées.	Members can access this team’s shared workspaces. Your personal analyses remain private. Editors can analyze and add feedback; viewers can view and export. Only the owner can delete shared analyses.
+Réponse HTTP et module dans les options avancées.	HTTP response and module are in advanced options.
+Appliquez vous-même les changements et indiquez le résultat.	Apply the changes yourself and report the result.
+Indiquez le résultat après votre essai.	Report the result after testing.
+Résultat attendu	Expected result
+Valeur exacte observée lors de l’exécution	Exact value observed during execution
+Identifiant de l’exécution Make	Make execution ID
+J’ai vérifié que ces deux bundles se correspondent dans cette exécution.	I verified that these two bundles match in this execution.
+Le champ cible sélectionné est explicitement obligatoire.	The selected target field is explicitly required.
+La valeur null est-elle autorisée ?	Is null allowed?
+Inviter dans votre équipe	Invite to your team
+Le diagnostic spécialisé Make	Diagnostics specialized in Make
+FlowFix est un outil indépendant, sans affiliation avec Make.	FlowFix is an independent tool, not affiliated with Make.
+Informations sur la bêta	Beta information
+Votre scénario Make bloque.	Your Make scenario is stuck.
+Comprenez pourquoi.	Understand why.
+Ajoutez l’erreur et le Blueprint. FlowFix vous aide à examiner les causes possibles et les vérifications à effectuer, avec des conseils documentés.	Add the error and Blueprint. FlowFix helps you examine possible causes and checks with documented guidance.
+Aucune modification automatique de vos scénarios. Vous gardez la main dans Make.	No automatic scenario changes. You stay in control in Make.
+Erreur exacte, Blueprint JSON, réponse HTTP et données du module. Retirez les informations sensibles inutiles avant l’import.	Exact error, JSON Blueprint, HTTP response and module data. Remove unnecessary sensitive information before importing.
+Constats, hypothèses concurrentes, confiance et informations manquantes restent visibles.	Findings, alternative hypotheses, confidence and missing information stay visible.
+3. Vérifiez dans Make	3. Verify in Make
+1. Apportez le contexte	1. Provide context
+2. Examinez les pistes	2. Examine the possibilities
+Ce que nous testons avec vous	What we are testing with you
+Comment commencer	How to start
+Conçu pour les créateurs d’automatisations	Built for automation creators
+Suivez les conditions et contrôles proposés, puis enregistrez le résultat obtenu.	Follow the suggested conditions and checks, then record the result.
+Historique privé, analyses modifiables, questions de clarification et rapports exportables : retrouvez le fil de chaque investigation.	Private history, editable analyses, clarification questions and exportable reports: follow every investigation.
+Le moteur utilise une base documentaire spécialisée. Il ne se connecte pas à votre compte Make et n’exécute pas vos scénarios.	The engine uses a specialized knowledge base. It does not connect to your Make account or run your scenarios.
+La pertinence des diagnostics sur des incidents réels et la clarté des étapes proposées. La précision en conditions réelles reste à mesurer ; une piste proposée peut être incorrecte ou insuffisante.	We are testing diagnostic relevance on real incidents and the clarity of proposed steps. Real-world accuracy is still being measured; a suggestion may be wrong or insufficient.
+L’accès bêta est temporaire, avec un quota visible dans votre compte. Les abonnements seront ouverts après validation du parcours de paiement et de l’offre commerciale.	Beta access is temporary, with a quota shown in your account. Subscriptions will open once payment and commercial setup are validated.
+Chaque nouveau compte dispose de 3 analyses gratuites. Les résultats non concluants ne consomment pas de crédit. Solo permet de continuer ensuite à 49 € HT/mois.	Every new account gets 3 free analyses. Inconclusive results do not use credits. Continue afterwards with Solo for €49/month excluding tax.
+3 ANALYSES GRATUITES · SANS CARTE	3 FREE ANALYSES · NO CARD REQUIRED
+Analyser mon erreur gratuitement	Analyze my error for free
+Ouvrir mon espace	Open my workspace
+Accès bêta-testeur sur invitation	Invitation-only beta access
+Ce que vous transmettez	What you submit
+Utilisation	Usage
+Historique et décompte	History and usage accounting
+Limites du diagnostic	Diagnostic limitations
+Avant ouverture publique	Before public launch
+Votre compte, les erreurs, Blueprints, données d’exécution et retours que vous importez sont stockés sur le serveur de l’exploitant. Les analyses personnelles sont privées. Celles créées dans un espace client sont accessibles au propriétaire et aux membres de son équipe, selon leur rôle. Les membres ne voient pas vos analyses personnelles. Certains secrets reconnus sont masqués avant stockage des analyses, mais ce masquage n’est pas une anonymisation complète. Retirez les données personnelles et secrets inutiles avant import.	Your account, errors, Blueprints, execution data and feedback are stored on the operator’s server. Personal analyses are private. Analyses in a client workspace are accessible to its owner and team members according to their roles. Members cannot see your personal analyses. Some recognized secrets are redacted before storage, but this is not full anonymization. Remove unnecessary personal data and secrets before importing.
+Le moteur de diagnostic s’exécute sur le serveur sans transmettre vos Blueprints à un modèle externe ni à Make. Vos retours n’enrichissent pas automatiquement la base de connaissances. La facturation, lorsqu’elle est activée, utilise Stripe ; les informations de carte ne passent pas par FlowFix.	The diagnostic engine runs on the server without sending Blueprints to an external model or Make. Feedback does not automatically update the knowledge base. Billing, when enabled, uses Stripe; card details do not pass through FlowFix.
+Vous pouvez consulter, exporter un rapport et supprimer chaque analyse. La suppression du compte est disponible dans les paramètres lorsqu’aucun abonnement n’est en cours. Les copies de sauvegarde suivent la durée de conservation fixée par l’exploitant.	You can view, export and delete each analysis. Account deletion is available in settings when no subscription is running. Backup copies follow the retention period set by the operator.
+L’offre Solo donne accès aux analyses des 30 derniers jours. Les offres Agence et l’essai ne limitent pas la durée de consultation. La fin de la consultation ne signifie pas une suppression physique : la politique de conservation et des sauvegardes doit être fixée par l’exploitant avant ouverture. Un journal technique conserve le statut et le décompte de chaque calcul, sans recopier vos données d’exécution. Un résultat ambigu, insuffisamment étayé ou contradictoire ne consomme pas de crédit. Une hypothèse principale avec une confiance moyenne ou élevée peut être décomptée ; cela ne certifie pas que la correction a réussi.	Solo provides access to analyses from the last 30 days. Agency and existing trials have no viewing time limit. The end of viewing access does not mean physical deletion: the operator must define retention and backup policies before launch. A technical log records each calculation’s status and credit usage without copying execution data. Ambiguous, insufficiently supported or contradictory results do not use credits. A leading hypothesis with medium or high confidence may use a credit; this does not certify a successful fix.
+Les conseils sont conditionnels. FlowFix ne vérifie pas l’exécution dans Make et ne garantit pas la résolution. Le résultat « résolu » correspond à votre déclaration.	Guidance is conditional. FlowFix does not verify execution in Make or guarantee resolution. A “resolved” result reflects your report.
+Cette fiche décrit le fonctionnement technique de la version bêta. L’identité et les coordonnées de l’exploitant, l’hébergeur, les durées de conservation et les conditions contractuelles doivent être renseignés avant de collecter des données de testeurs sur un service déployé.	This page describes the beta’s technical operation. The operator’s identity and contact details, hosting provider, retention periods and contractual terms must be completed before collecting tester data on a deployed service.
+Contact :	Contact:
+Vous pouvez activer votre essai, rejoindre une équipe ou souscrire une offre.	You can join a team or choose a subscription.
+Confirmez l’adresse du compte auquel vous êtes actuellement connecté. Si le lien concerne un autre compte, connectez-vous d’abord à celui-ci.	Verify the address of the account you are currently signed into. If this link belongs to another account, sign into that account first.
+Utilisez le code envoyé à l’adresse de votre compte :	Use the code sent to your account’s email address:
+informations sur les données et les limites de la bêta	information about data and beta limitations
+Activer mon accès bêta	Activate my beta access
+Activer une invitation	Activate an invitation
+La connexion et la création de compte avec Google seront bientôt disponibles. Vous pouvez utiliser votre adresse email dès maintenant.	Google sign-in and sign-up are coming soon. You can use your email address now.
+Sélectionnez le champ exact	Select the exact field
+Complétez les observations du champ JSON dans Détails, ou désactivez cette option.	Complete the JSON field observations in Details, or disable this option.
+Preuves, déclarations et déductions	Evidence, declarations and inferences
+Déduction	Inference
+Origine non précisée	Origin not specified
+Référence : 	Reference: 
+Références : 	References: 
+Aucune preuve détaillée disponible pour ce résultat.	No detailed evidence is available for this result.
+Modification manuelle proposée	Suggested manual change
+Chemin du Blueprint fourni, pas un libellé Make vérifié.	Path from the supplied Blueprint, not a verified Make label.
+Valeur observée	Observed value
+Valeur proposée	Proposed value
+Cette correction locale de syntaxe ne confirme pas la résolution du scénario.	This local syntax correction does not confirm that the scenario is fixed.
+Conditions, preuves et vérification	Conditions, evidence and verification
+Aucune modification exacte démontrée avec les éléments disponibles. Les conseils ci-dessus restent des vérifications conditionnelles.	No exact change is demonstrated by the available evidence. The advice above remains conditional.
+Pourquoi aucune correction précise n’est proposée	Why no precise correction is proposed
+Faites vérifier ce cas par une personne connaissant le scénario Make. Les informations disponibles ne permettent pas une correction suffisamment étayée.	Ask someone familiar with this Make scenario to review the case. The available information does not support a sufficiently reliable correction.
+Exportez le rapport pour partager les constats et les vérifications déjà effectuées.	Export the report to share findings and checks already performed.
+Vous pouvez commencer par cette vérification sans Blueprint. Pour aller plus loin, ouvrez la section facultative ci-dessous.	You can start with this check without a Blueprint. Open the optional section below to go further.
+Comparez la valeur observée et la valeur proposée dans les corrections détaillées avant de modifier le champ dans Make.	Compare the observed and proposed values in the detailed corrections before editing the field in Make.
+Complétez le contexte avec le message exact et les données de l’exécution via « Modifier ». Aucun changement précis ne peut encore être conseillé.	Add the exact message and execution data using “Edit”. No precise change can be recommended yet.
+Après cette vérification, testez le scénario dans Make et indiquez ci-contre si le blocage persiste.	After this check, test the scenario in Make and report whether it is still blocked.
+Ou ajoutez un Blueprint, si vous en avez un	Or add a Blueprint if you have one
+Première lecture · à confirmer	Initial reading · to be confirmed
+Authentification à vérifier	Check authentication
+Le message signale un refus lié à l’authentification.	The message indicates an authentication rejection.
+La connexion peut avoir expiré, avoir été révoquée ou utiliser des identifiants non acceptés.	The connection may have expired, been revoked or use credentials that are not accepted.
+Dans Make, repérez la connexion du module en erreur et consultez son état. Comparez le compte connecté avec celui attendu par le service.	In Make, find the failing module’s connection and check its status. Compare the connected account with the one expected by the service.
+Accès refusé	Access denied
+Le service refuse l’accès à l’opération ou à la ressource demandée.	The service denies access to the requested operation or resource.
+Les droits du compte, les autorisations de la connexion ou l’accès à cette ressource peuvent être insuffisants.	The account rights, connection permissions or resource access may be insufficient.
+Vérifiez que le compte utilisé par le module a accès à la ressource et à cette opération dans le service cible.	Check that the module’s account can access the resource and perform this operation in the target service.
+Limite de requêtes atteinte	Request rate limit reached
+Le message indique une limitation du rythme des appels.	The message indicates request rate limiting.
+Plusieurs exécutions ou bundles peuvent envoyer trop de requêtes sur la même période.	Multiple executions or bundles may send too many requests in the same period.
+Consultez les limites du service et les horaires des appels en échec. Recherchez un délai Retry-After dans la réponse avant de planifier une nouvelle tentative.	Check the service limits and the timing of failed requests. Look for Retry-After in the response before scheduling a retry.
+Données refusées par le service	Data rejected by the service
+Le code 422 indique que le service ne peut pas traiter les données envoyées.	Code 422 indicates that the service cannot process the submitted data.
+Un champ requis, un format ou une règle métier peut ne pas être respecté. Le code seul ne permet pas de choisir entre ces causes.	A required field, format or business rule may not be satisfied. The code alone cannot distinguish these causes.
+Ouvrez la réponse complète de l’exécution en échec. Repérez le champ cité, puis comparez sa valeur reçue avec le format et les contraintes attendus par le service.	Open the full response from the failed execution. Find the named field, then compare its received value with the format and constraints expected by the service.
+Entrée du module à vérifier	Check module input
+Le module signale une valeur d’entrée absente ou non conforme.	The module reports a missing or invalid input value.
+Un mapping peut fournir une valeur vide ou un type incompatible sur le bundle concerné.	A mapping may supply an empty value or an incompatible type for this bundle.
+Repérez le paramètre nommé dans l’erreur. Dans le bundle en échec, vérifiez sa valeur et son type, puis remontez au module qui le fournit.	Find the parameter named in the error. Check its value and type in the failed bundle, then trace it to the supplying module.
+Délai de réponse dépassé	Response timeout
+L’opération n’a pas reçu de réponse dans le délai attendu.	The operation did not receive a response within the expected time.
+Le service peut être lent ou la demande trop coûteuse ; cela ne prouve pas une erreur de mapping.	The service may be slow or the request too expensive; this does not prove a mapping error.
+Consultez l’état du service cible et la durée de l’exécution. Avant une relance, vérifiez si l’opération a déjà été effectuée côté service pour éviter un doublon.	Check the target service status and execution duration. Before retrying, check whether the operation already completed on the service to avoid duplicates.
+Connexion au service impossible	Cannot connect to the service
+Le message signale un problème pour joindre le service.	The message reports a problem reaching the service.
+Une indisponibilité, une adresse incorrecte ou un problème réseau peut expliquer cet échec.	An outage, incorrect address or network issue may explain this failure.
+Vérifiez l’adresse appelée et l’état du service cible, puis comparez avec une exécution récente qui a réussi.	Check the requested address and target service status, then compare with a recent successful execution.
+Erreur côté service distant	Remote service error
+Le code signale une erreur de serveur ou de passerelle.	The code indicates a server or gateway error.
+Une indisponibilité temporaire du service est possible ; le message seul ne permet pas d’exclure une requête qui déclenche son erreur.	A temporary service outage is possible; the message alone cannot rule out a request that triggers the error.
+Consultez la réponse complète et l’état du service. Vérifiez si les mêmes données fonctionnaient auparavant avant de changer le scénario.	Check the full response and service status. Verify whether the same data worked before changing the scenario.
+Ressource introuvable	Resource not found
+Le service ne trouve pas la ressource demandée.	The service cannot find the requested resource.
+L’adresse ou l’identifiant peut être incorrect, ou la ressource peut avoir été supprimée ou être inaccessible à ce compte.	The address or ID may be incorrect, or the resource may have been deleted or be inaccessible to this account.
+Comparez l’URL et l’identifiant réellement envoyés avec une ressource visible pour le compte connecté.	Compare the actual URL and ID sent with a resource visible to the connected account.
+Requête à vérifier	Check the request
+Le service rejette la requête envoyée.	The service rejects the submitted request.
+Un paramètre, le corps de la requête ou son format peut ne pas correspondre à ce que l’API attend.	A parameter, request body or format may not match what the API expects.
+Lisez le détail de la réponse puis comparez les paramètres et le corps envoyés avec un exemple accepté par la documentation de cette API.	Read the response details, then compare the submitted parameters and body with an accepted example in the API documentation.
+Syntaxe JSON à vérifier	Check JSON syntax
+Le message indique que du texte n’a pas pu être interprété comme du JSON.	The message indicates that text could not be parsed as JSON.
+Une ponctuation incorrecte, un texte non JSON ou une valeur injectée par mapping peut produire ce résultat.	Incorrect punctuation, non-JSON text or a mapped value may produce this result.
+Inspectez le texte réellement reçu au moment de l’erreur et l’emplacement indiqué par le parseur. Ne corrigez pas seulement le modèle avant mapping.	Inspect the text actually received when the error occurred and the location reported by the parser. Do not fix only the template before mapping.
+Première lecture de votre erreur	Initial reading of your error
+Ces pistes reposent sur les informations transmises. Elles ne confirment ni la cause exacte ni une valeur à modifier.	These leads are based on the supplied information. They confirm neither the exact cause nor a value to change.
+Make — erreurs et avertissements	Make — errors and warnings
+Le message ne suffit pas à identifier une famille d’erreur avec fiabilité. Vous pouvez néanmoins localiser le point de rupture sans fournir de Blueprint.	The message is not sufficient to reliably identify an error category. You can still locate the failure point without a Blueprint.
+Dans l’historique Make, ouvrez l’exécution en échec et le premier module qui signale une erreur.	In Make history, open the failed execution and the first module reporting an error.
+Comparez son bundle d’entrée avec celui d’une exécution réussie : cherchez une valeur absente, un type différent ou une ressource inaccessible.	Compare its input bundle with a successful execution: look for a missing value, a different type or an inaccessible resource.
+Une référence documentaire correspond au type d’erreur cité. Voici les contrôles qu’elle propose ; leur pertinence reste à vérifier sur votre exécution.	A documentation reference matches the reported error type. These are its suggested checks; verify their relevance to your execution.
+Pour affiner : ajoutez le détail complet de l’erreur, le nom du module et sa valeur d’entrée. Le Blueprint est facultatif et aide à examiner les liens entre modules.	To refine the diagnosis, add the full error details, module name and input value. A Blueprint is optional and helps examine module connections.
+Défaut de syntaxe reproduit localement	Syntax issue reproduced locally
+La modification proposée corrige la syntaxe du texte fourni. Le contrat du champ et sa provenance sont déclarés par vous ; la résolution dans Make reste à vérifier.	The proposed change corrects the supplied text’s syntax. You declared the field contract and provenance; resolution in Make still needs verification.
+Cause probable à vérifier	Likely cause to verify
+Les éléments disponibles soutiennent une hypothèse principale. Ils ne prouvent pas encore la cause réelle ni une valeur de remplacement exacte.	The available evidence supports a leading hypothesis. It does not yet prove the actual cause or an exact replacement value.
+Diagnostic non concluant	Inconclusive diagnosis
+Plusieurs explications restent possibles, ou les preuves sont insuffisantes ou contradictoires. Complétez le contexte avant de modifier le scénario.	Several explanations remain possible, or evidence is insufficient or contradictory. Add context before editing the scenario.
+Vérification humaine nécessaire	Human review required
+Le parcours automatique ne permet pas de conclure. Aucune correction précise n’est présentée comme applicable.	The automatic process cannot reach a conclusion. No precise correction is presented as applicable.
+Diagnostic non concluant : aucun crédit décompté.	Inconclusive diagnosis: no credit used.
+Diagnostic inclus dans votre essai. Aucun paiement effectué.	Diagnosis included in your trial. No payment taken.
+Diagnostic inclus dans votre abonnement sans quota mensuel.	Diagnosis included in your subscription without a monthly quota.
+Un diagnostic décompté de votre quota mensuel.	One diagnostic deducted from your monthly quota.
+Vos 3 analyses gratuites ont été utilisées. Passez à Solo à 49 € HT/mois pour continuer.	Your 3 free analyses have been used. Continue with Solo at €49/month excluding tax.
+Session expirée ou origine refusée. Rechargez la page.	Session expired or origin rejected. Reload the page.
+Essai activé pour 14 jours, sans paiement automatique.	14-day trial activated, with no automatic payment.
+Trop de requêtes.	Too many requests.
+Trop de calculs rapprochés. Réessayez plus tard.	Too many analyses in a short period. Try again later.
+Trop de tentatives. Réessayez dans 15 minutes.	Too many attempts. Try again in 15 minutes.
+Trop de demandes rapprochées.	Too many requests in a short period.
+Modification enregistrée.	Changes saved.
+Trop de demandes. Réessayez plus tard.	Too many requests. Try again later.
+La récupération par email est indisponible. Contactez votre interlocuteur bêta.	Email account recovery is unavailable. Contact your beta support contact.
+Invitation invalide, expirée ou destinée à une autre adresse.	The invitation is invalid, expired or intended for another address.
+L’offre actuelle ne permet pas de nouvelles analyses partagées.	The current plan does not allow new shared analyses.
+Limite de 500 analyses stockées. Exportez puis supprimez les anciennes analyses.	The 500 saved analyses limit has been reached. Export and delete older analyses.
+Cette analyse a changé. Rechargez-la.	This analysis has changed. Reload it.
+Historique maximal atteint. Exportez cette analyse et créez-en une nouvelle.	Maximum history reached. Export this analysis and create a new one.
+Historique trop volumineux. Exportez puis créez une nouvelle analyse.	History is too large. Export and create a new analysis.
+Révoquez les membres et supprimez vos analyses et espaces partagés avant de supprimer ce compte.	Revoke members and delete shared analyses and workspaces before deleting this account.
+Supprimez les analyses partagées avant de supprimer ce compte.	Delete shared analyses before deleting this account.
+Des analyses appartiennent à une équipe. Demandez au propriétaire de les supprimer avant de supprimer votre compte.	Some analyses belong to a team. Ask its owner to delete them before deleting your account.
+Résiliez votre abonnement dans le portail puis contactez le support pour supprimer le compte après sa clôture.	Cancel your subscription in the portal, then contact support to delete the account after it ends.
+Confirmez avoir lu les informations de la bêta.	Confirm you have read the beta information.
+Données invalides. Vérifiez les champs et le Blueprint.	Invalid data. Check the fields and Blueprint.
+La requête dépasse 1,5 Mo.	The request exceeds 1.5 MB.
+Service momentanément indisponible. Réessayez.	Service temporarily unavailable. Try again.
+Invitation expirée ou déjà utilisée.	Invitation expired or already used.
+Tous les sièges de cette équipe sont occupés.	All team seats are occupied.
+Le propriétaire fait déjà partie de cette équipe.	The owner is already on this team.
+Vous faites déjà partie de cette équipe.	You are already on this team.
+Invitation acceptée. Vos espaces clients sont disponibles dans le panneau.	Invitation accepted. Client workspaces are available in your dashboard.
+Ce compte existe déjà. Connectez-vous.	This account already exists. Sign in.
+Requête invalide.	Invalid request.
+Confirmez avoir lu les informations sur vos données et les limites de FlowFix.	Confirm you have read the information about your data and FlowFix limitations.
+Cette personne fait déjà partie de votre équipe.	This person is already on your team.
+Une invitation est déjà en cours pour cette adresse.	An invitation is already pending for this address.
+Tous les sièges sont occupés ou réservés par une invitation.	All seats are occupied or reserved by invitations.
+Transmettez ce code au destinataire par un canal privé. Il expire dans 7 jours. Aucun email automatique envoyé.	Share this code privately with the recipient. It expires in 7 days. No email was sent automatically.
+Activez un essai de 14 jours ou une offre équipe pour gérer vos espaces clients.	Choose a team plan to manage client workspaces.
+Votre rôle autorise uniquement la consultation et l’export.	Your role only allows viewing and exporting.
+Seul le propriétaire de l’équipe peut supprimer une analyse partagée.	Only the team owner can delete a shared analysis.
+L’accès équipe est expiré. Les analyses restent consultables.	Team access has expired. Analyses remain viewable.
+Confirmez votre adresse email depuis Mon accès avant de continuer.	Verify your email address in My access before continuing.
+Trop de demandes. Réessayez dans 15 minutes.	Too many requests. Try again in 15 minutes.
+Ce lien est invalide, expiré ou déjà utilisé. Demandez un nouvel email.	This link is invalid, expired or already used. Request a new email.
+Email envoyé. Ouvrez le lien reçu et confirmez votre adresse. Pensez aux indésirables.	Email sent. Open the link and verify your address. Check your spam folder.
+L’email n’a pas pu être envoyé. Réessayez plus tard.	The email could not be sent. Try again later.
+Réessayez dans quelques minutes.	Try again in a few minutes.
+Trop de demandes de facturation. Réessayez dans 15 minutes.	Too many billing requests. Try again in 15 minutes.
+Le tarif doit être vérifié avant l’ouverture du paiement.	The price must be verified before checkout opens.
+Un abonnement existe déjà. Utilisez le portail de facturation.	A subscription already exists. Use the billing portal.
+Votre accès est terminé. Consultez Mon accès pour continuer.	Your access has ended. Open My access to continue.
+L’offre de découverte comprend désormais 3 analyses gratuites. Choisissez Solo pour continuer ensuite.	The introductory offer now includes 3 free analyses. Choose Solo to continue afterwards.
+Votre accès LTD est déjà actif.	Your lifetime access is already active.
+Cet essai a déjà été activé.	This trial has already been activated.
+Votre abonnement est déjà actif.	Your subscription is already active.
+Vos 3 analyses gratuites ont été utilisées. Choisissez Solo à 49 € HT/mois dans Abonnement et facturation pour continuer.	Your 3 free analyses have been used. Choose Solo at €49/month excluding tax in Subscription and billing to continue.
+Analyses hors fenêtre de consultation	Analyses outside the viewing window
+Ces analyses sont conservées mais leur contenu n’est plus consultable dans l’offre actuelle. Vous pouvez les supprimer.	These analyses are retained but their content cannot be viewed on your current plan. You can delete them.
+Aucune analyse hors fenêtre dans cet espace.	No analyses outside the viewing window in this workspace.
+Supprimer définitivement cette analyse ?	Permanently delete this analysis?
+Autres vérifications utiles	Other useful checks
+Fermer	Close
+Valider	Confirm
+Les abonnements ne sont pas encore ouverts.	Subscriptions are not open yet.
+Cette offre n’est pas encore ouverte au paiement.	Checkout is not available for this plan yet.
+Aucun compte de facturation.	No billing account.
+Session de paiement invalide.	Invalid payment session.
+Session introuvable.	Session not found.
+Seules les offres mensuelles sont ouvertes.	Only monthly subscriptions are available.
+Connectez-vous pour continuer.	Sign in to continue.
+Format JSON requis.	JSON format required.
+Nom requis.	Name required.
+Introuvable	Not found
+Utilisez votre adresse email comme identifiant.	Use your email address as your username.
+Mot de passe incorrect.	Incorrect password.
+Confirmez votre adresse email — FlowFix	Verify your email address — FlowFix
+Confirmez cette adresse pour votre compte FlowFix :	Verify this email address for your FlowFix account:
+Connectez-vous au compte concerné, puis confirmez. Ce lien expire dans 24 heures. Un nouvel envoi remplace le précédent.	Sign into the matching account, then confirm. This link expires in 24 hours. A new email replaces the previous link.
+Si vous n’avez pas demandé cet email, ignorez-le.	If you did not request this email, ignore it.
+Réinitialisation du mot de passe FlowFix	Reset your FlowFix password
+Rechercher une analyse…	Search analyses…
+Réinitialisation de votre mot de passe FlowFix	Reset your FlowFix password
+Texte absent ou trop volumineux.	Text is missing or too large.
+Les informations fournies ne peuvent pas être analysées.	The supplied information cannot be analyzed.
+Le fichier doit être un Blueprint de scénario Make au format JSON.	The file must be a Make scenario Blueprint in JSON format.
+Ce module ne figure pas dans le Blueprint. Sélectionnez un module existant.	This module is not in the Blueprint. Select an existing module.
+Le moteur a refusé un résultat invalide ; aucune modification enregistrée.	The engine rejected an invalid result; no changes were saved.
+La base de connaissances est indisponible ou invalide.	The knowledge base is unavailable or invalid.
+Ajoutez une description, une erreur, un Blueprint ou des données d’exécution.	Add a description, error, Blueprint or execution data.
+Contexte de traçage invalide.	Invalid tracing context.
+Observation de champ JSON invalide ou incomplète.	Invalid or incomplete JSON field observation.
+Le champ observé doit appartenir au module sélectionné.	The observed field must belong to the selected module.
+Cette session a changé. Rechargez-la avant de poursuivre.	This session has changed. Reload it before continuing.
+Activer mon essai de 14 jours	Activate my 14-day trial
+Essai de 14 jours, une seule fois par compte. Aucune carte ni facturation automatique.	One 14-day trial per account. No card or automatic billing.
+Fin de l’essai : 	Trial ends: 
+Essai actif jusqu’au 	Trial active until 
+ · aucun paiement automatique.	 · no automatic payment.
+LA SUITE	NEXT STEP
+Historique des analyses	Analysis history
+Ce type de module ou ce filtre n’est pas reconnu dans le Blueprint.	This module type or filter is not recognized in the Blueprint.
+DU BLOCAGE À LA CLARTÉ	FROM BLOCKED TO CLEAR
+FlowFix — Comprendre vos erreurs Make	FlowFix — Understand your Make errors
+Identifiant de l’exécution concernée	Relevant execution ID
+Identifiant lu dans l’historique Make	ID from Make history
+Inclure ces preuves dans l’analyse	Include this evidence in the analysis
+Inconnu — ajoutez un Blueprint	Unknown — add a Blueprint
+Informations insuffisantes	Insufficient information
+Informations manquantes	Missing information
+Iterator : bundle manquant	Iterator: missing bundle
+Je ne sais pas	I don’t know
+Journal ou message de l’exécution concernée	Log or message from the relevant execution
+Journaux d’exécution…	Execution logs…
+Preuves contradictoires : 	Conflicting evidence: 
+Testez dans Make	Test in Make
+ État : 	 Status: 
+Analyse trop volumineuse.	Analysis too large.
+Action invalide.	Invalid action.
+Nom d’espace requis.	Workspace name required.
+Adresse email invalide.	Invalid email address.
+Adresse invalide.	Invalid address.
+Espace de travail	Workspace

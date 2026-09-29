@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from local_app.service import Conflict
 from .models import Account,EmailVerification
+from .localization import text as translate
 
 
 def verified(account):
@@ -56,12 +57,12 @@ def verification(request,token=None):
                     secret=secrets.token_urlsafe(32)
                     EmailVerification.objects.update_or_create(account=account,defaults={'email':email,'digest':hashlib.sha256(secret.encode()).hexdigest(),'expires':timezone.now()+timedelta(hours=24)})
                     url=settings.PUBLIC_URL+'/verify-email/'+secret+'/'
-                    sent=send_mail('Confirmez votre adresse email — FlowFix',
-                        'Confirmez cette adresse pour votre compte FlowFix :\n\n'+url+'\n\nConnectez-vous au compte concerné, puis confirmez. Ce lien expire dans 24 heures. Un nouvel envoi remplace le précédent.\nSi vous n’avez pas demandé cet email, ignorez-le.',
+                    sent=send_mail(translate('Confirmez votre adresse email — FlowFix'),
+                        translate('Confirmez cette adresse pour votre compte FlowFix :')+'\n\n'+url+'\n\n'+translate('Connectez-vous au compte concerné, puis confirmez. Ce lien expire dans 24 heures. Un nouvel envoi remplace le précédent.')+'\n'+translate('Si vous n’avez pas demandé cet email, ignorez-le.'),
                         settings.DEFAULT_FROM_EMAIL,[email],fail_silently=False)
                     if sent!=1:raise RuntimeError('Email not sent')
                 message='Email envoyé. Ouvrez le lien reçu et confirmez votre adresse. Pensez aux indésirables.'
             except Exception:
                 # Never reflect SMTP errors or log a token/recipient.
                 message='L’email n’a pas pu être envoyé. Réessayez plus tard.';status=503
-    return render(request,'registration/verify_email.html',{'verified':verified(account),'confirm_link':bool(token),'message':message},status=status)
+    return render(request,'registration/verify_email.html',{'verified':verified(account),'confirm_link':bool(token),'message':translate(message)},status=status)

@@ -63,3 +63,28 @@ Une fois les contrôles concluants, décider explicitement l’ouverture et pass
 - [Proxys et protection réseau Render](https://render.com/articles/how-render-handles-ddos-attacks)
 
 Ce guide prépare un déploiement ; il ne certifie pas une production opérationnelle ou invulnérable.
+
+## Retour à la page de vente
+
+Configurer `MARKETING_URL` avec l’URL HTTPS réelle du site commercial. Le logo FlowFix et « Retour à l’accueil » des écrans connexion, inscription et invitation bêta renvoient vers cette URL. En développement, la valeur par défaut est `http://127.0.0.1:8770/`. `PUBLIC_URL` reste l’URL du produit.
+
+## Test gratuit — 29 septembre 2026
+
+Le `render.yaml` racine décrit désormais uniquement le test gratuit : `flowfix-test`
+et `flowfix-test-db` (Frankfurt, PostgreSQL 17). La configuration payante précédente
+est conservée dans `deploy/render-paid.yaml` et n'est pas appliquée automatiquement.
+
+Le démarrage `python deploy/start_test.py` conserve DEBUG désactivé, HTTPS, les
+cookies sécurisés et PostgreSQL. Il déduit l'origine du nom fourni par Render,
+valide la configuration puis applique les migrations avant de démarrer un seul
+worker. Le secret est généré par Render. Aucun compte ni historique local n'est copié.
+
+`release_check --test-deployment` dispense uniquement de la configuration SMTP,
+avec un drapeau explicite et la facturation désactivée. Le contrôle commercial
+sans cette option continue d'exiger les emails. Aucun paiement réel ne doit être
+activé avec ce lanceur. Les emails de vérification et de récupération ne sont pas
+opérationnels tant qu'un transport compatible avec Render Free n'est pas ajouté.
+
+Limites : veille après 15 minutes, démarrage à froid, base gratuite expirant après
+30 jours, absence de sauvegardes intégrées. Utiliser uniquement des données de test.
+Le déploiement ne constitue pas une validation commerciale ni un audit de sécurité complet.

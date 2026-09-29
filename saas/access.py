@@ -27,16 +27,18 @@ def entitlement(account):
     if account.paid_until or account.beta_until or account.agency_trial_started or account.ltd_checkout:
         return False,0,'Accès expiré'
     if account.free_remaining:
-        return True,1,'Premier diagnostic gratuit'
-    return False,0,'Diagnostic gratuit utilisé'
+        return True,3,'Analyses gratuites'
+    return False,0,'Analyses gratuites utilisées'
 
 
 def check_access(account):
     allowed,limit,plan=entitlement(account)
-    if not allowed:raise Conflict('Votre accès est terminé. Consultez Mon accès pour continuer.')
+    if not allowed:
+        if plan=='Analyses gratuites utilisées':raise Conflict('Vos 3 analyses gratuites ont été utilisées. Choisissez Solo à 49 € HT/mois dans Abonnement et facturation pour continuer.')
+        raise Conflict('Votre accès est terminé. Consultez Mon accès pour continuer.')
     month=timezone.now().strftime('%Y-%m')
     used=account.usage if account.usage_month==month else 0
-    if limit is not None and plan!='Premier diagnostic gratuit' and used>=limit:
+    if limit is not None and plan!='Analyses gratuites' and used>=limit:
         raise Conflict('Quota mensuel atteint. Vos analyses restent consultables.')
 
 
@@ -50,7 +52,7 @@ def record_usage(account,analysis,output):
     reason='inconclusive'
     counted=False
     if conclusive:
-        if plan=='Premier diagnostic gratuit':
+        if plan=='Analyses gratuites':
             account.free_remaining-=1
             reason='free_diagnosis'
             counted=True
@@ -67,7 +69,7 @@ def record_usage(account,analysis,output):
                                     outcome=outcome,counted=counted,reason=reason)
     messages={
         'inconclusive':'Diagnostic non concluant : aucun crédit décompté.',
-        'free_diagnosis':'Votre premier diagnostic est offert. Aucun paiement effectué.',
+        'free_diagnosis':f'Analyse offerte : {account.free_remaining} sur 3 restante(s). Aucun paiement effectué.' if account.free_remaining else 'Vos 3 analyses gratuites ont été utilisées. Passez à Solo à 49 € HT/mois pour continuer.',
         'included_in_trial':'Diagnostic inclus dans votre essai. Aucun paiement effectué.',
         'included_in_plan':'Diagnostic inclus dans votre abonnement sans quota mensuel.',
         'monthly_quota':'Un diagnostic décompté de votre quota mensuel.',
@@ -76,6 +78,7 @@ def record_usage(account,analysis,output):
 
 
 def start_trial(account):
+    if not getattr(settings,'AGENCY_TRIAL_ENABLED',False):raise Conflict('L’offre de découverte comprend désormais 3 analyses gratuites. Choisissez Solo pour continuer ensuite.')
     from .email_verification import require_verified
     require_verified(account)
     if account.ltd_active:raise Conflict('Votre accès LTD est déjà actif.')
@@ -85,7 +88,7 @@ def start_trial(account):
     now=timezone.now()
     account.agency_trial_started=now
     account.agency_trial_until=now+timedelta(days=14)
-    # Starting the time-limited trial replaces the one-diagnosis entry offer.
+    # Starting the time-limited trial replaces the free-analysis entry offer.
     account.free_remaining=0
     account.save(update_fields=['agency_trial_started','agency_trial_until','free_remaining'])
     return account.agency_trial_until

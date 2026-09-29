@@ -4,7 +4,7 @@ from datetime import timedelta
 from functools import wraps
 from django.conf import settings
 from django.contrib.auth import login,logout,views as auth_views
-from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm,AuthenticationForm,PasswordResetForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError,RequestDataTooBig
 from django.core.validators import validate_email
@@ -17,8 +17,9 @@ from django.views.decorators.http import require_http_methods,require_POST
 from local_app.service import Sessions,Invalid,Conflict,analyze,mutate,now,intake,text
 from .models import Account,Analysis,Invitation,Throttle,Workspace,TeamMember,TeamInvitation
 from .email_verification import verified,require_verified
+from .localization import text as translate,html_source,javascript_source
 log=logging.getLogger(__name__)
-def error(message,status=400):return JsonResponse({'error':message},status=status)
+def error(message,status=400):return JsonResponse({'error':translate(message)},status=status)
 def csrf_failure(request,reason=''):return error('Session expirée ou origine refusée. Rechargez la page.',403)
 def limited(request,scope,limit=10,identity=None):
     # Never trust client-supplied forwarding headers. Proxy rate limiting supplements this.
@@ -35,11 +36,15 @@ def limited(request,scope,limit=10,identity=None):
         if timezone.now()-obj.started>timedelta(minutes=15):obj.started=timezone.now();obj.count=0
         obj.count+=1;obj.save()
         return obj.count>limit
+def diagnostic_limited(request):
+    # Keep the IP budget and add an account budget shared by create/edit/answer.
+    return limited(request,'diagnostic',120) or limited(request,'diagnostic-user',120,identity=request.user.pk)
+
 class Login(auth_views.LoginView):
     template_name='registration/login.html'
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        context.update(auth_mode='login',login_form=context['form'],signup_form=UserCreationForm())
+        context.update(marketing_url=settings.MARKETING_URL,auth_mode='login',login_form=context['form'],signup_form=UserCreationForm())
         return context
     def post(self,request,*args,**kwargs):
         if limited(request,'login'):return error('Trop de tentatives. Réessayez dans 15 minutes.',429)
@@ -47,9 +52,27 @@ class Login(auth_views.LoginView):
         identity=request.POST.get('username','').strip().casefold()
         if limited(request,'login-identity',30,identity=identity):return error('Trop de tentatives. Réessayez dans 15 minutes.',429)
         return super().post(request,*args,**kwargs)
+class LocalizedPasswordResetForm(PasswordResetForm):
+    def save(self,**kwargs):
+        from urllib.parse import urlsplit
+        origin=urlsplit(settings.PUBLIC_URL)
+        # Links use the configured application origin, not a request Host alias.
+        kwargs['domain_override']=origin.netloc
+        kwargs['use_https']=origin.scheme=='https'
+        return super().save(**kwargs)
+
+    def send_mail(self,subject_template_name,email_template_name,context,from_email,to_email,html_email_template_name=None):
+        from django.utils import translation
+        lang=Account.objects.filter(user=context['user']).values_list('language',flat=True).first() or 'en'
+        with translation.override(lang):
+            return super().send_mail(subject_template_name,email_template_name,context,from_email,to_email,html_email_template_name)
+
 class PasswordReset(auth_views.PasswordResetView):
+    form_class=LocalizedPasswordResetForm
     def post(self,request,*args,**kwargs):
         if limited(request,'reset',5):return error('Trop de demandes. Réessayez plus tard.',429)
+        identity=request.POST.get('email','').strip().casefold()
+        if limited(request,'reset-identity',5,identity=identity):return error('Trop de demandes. Réessayez plus tard.',429)
         if not settings.EMAIL_HOST:return error('La récupération par email est indisponible. Contactez votre interlocuteur bêta.',503)
         return super().post(request,*args,**kwargs)
 @require_http_methods(['GET','POST'])
@@ -75,7 +98,7 @@ def signup(request,invitation_required=False):
                     Account.objects.create(user=user,beta_until=timezone.now()+timedelta(days=30) if beta_mode else None)
                     if beta_mode:invite.used=True;invite.save()
                     login(request,user);return redirect('/app/')
-    return render(request,'registration/signup.html',{'form':form,'error':msg,'auth_mode':'signup','beta_mode':beta_mode,'signup_form':form,'login_form':AuthenticationForm(request)})
+    return render(request,'registration/signup.html',{'marketing_url':settings.MARKETING_URL,'form':form,'error':translate(msg),'auth_mode':'signup','beta_mode':beta_mode,'signup_form':form,'login_form':AuthenticationForm(request)})
 @require_http_methods(['GET','POST'])
 def activate_beta(request):
     if not request.user.is_authenticated:return redirect('/beta/')
@@ -93,7 +116,7 @@ def activate_beta(request):
                 account.beta_until=max(account.beta_until,until) if account.beta_until else until
                 account.save(update_fields=['beta_until']);invite.used=True;invite.save()
                 return redirect('/app/')
-    return render(request,'registration/activate_beta.html',{'error':msg})
+    return render(request,'registration/activate_beta.html',{'error':translate(msg)})
 
 def welcome(request):
     if not request.user.is_authenticated:return redirect('/login/?next=/welcome/')
@@ -108,10 +131,15 @@ def privacy(request):return render(request,'privacy.html',{'support':settings.SU
 def panel(request):
     if not request.user.is_authenticated:return redirect('/login/?next=/app/')
     account=Account.objects.get(user=request.user)
-    return HttpResponse((settings.BASE_DIR/'local_app/static/index.html').read_text().replace('Local Plan','Bêta privée').replace('Local user','Utilisateur').replace('Stored on this device','Analyses privées'))
+    return HttpResponse(html_source((settings.BASE_DIR/'local_app/static/index.html').read_text().replace('Local Plan','Bêta privée').replace('Local user','Utilisateur').replace('Stored on this device','Analyses privées')))
 def asset(request,name):
-    if name not in ['app.js','trace-examples.json','root-trace.js','style.css','auth.js','auth.css','team.js']:return error('Introuvable',404)
-    return HttpResponse((settings.BASE_DIR/'local_app/static'/name).read_bytes(),content_type='application/json' if name.endswith('.json') else 'text/javascript' if name.endswith('.js') else 'text/css')
+    if name not in ['app.js','trace-examples.json','root-trace.js','style.css','auth.js','auth.css','team.js','billing.css','billing.js','ui-text.js']:return error('Introuvable',404)
+    source=(settings.BASE_DIR/'local_app/static'/name).read_text()
+    if name=='ui-text.js':
+        from .localization import catalog,language
+        source='window.flowfixLanguage='+json.dumps(language())+';window.flowfixCatalog='+json.dumps(catalog(),ensure_ascii=True)+';'+source
+    elif name.endswith('.js'):source=javascript_source(source)
+    return HttpResponse(source,content_type='application/json' if name.endswith('.json') else 'text/javascript' if name.endswith('.js') else 'text/css')
 def endpoint(fn):
     @wraps(fn)
     def wrapped(request,*args,**kwargs):
@@ -155,24 +183,38 @@ def config(request,body):return JsonResponse({'csrf':get_token(request),'mode':'
 def profile(request,body):
     account=Account.objects.get(user=request.user)
     if request.method=='POST':
-        name=text(body.get('display_name',''),60)
-        if not name:raise Invalid('Nom requis.')
-        account.display_name=intake({'description':name},'profile').user_description;account.save(update_fields=['display_name'])
+        fields=[]
+        if 'display_name' in body:
+            name=text(body['display_name'],60)
+            if not name:raise Invalid('Nom requis.')
+            account.display_name=intake({'description':name},'profile').user_description;fields.append('display_name')
+        if 'language' in body:
+            if body['language'] not in ('en','fr'):raise Invalid('Unsupported language.')
+            account.language=body['language'];fields.append('language')
+        if not fields:raise Invalid('No settings supplied.')
+        account.save(update_fields=fields)
+        if 'language' in fields:request.session['flowfix_language']=account.language
     _,limit,plan=entitlement(account)
     active_workspace=None
     if request.GET.get('workspace'):
         selected=workspaces(request.user).select_related('account').filter(pk=request.GET['workspace']).first()
         if selected:
             allowed,shared_limit,shared_plan=entitlement(selected.account)
-            active_workspace={'name':selected.name,'plan':shared_plan,'limit':shared_limit,'can_analyze':allowed,'trial_until':selected.account.agency_trial_until,'role':role_for(selected.account,request.user)}
+            active_workspace={'name':selected.name,'plan':translate(shared_plan),'limit':shared_limit,'can_analyze':allowed,'trial_until':selected.account.agency_trial_until,'role':role_for(selected.account,request.user)}
         else:active_workspace={'plan':'Espace inaccessible','can_analyze':False,'role':None}
-    return JsonResponse({'email_verified':verified(account),'display_name':account.display_name,'mode':'saas','active_workspace':active_workspace,'plan':plan,'usage':account.usage if account.usage_month==timezone.now().strftime('%Y-%m') else 0,'limit':limit,'billing_enabled':settings.BILLING_ENABLED,'beta_until':account.beta_until,'email':request.user.email,'free_remaining':account.free_remaining,'trial_until':account.agency_trial_until,'can_start_trial':not account.agency_trial_started and not account.subscription and not account.ltd_active,'can_analyze':entitlement(account)[0],'workspaces':[{'id':str(w.pk),'name':w.name,'role':role_for(w.account,request.user),'team':w.account.display_name} for w in workspaces(request.user).select_related('account')],'history_days':history_days(account),'seats':team_seats(account),'offers':[{'plan':r['plan'],'interval':r['interval'],'name':PLANS.get(r['plan'],{'name':'Abonnement'})['name']} for r in price_catalog().values()]})
+    return JsonResponse({'email_verified':verified(account),'display_name':account.display_name,'mode':'saas','active_workspace':active_workspace,'plan':translate(plan),'language':account.language,'usage':account.usage if account.usage_month==timezone.now().strftime('%Y-%m') else 0,'limit':limit,'billing_enabled':settings.BILLING_ENABLED,'beta_until':account.beta_until,'email':request.user.email,'free_remaining':account.free_remaining,'trial_until':account.agency_trial_until,'can_start_trial':getattr(settings,'AGENCY_TRIAL_ENABLED',False) and not account.agency_trial_started and not account.subscription and not account.ltd_active,'can_analyze':entitlement(account)[0],'workspaces':[{'id':str(w.pk),'name':w.name,'role':role_for(w.account,request.user),'team':w.account.display_name} for w in workspaces(request.user).select_related('account')],'history_days':history_days(account),'seats':team_seats(account),'offers':[{'plan':r['plan'],'interval':r['interval'],'name':PLANS.get(r['plan'],{'name':'Abonnement'})['name']} for r in price_catalog().values()]})
 @require_POST
 @endpoint
 def preview(request,body):
     if limited(request,'preview',120):return error('Trop de requêtes.',429)
     p=intake({'blueprint':text(body.get('blueprint',''),1000000)},'preview')
     return JsonResponse({'modules':module_choices(p)})
+def stored_analysis_count(account):
+    from django.db.models import Q
+    # Archive visibility is not physical deletion. Count all storage sponsored by
+    # this account, excluding unrelated teams the owner happens to belong to.
+    return Analysis.objects.filter(Q(owner=account.user,workspace__isnull=True)|Q(workspace__account=account)).count()
+
 @require_http_methods(['GET','POST'])
 @endpoint
 def sessions(request,body):
@@ -184,11 +226,11 @@ def sessions(request,body):
         query=query.filter(workspace_id=space) if space else query.filter(workspace__isnull=True,owner=request.user)
         rows=query.values(*['data__'+k for k in keys])
         return JsonResponse(sorted([{k:d['data__'+k] for k in keys} for d in rows],key=lambda d:d['updated'],reverse=True),safe=False)
-    if limited(request,'diagnostic',120):return error('Trop de calculs rapprochés. Réessayez plus tard.',429)
+    if diagnostic_limited(request):return error('Trop de calculs rapprochés. Réessayez plus tard.',429)
     with transaction.atomic():
         account,space,role=sponsor(request.user,body.get('workspace'));can_write(account,role);check_access(account)
         if space and team_seats(account)<2:raise Conflict('L’offre actuelle ne permet pas de nouvelles analyses partagées.')
-        if entitlement(account)[1] is not None and analysis_access(account.user).count()>=500:raise Conflict('Limite de 500 analyses stockées. Exportez puis supprimez les anciennes analyses.')
+        if entitlement(account)[1] is not None and stored_analysis_count(account)>=500:raise Conflict('Limite de 500 analyses stockées. Exportez puis supprimez les anciennes analyses.')
         sid=str(uuid.uuid4());clean,output=analyze(Sessions.parse_inputs(None,body),sid)
         d=dict(id=sid,workspace_id=str(space.pk) if space else None,title=(clean['description'] or clean['error'] or 'Analyse de Blueprint')[:90],created=now(),updated=now(),revision=1,resolution='unknown',inputs=clean,output=output,cycle=0,answered=[],history=[])
         if len(json.dumps(d).encode())>3000000:raise Invalid('Analyse trop volumineuse.')
@@ -210,7 +252,7 @@ def session(request,body,sid,operation=None):
         if operation:return error('Action invalide.',405)
         return JsonResponse(d)
     if operation not in ['answer','feedback','edit','delete']:return error('Action invalide.',405)
-    if operation in ['answer','edit'] and limited(request,'diagnostic',120):return error('Trop de calculs rapprochés. Réessayez plus tard.',429)
+    if operation in ['answer','edit'] and diagnostic_limited(request):return error('Trop de calculs rapprochés. Réessayez plus tard.',429)
     with transaction.atomic():
         query=authorized_analyses(request.user) if operation=='delete' else analysis_access(request.user)
         visible=query.get(id=sid)

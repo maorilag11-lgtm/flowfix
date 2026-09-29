@@ -1,0 +1,96 @@
+{
+  "services": [
+    {
+      "type": "web",
+      "name": "flowfix-product",
+      "runtime": "docker",
+      "plan": "starter",
+      "region": "frankfurt",
+      "dockerfilePath": "./Dockerfile",
+      "dockerContext": ".",
+      "autoDeployTrigger": "off",
+      "maintenanceMode": {
+        "enabled": true
+      },
+      "healthCheckPath": "/healthz",
+      "preDeployCommand": "python manage.py check --deploy --fail-level WARNING && python manage.py release_check && python manage.py migrate --noinput",
+      "envVars": [
+        {
+          "key": "FLOWFIX_DEV",
+          "value": "0"
+        },
+        {
+          "key": "PORT",
+          "value": "8000"
+        },
+        {
+          "key": "TRUST_PROXY",
+          "value": "1"
+        },
+        {
+          "key": "TRUST_CLIENT_IP",
+          "value": "0"
+        },
+        {
+          "key": "BILLING_ENABLED",
+          "value": "0"
+        },
+        {
+          "key": "EMAIL_PORT",
+          "value": "587"
+        },
+        {
+          "key": "DJANGO_SECRET_KEY",
+          "sync": false
+        },
+        {
+          "key": "DJANGO_ALLOWED_HOSTS",
+          "sync": false
+        },
+        {
+          "key": "PUBLIC_URL",
+          "sync": false
+        },
+        {
+          "key": "EMAIL_HOST",
+          "sync": false
+        },
+        {
+          "key": "EMAIL_HOST_USER",
+          "sync": false
+        },
+        {
+          "key": "EMAIL_HOST_PASSWORD",
+          "sync": false
+        },
+        {
+          "key": "DEFAULT_FROM_EMAIL",
+          "sync": false
+        },
+        {
+          "key": "SUPPORT_EMAIL",
+          "sync": false
+        },
+        {
+          "key": "DATABASE_URL",
+          "fromDatabase": {
+            "name": "flowfix-db",
+            "property": "connectionString"
+          }
+        }
+      ]
+    }
+  ],
+  "databases": [
+    {
+      "name": "flowfix-db",
+      "plan": "0.5c-1g",
+      "region": "frankfurt",
+      "databaseName": "flowfix",
+      "user": "flowfix",
+      "postgresMajorVersion": "17",
+      "diskSizeGB": 5,
+      "ipAllowList": []
+    }
+  ]
+}
