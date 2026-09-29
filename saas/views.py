@@ -126,7 +126,9 @@ def welcome(request):
 
 @require_POST
 def signout(request):logout(request);return redirect('/login/')
-def landing(request):return render(request,'landing.html',{'support':settings.SUPPORT_EMAIL})
+def landing(request):
+    from .marketing import serve
+    return serve(request, 'index.html')
 def privacy(request):return render(request,'privacy.html',{'support':settings.SUPPORT_EMAIL})
 def panel(request):
     if not request.user.is_authenticated:return redirect('/login/?next=/app/')
