@@ -3,11 +3,9 @@
     {
       "type": "web",
       "name": "flowfix-test",
-      "runtime": "docker",
+      "runtime": "python",
       "plan": "free",
       "region": "frankfurt",
-      "dockerfilePath": "./Dockerfile",
-      "dockerContext": ".",
       "autoDeployTrigger": "off",
       "healthCheckPath": "/healthz",
       "envVars": [
@@ -49,9 +47,14 @@
             "name": "flowfix-test-db",
             "property": "connectionString"
           }
+        },
+        {
+          "key": "PYTHON_VERSION",
+          "value": "3.12.12"
         }
       ],
-      "dockerCommand": "python deploy/start_test.py"
+      "buildCommand": "pip install -r requirements.lock",
+      "startCommand": "python deploy/start_test.py"
     }
   ],
   "databases": [
@@ -59,8 +62,8 @@
       "name": "flowfix-test-db",
       "plan": "free",
       "region": "frankfurt",
-      "databaseName": "flowfix",
-      "user": "flowfix",
+      "databaseName": "flowfix_test_db",
+      "user": "flowfix_test_db_user",
       "postgresMajorVersion": "17",
       "ipAllowList": []
     }
