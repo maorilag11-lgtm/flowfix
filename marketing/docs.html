@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Documentation · FlowFix</title>
-<meta name="description" content="How to use FlowFix: what to paste in, what happens to your credentials, and how to read a diagnosis.">
+<title>Documentation · FixScenario</title>
+<meta name="description" content="How to use FixScenario: what to paste in, what happens to your credentials, and how to read a diagnosis.">
 <meta name="theme-color" content="#07050E">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
@@ -241,7 +241,7 @@
 <div id="progress"></div>
 <div class="wrap">
   <div id="nav" class="pad">
-    <a class="brand" href="index.html"><img src="logo.webp" alt="" aria-hidden="true" width="29" height="24" style="display: block; width: 29px; height: 24px;"> FlowFix</a>
+    <a class="brand" href="index.html"><img src="logo.webp" alt="" aria-hidden="true" width="29" height="24" style="display: block; width: 29px; height: 24px;"> FixScenario</a>
     <div class="navlinks">
       <a href="how-it-works.html">How it works</a>
       <a href="diagnosis.html">A diagnosis</a>
@@ -257,7 +257,7 @@
 
   <div id="head" class="pad">
     <canvas class="shape" aria-hidden="true"></canvas>
-    <h1 class="rt-h"><span class="vh">What to give FlowFix, and how to read what comes back.</span><span class="rt" data-texts='["What to give it", "What happens to credentials", "How to read a diagnosis", "When it says inconclusive", "What it does not do"]' aria-hidden="true"></span></h1>
+    <h1 class="rt-h"><span class="vh">What to give FixScenario, and how to read what comes back.</span><span class="rt" data-texts='["What to give it", "What happens to credentials", "How to read a diagnosis", "When it says inconclusive", "What it does not do"]' aria-hidden="true"></span></h1>
   </div>
 
   <div class="body pad">
@@ -269,7 +269,7 @@
         <p>Only the first item is required. Each extra one narrows the diagnosis, and the page tells you what a missing piece costs you before you run.</p>
         <ul>
           <li><strong>The error message</strong>, copied from the Make execution log. Raw is better than summarised &mdash; the module number and bundle index matter.</li>
-          <li><strong>The blueprint</strong> (<span class="code">Scenario &rarr; Export blueprint</span>). This is what lets FlowFix see the modules around the failure instead of guessing from the text.</li>
+          <li><strong>The blueprint</strong> (<span class="code">Scenario &rarr; Export blueprint</span>). This is what lets FixScenario see the modules around the failure instead of guessing from the text.</li>
           <li><strong>Execution data</strong> for the failed run, if you can export it. This is what turns a likely cause into a confirmed one.</li>
           <li><strong>Context</strong>: which module you suspect, when it last worked, what you changed since.</li>
         </ul>
@@ -279,7 +279,7 @@
         <header class="sec-hero">
           <h2>What happens to credentials</h2>
         </header>
-        <p>A Make blueprint contains connection references, and can contain tokens and keys depending on how the scenario was built. FlowFix strips those before the blueprint is analysed &mdash; the diagnosis never needs them, only the shape of the scenario.</p>
+        <p>A Make blueprint contains connection references, and can contain tokens and keys depending on how the scenario was built. FixScenario strips those before the blueprint is analysed &mdash; the diagnosis never needs them, only the shape of the scenario.</p>
         <p>The details of what is stripped, what is stored and for how long are on the <a href="security.html">security page</a>.</p>
 
       </section>
@@ -301,7 +301,7 @@
         <header class="sec-hero">
           <h2>When it says inconclusive</h2>
         </header>
-        <p>If several causes remain compatible with what you gave it, FlowFix says so and lists what it ruled out, rather than picking the most plausible one and sounding certain. It then names the one piece of missing information that would settle it.</p>
+        <p>If several causes remain compatible with what you gave it, FixScenario says so and lists what it ruled out, rather than picking the most plausible one and sounding certain. It then names the one piece of missing information that would settle it.</p>
         <p>Guessing here would cost you more time than saying nothing: you would go and change a field that was never the problem.</p>
 
       </section>
@@ -318,7 +318,7 @@
       </section>
       <div class="pager">
         <a href="errors.html"><span class="dir">&larr; Previous</span><span class="ttl">Common Make errors</span></a>
-        <a class="next" href="about.html"><span class="dir">Next &rarr;</span><span class="ttl">About FlowFix</span></a>
+        <a class="next" href="about.html"><span class="dir">Next &rarr;</span><span class="ttl">About FixScenario</span></a>
       </div>
       <div class="endcta">
         <h3>Something broke right now?</h3>
@@ -336,7 +336,7 @@
         <div class="foot-news" style="display: flex; flex-direction: column; gap: 14px; width: 320px; flex-shrink: 0;">
           <div style="display: flex; align-items: center; gap: 10px;">
             <img src="logo.webp" alt="" aria-hidden="true" width="29" height="24" style="display: block; width: 29px; height: 24px;">
-            <span style="font-size: 16px; font-weight: 500; letter-spacing: -0.02em; color: #FFFFFF;">FlowFix</span>
+            <span style="font-size: 16px; font-weight: 500; letter-spacing: -0.02em; color: #FFFFFF;">FixScenario</span>
           </div>
           <p style="font-size: 13.5px; line-height: 1.6; color: #B2B2BE;">Product updates by email are not open yet. Contact us with questions.</p>
           <form id="newsForm" novalidate style="display: flex; flex-direction: column; gap: 12px;">
@@ -372,7 +372,7 @@
       </div>
       <div style="display: flex; flex-direction: column; gap: 2px;">
         <span class="m" style="font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #85859A;">Company</span>
-        <a href="about.html" style="font-size: 13.5px; color: #B2B2BE; text-decoration: none;">About FlowFix</a>
+        <a href="about.html" style="font-size: 13.5px; color: #B2B2BE; text-decoration: none;">About FixScenario</a>
         <a href="contact.html" style="font-size: 13.5px; color: #B2B2BE; text-decoration: none;">Contact</a>
       </div>
       <div style="display: flex; flex-direction: column; gap: 2px;">
@@ -385,7 +385,7 @@
       </div>
 
       <div class="foot-bottom" style="display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.08);">
-        <p style="font-size: 12.5px; color: #8E8E9E;">&copy; 2026 FlowFix. All rights reserved.</p>
+        <p style="font-size: 12.5px; color: #8E8E9E;">&copy; 2026 FixScenario. All rights reserved.</p>
         <p style="font-size: 12.5px; color: #8E8E9E;">Independent product, not affiliated with Make.com or Celonis.</p>
       </div>
 
@@ -400,7 +400,7 @@
        gestionnaire par un fetch() vers l'URL du formulaire de ton service. */
     f.addEventListener('submit', function (e) {
       e.preventDefault();
-      n.innerHTML = 'The list is not open yet &mdash; nothing was sent. Check back once FlowFix leaves private beta.';
+      n.innerHTML = 'The list is not open yet &mdash; nothing was sent. Check back once FixScenario leaves private beta.';
       n.style.color = '#B79BFF';
     });
   })();

@@ -73,12 +73,12 @@ def make_server(port,directory):
     return server
 
 def main():
-    parser=argparse.ArgumentParser(description='FlowFix MVP local')
+    parser=argparse.ArgumentParser(description='FixScenario MVP local')
     parser.add_argument('--port',type=int,default=8765)
     parser.add_argument('--data-dir',default=str(Path(__file__).resolve().parents[1]/'.flowfix-data'))
     args=parser.parse_args();os.umask(0o077)
     server=make_server(args.port,args.data_dir)
-    print(f'FlowFix : http://127.0.0.1:{server.server_port}\nSessions : {Path(args.data_dir).resolve()}\nCtrl+C pour arrêter.',flush=True)
+    print(f'FixScenario : http://127.0.0.1:{server.server_port}\nSessions : {Path(args.data_dir).resolve()}\nCtrl+C pour arrêter.',flush=True)
     try:server.serve_forever()
     except KeyboardInterrupt:pass
     finally:server.server_close()

@@ -154,11 +154,11 @@ Espaces clients et rôles d’équipe	Client workspaces and team roles
 Fenêtre d’historique configurable sur demande	History window configurable on request
 Historique sans limite de durée	No history time limit
 Vous gardez la main dans Make.	You stay in control in Make.
-FlowFix analyse les informations fournies et vous guide. Les corrections restent à appliquer et à vérifier dans votre scénario.	FlowFix analyzes the information you provide and guides you. Apply and verify corrections in your scenario yourself.
-Votre abonnement — FlowFix	Your subscription — FlowFix
+FixScenario analyse les informations fournies et vous guide. Les corrections restent à appliquer et à vérifier dans votre scénario.	FixScenario analyzes the information you provide and guides you. Apply and verify corrections in your scenario yourself.
+Votre abonnement — FixScenario	Your subscription — FixScenario
 Votre abonnement	Your subscription
 Votre abonnement 	Your subscription 
-Votre compte FlowFix	Your FlowFix account
+Votre compte FixScenario	Your FixScenario account
 Abonnement mensuel	Monthly subscription
 Taxes applicables	Applicable taxes
 Calculées au paiement	Calculated at checkout
@@ -167,7 +167,7 @@ Renouvellement automatique chaque mois. Résiliation depuis votre espace de fact
 Confirmer mon adresse email →	Verify my email address →
 Gérer mon abonnement et mes factures	Manage my subscription and invoices
 Paiement sécurisé par Stripe	Secure payment by Stripe
-Vos coordonnées bancaires ne passent pas par FlowFix.	Your card details are never processed by FlowFix.
+Vos coordonnées bancaires ne passent pas par FixScenario.	Your card details are never processed by FixScenario.
 Besoin d’aide avant de choisir ?	Need help choosing?
 Contactez-nous ↗	Contact us ↗
 Confidentialité	Privacy
@@ -202,9 +202,9 @@ Masquer le mot de passe	Hide password
 Adresse email	Email address
 vous@entreprise.fr	you@company.com
 Retour à l’accueil	Back to home
-FlowFix — retour à la page de vente	FlowFix — back to the website
+FixScenario — retour à la page de vente	FixScenario — back to the website
 Le debugger spécialisé Make	The specialist debugger for Make
-Accès à FlowFix	Access FlowFix
+Accès à FixScenario	Access FixScenario
 MOINS DE FLOU. UNE PROCHAINE ÉTAPE.	LESS GUESSWORK. A CLEAR NEXT STEP.
 Reprenez vos	Get back to your
 analyses.	analyses.
@@ -214,26 +214,26 @@ erreurs.	errors.
 Une erreur Make, le bon contexte,	A Make error, the right context,
 des pistes pour comprendre le blocage	insights into what is blocking you
 et savoir quoi vérifier ensuite.	and what to check next.
-FlowFix vous guide.	FlowFix guides you.
+FixScenario vous guide.	FixScenario guides you.
 Choisir un formulaire	Choose a form
 REPRENEZ LÀ OÙ VOUS EN ÉTIEZ	PICK UP WHERE YOU LEFT OFF
 Retrouvez vos diagnostics.	Your diagnostics, all in one place.
 Vos analyses et vos vérifications, au même endroit.	Your analyses and checks, together in one workspace.
-Nouveau sur FlowFix ?	New to FlowFix?
+Nouveau sur FixScenario ?	New to FixScenario?
 Conseils pour un mot de passe valide	Password guidelines
-VOTRE PREMIER PAS AVEC FLOWFIX	YOUR FIRST STEP WITH FLOWFIX
+VOTRE PREMIER PAS AVEC FIXSCENARIO	YOUR FIRST STEP WITH FIXSCENARIO
 Créez votre compte.	Create your account.
 Analysez votre premier problème Make, sans carte bancaire.	Analyze your first Make issue. No card required.
 J’ai lu les	I have read the
-informations sur mes données et les limites de FlowFix	information about my data and FlowFix limitations
+informations sur mes données et les limites de FixScenario	information about my data and FixScenario limitations
 3 analyses gratuites à la création du compte. Les résultats non concluants ne consomment pas de crédit.	3 free analyses when you create an account. Inconclusive results do not use credits.
 Vous avez déjà un compte ?	Already have an account?
-FLOWFIX / VOTRE ESPACE	FLOWFIX / YOUR WORKSPACE
+FIXSCENARIO / VOTRE ESPACE	FIXSCENARIO / YOUR WORKSPACE
 Comprendre.	Understand.
 Avancer.	Move forward.
 COMPRENDRE. VÉRIFIER. AVANCER.	UNDERSTAND. VERIFY. MOVE FORWARD.
 Des pistes expliquées. Des vérifications concrètes. Vous gardez le contrôle.	Clear insights. Practical checks. You stay in control.
-FlowFix est indépendant et n’est pas affilié à Make.	FlowFix is independent and is not affiliated with Make.
+FixScenario est indépendant et n’est pas affilié à Make.	FixScenario is independent and is not affiliated with Make.
 Données & limites	Data & limitations
 Accès bêta-testeur	Beta tester access
 ACCÈS BÊTA-TESTEUR	BETA TESTER ACCESS
@@ -256,7 +256,7 @@ Si un compte correspond à cette adresse, un lien de réinitialisation vous a é
 Ce lien est invalide ou expiré.	This link is invalid or expired.
 Demander un nouveau lien	Request a new link
 Demander un autre lien	Request another link
-Pour réinitialiser votre mot de passe FlowFix, ouvrez ce lien :	To reset your FlowFix password, open this link:
+Pour réinitialiser votre mot de passe FixScenario, ouvrez ce lien :	To reset your FixScenario password, open this link:
 Si vous n’avez pas demandé cette action, ignorez ce message.	If you did not request this, ignore this message.
 Confirmez votre adresse email.	Verify your email address.
 Cette étape protège l’accès à votre équipe et l’attribution de vos offres. Vos analyses gratuites restent disponibles.	This protects your team access and plan activation. Your free analyses remain available.
@@ -269,7 +269,7 @@ Retour à Mon accès	Back to My access
 Mon panneau	My dashboard
 Votre accès	Your access
 Votre compte	Your account
-VOTRE ESPACE FLOWFIX	YOUR FLOWFIX WORKSPACE
+VOTRE ESPACE FIXSCENARIO	YOUR FIXSCENARIO WORKSPACE
 Vos analyses restent accessibles.	Your analyses remain accessible.
 Vos analyses gratuites ont été utilisées ou votre accès est arrivé à échéance. Retrouvez vos analyses et les options disponibles depuis votre panneau.	Your free analyses have been used or your access has expired. Your analyses and available options remain in your dashboard.
 Continuez depuis Mon accès	Continue from My access
@@ -298,11 +298,11 @@ Déposez votre fichier ici	Drop your file here
 ou parcourez vos fichiers	or browse your files
 Dans Make : menu du scénario → Export Blueprint.	In Make: scenario menu → Export Blueprint.
 Ajoutez le message exact et le Blueprint quand vous le pouvez.	Include the exact message and Blueprint when possible.
-FlowFix ne modifie jamais votre scénario Make automatiquement.	FlowFix never modifies your Make scenario automatically.
+FixScenario ne modifie jamais votre scénario Make automatiquement.	FixScenario never modifies your Make scenario automatically.
 Décrivez le blocage	Describe the issue
 Structure fournie	Provided structure
 Suivez la prochaine étape	Follow the next step
-FlowFix propose une vérification ou vous demande une précision.	FlowFix suggests a check or asks for more context.
+FixScenario propose une vérification ou vous demande une précision.	FixScenario suggests a check or asks for more context.
 Vérifiez les pistes proposées et appliquez les corrections dans Make.	Check the proposed explanations and apply corrections in Make.
 Tout voir	View all
 Exemples de diagnostic	Diagnostic examples
@@ -366,10 +366,10 @@ Non précisé	Not specified
 Source indiquant que ce champ attend du JSON	Source showing this field expects JSON
 Documentation précise, description du champ ou erreur explicite	Specific documentation, field description or explicit error
 Source de l’erreur de syntaxe JSON	Source of the JSON syntax error
-Ces éléments sont vos observations déclarées. FlowFix ne vérifie pas l’exécution dans Make et ne modifie pas le scénario.	These are your reported observations. FlowFix does not verify execution in Make or modify the scenario.
+Ces éléments sont vos observations déclarées. FixScenario ne vérifie pas l’exécution dans Make et ne modifie pas le scénario.	These are your reported observations. FixScenario does not verify execution in Make or modify the scenario.
 Examiner les données en amont (facultatif)	Examine upstream data (optional)
 Examiner les données en amont	Examine upstream data
-Pour comparer une donnée observée à une exigence explicite : présence, type, null ou tableau non vide. Importez le Blueprint et sélectionnez le module en erreur ci-dessus. FlowFix utilise uniquement les références de mapping qu’il reconnaît.	Compare observed data with an explicit requirement: presence, type, null or a non-empty array. Import the Blueprint and select the failing module above. FlowFix only uses mapping references it recognizes.
+Pour comparer une donnée observée à une exigence explicite : présence, type, null ou tableau non vide. Importez le Blueprint et sélectionnez le module en erreur ci-dessus. FixScenario utilise uniquement les références de mapping qu’il reconnaît.	Compare observed data with an explicit requirement: presence, type, null or a non-empty array. Import the Blueprint and select the failing module above. FixScenario only uses mapping references it recognizes.
 1 · Choisissez la donnée à examiner	1 · Choose the data to examine
 Mapping explicite du module en erreur	Explicit mapping of the failing module
 Aucune relation ne sera inventée si le mapping n’est pas reconnu.	No relationship is invented if the mapping is not recognized.
@@ -443,7 +443,7 @@ Traçage des données	Data tracing
 Chemins de données observés	Observed data paths
 Voir les chemins et les preuves	View paths and evidence
 Ajouter mes observations de ce champ	Add my observations of this field
-Ajoutez les valeurs observées. FlowFix ne les récupère pas dans Make.	Add observed values. FlowFix does not fetch them from Make.
+Ajoutez les valeurs observées. FixScenario ne les récupère pas dans Make.	Add observed values. FixScenario does not fetch them from Make.
 Compléter les preuves	Add evidence
 Traçage : 	Tracing: 
 Écart au contrat observé	Observed contract mismatch
@@ -592,11 +592,11 @@ Le champ cible sélectionné est explicitement obligatoire.	The selected target 
 La valeur null est-elle autorisée ?	Is null allowed?
 Inviter dans votre équipe	Invite to your team
 Le diagnostic spécialisé Make	Diagnostics specialized in Make
-FlowFix est un outil indépendant, sans affiliation avec Make.	FlowFix is an independent tool, not affiliated with Make.
+FixScenario est un outil indépendant, sans affiliation avec Make.	FixScenario is an independent tool, not affiliated with Make.
 Informations sur la bêta	Beta information
 Votre scénario Make bloque.	Your Make scenario is stuck.
 Comprenez pourquoi.	Understand why.
-Ajoutez l’erreur et le Blueprint. FlowFix vous aide à examiner les causes possibles et les vérifications à effectuer, avec des conseils documentés.	Add the error and Blueprint. FlowFix helps you examine possible causes and checks with documented guidance.
+Ajoutez l’erreur et le Blueprint. FixScenario vous aide à examiner les causes possibles et les vérifications à effectuer, avec des conseils documentés.	Add the error and Blueprint. FixScenario helps you examine possible causes and checks with documented guidance.
 Aucune modification automatique de vos scénarios. Vous gardez la main dans Make.	No automatic scenario changes. You stay in control in Make.
 Erreur exacte, Blueprint JSON, réponse HTTP et données du module. Retirez les informations sensibles inutiles avant l’import.	Exact error, JSON Blueprint, HTTP response and module data. Remove unnecessary sensitive information before importing.
 Constats, hypothèses concurrentes, confiance et informations manquantes restent visibles.	Findings, alternative hypotheses, confidence and missing information stay visible.
@@ -622,10 +622,10 @@ Historique et décompte	History and usage accounting
 Limites du diagnostic	Diagnostic limitations
 Avant ouverture publique	Before public launch
 Votre compte, les erreurs, Blueprints, données d’exécution et retours que vous importez sont stockés sur le serveur de l’exploitant. Les analyses personnelles sont privées. Celles créées dans un espace client sont accessibles au propriétaire et aux membres de son équipe, selon leur rôle. Les membres ne voient pas vos analyses personnelles. Certains secrets reconnus sont masqués avant stockage des analyses, mais ce masquage n’est pas une anonymisation complète. Retirez les données personnelles et secrets inutiles avant import.	Your account, errors, Blueprints, execution data and feedback are stored on the operator’s server. Personal analyses are private. Analyses in a client workspace are accessible to its owner and team members according to their roles. Members cannot see your personal analyses. Some recognized secrets are redacted before storage, but this is not full anonymization. Remove unnecessary personal data and secrets before importing.
-Le moteur de diagnostic s’exécute sur le serveur sans transmettre vos Blueprints à un modèle externe ni à Make. Vos retours n’enrichissent pas automatiquement la base de connaissances. La facturation, lorsqu’elle est activée, utilise Stripe ; les informations de carte ne passent pas par FlowFix.	The diagnostic engine runs on the server without sending Blueprints to an external model or Make. Feedback does not automatically update the knowledge base. Billing, when enabled, uses Stripe; card details do not pass through FlowFix.
+Le moteur de diagnostic s’exécute sur le serveur sans transmettre vos Blueprints à un modèle externe ni à Make. Vos retours n’enrichissent pas automatiquement la base de connaissances. La facturation, lorsqu’elle est activée, utilise Stripe ; les informations de carte ne passent pas par FixScenario.	The diagnostic engine runs on the server without sending Blueprints to an external model or Make. Feedback does not automatically update the knowledge base. Billing, when enabled, uses Stripe; card details do not pass through FixScenario.
 Vous pouvez consulter, exporter un rapport et supprimer chaque analyse. La suppression du compte est disponible dans les paramètres lorsqu’aucun abonnement n’est en cours. Les copies de sauvegarde suivent la durée de conservation fixée par l’exploitant.	You can view, export and delete each analysis. Account deletion is available in settings when no subscription is running. Backup copies follow the retention period set by the operator.
 L’offre Solo donne accès aux analyses des 30 derniers jours. Les offres Agence et l’essai ne limitent pas la durée de consultation. La fin de la consultation ne signifie pas une suppression physique : la politique de conservation et des sauvegardes doit être fixée par l’exploitant avant ouverture. Un journal technique conserve le statut et le décompte de chaque calcul, sans recopier vos données d’exécution. Un résultat ambigu, insuffisamment étayé ou contradictoire ne consomme pas de crédit. Une hypothèse principale avec une confiance moyenne ou élevée peut être décomptée ; cela ne certifie pas que la correction a réussi.	Solo provides access to analyses from the last 30 days. Agency and existing trials have no viewing time limit. The end of viewing access does not mean physical deletion: the operator must define retention and backup policies before launch. A technical log records each calculation’s status and credit usage without copying execution data. Ambiguous, insufficiently supported or contradictory results do not use credits. A leading hypothesis with medium or high confidence may use a credit; this does not certify a successful fix.
-Les conseils sont conditionnels. FlowFix ne vérifie pas l’exécution dans Make et ne garantit pas la résolution. Le résultat « résolu » correspond à votre déclaration.	Guidance is conditional. FlowFix does not verify execution in Make or guarantee resolution. A “resolved” result reflects your report.
+Les conseils sont conditionnels. FixScenario ne vérifie pas l’exécution dans Make et ne garantit pas la résolution. Le résultat « résolu » correspond à votre déclaration.	Guidance is conditional. FixScenario does not verify execution in Make or guarantee resolution. A “resolved” result reflects your report.
 Cette fiche décrit le fonctionnement technique de la version bêta. L’identité et les coordonnées de l’exploitant, l’hébergeur, les durées de conservation et les conditions contractuelles doivent être renseignés avant de collecter des données de testeurs sur un service déployé.	This page describes the beta’s technical operation. The operator’s identity and contact details, hosting provider, retention periods and contractual terms must be completed before collecting tester data on a deployed service.
 Contact :	Contact:
 Vous pouvez activer votre essai, rejoindre une équipe ou souscrire une offre.	You can join a team or choose a subscription.
@@ -754,7 +754,7 @@ Vous faites déjà partie de cette équipe.	You are already on this team.
 Invitation acceptée. Vos espaces clients sont disponibles dans le panneau.	Invitation accepted. Client workspaces are available in your dashboard.
 Ce compte existe déjà. Connectez-vous.	This account already exists. Sign in.
 Requête invalide.	Invalid request.
-Confirmez avoir lu les informations sur vos données et les limites de FlowFix.	Confirm you have read the information about your data and FlowFix limitations.
+Confirmez avoir lu les informations sur vos données et les limites de FixScenario.	Confirm you have read the information about your data and FixScenario limitations.
 Cette personne fait déjà partie de votre équipe.	This person is already on your team.
 Une invitation est déjà en cours pour cette adresse.	An invitation is already pending for this address.
 Tous les sièges sont occupés ou réservés par une invitation.	All seats are occupied or reserved by invitations.
@@ -797,13 +797,13 @@ Nom requis.	Name required.
 Introuvable	Not found
 Utilisez votre adresse email comme identifiant.	Use your email address as your username.
 Mot de passe incorrect.	Incorrect password.
-Confirmez votre adresse email — FlowFix	Verify your email address — FlowFix
-Confirmez cette adresse pour votre compte FlowFix :	Verify this email address for your FlowFix account:
+Confirmez votre adresse email — FixScenario	Verify your email address — FixScenario
+Confirmez cette adresse pour votre compte FixScenario :	Verify this email address for your FixScenario account:
 Connectez-vous au compte concerné, puis confirmez. Ce lien expire dans 24 heures. Un nouvel envoi remplace le précédent.	Sign into the matching account, then confirm. This link expires in 24 hours. A new email replaces the previous link.
 Si vous n’avez pas demandé cet email, ignorez-le.	If you did not request this email, ignore it.
-Réinitialisation du mot de passe FlowFix	Reset your FlowFix password
+Réinitialisation du mot de passe FixScenario	Reset your FixScenario password
 Rechercher une analyse…	Search analyses…
-Réinitialisation de votre mot de passe FlowFix	Reset your FlowFix password
+Réinitialisation de votre mot de passe FixScenario	Reset your FixScenario password
 Texte absent ou trop volumineux.	Text is missing or too large.
 Les informations fournies ne peuvent pas être analysées.	The supplied information cannot be analyzed.
 Le fichier doit être un Blueprint de scénario Make au format JSON.	The file must be a Make scenario Blueprint in JSON format.
@@ -824,7 +824,7 @@ LA SUITE	NEXT STEP
 Historique des analyses	Analysis history
 Ce type de module ou ce filtre n’est pas reconnu dans le Blueprint.	This module type or filter is not recognized in the Blueprint.
 DU BLOCAGE À LA CLARTÉ	FROM BLOCKED TO CLEAR
-FlowFix — Comprendre vos erreurs Make	FlowFix — Understand your Make errors
+FixScenario — Comprendre vos erreurs Make	FixScenario — Understand your Make errors
 Identifiant de l’exécution concernée	Relevant execution ID
 Identifiant lu dans l’historique Make	ID from Make history
 Inclure ces preuves dans l’analyse	Include this evidence in the analysis
@@ -844,3 +844,38 @@ Nom d’espace requis.	Workspace name required.
 Adresse email invalide.	Invalid email address.
 Adresse invalide.	Invalid address.
 Espace de travail	Workspace
+Récupérer votre accès	Recover your access
+VOTRE ESPACE VOUS ATTEND	YOUR WORKSPACE IS WAITING
+Retrouvez votre	Get back into
+élan.	your flow.
+Un nouveau mot de passe.	A fresh password.
+Vos analyses, toujours au même endroit.	Your analyses, right where you left them.
+RÉCUPÉRATION DU COMPTE	ACCOUNT RECOVERY
+Besoin d’aide ?	Need a hand?
+Contactez-nous	Contact us
+Un lien personnel. Un nouveau départ.	One personal link. A fresh start.
+REPRENEZ LA MAIN	LET’S GET YOU BACK IN
+Mot de passe oublié ?	Forgot your password?
+Indiquez l’adresse email de votre compte. Nous vous enverrons un lien pour choisir un nouveau mot de passe.	Enter the email address for your account. We’ll send you a link to choose a new password.
+vous@entreprise.com	you@company.com
+Envoyer le lien	Send reset link
+Vous vous souvenez du mot de passe ?	Remember your password?
+Retour à la connexion	Back to sign in
+PROCHAINE ÉTAPE : VOTRE MESSAGERIE	NEXT STOP: YOUR INBOX
+Vérifiez vos emails.	Check your inbox.
+Rien reçu ?	Nothing yet?
+Vérifiez les courriers indésirables et l’adresse utilisée. L’email peut prendre quelques instants à arriver.	Check your spam folder and the address you entered. The email may take a few moments to arrive.
+Utiliser une autre adresse	Try another email address
+UN NOUVEAU DÉPART	A FRESH START
+Votre nouveau mot de passe.	Your new password.
+Choisissez un mot de passe unique pour retrouver votre espace FixScenario.	Choose a unique password to get back to your FixScenario workspace.
+Conseils pour votre mot de passe	Password guidelines
+Enregistrer le mot de passe	Save new password
+REPARTONS D’UN NOUVEAU LIEN	LET’S GET YOU A NEW LINK
+Ce lien n’est plus valide.	This link is no longer valid.
+Il a peut-être expiré ou déjà été utilisé. Demandez un nouveau lien pour continuer.	It may have expired or already been used. Request a new link to continue.
+Demander un nouveau lien	Request a new link
+VOUS POUVEZ REPRENDRE	YOU’RE READY TO GO
+Mot de passe mis à jour.	Password updated.
+Votre nouveau mot de passe est enregistré. Connectez-vous pour retrouver vos analyses.	Your new password is saved. Sign in to get back to your analyses.
+L’envoi d’emails n’est pas encore activé sur cette version de test. Contactez-nous pour obtenir de l’aide.	Email delivery is not enabled on this test version yet. Contact us for help.

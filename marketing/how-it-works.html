@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How it works · FlowFix</title>
-<meta name="description" content="How FlowFix works: start with an error, add workflow context, and review likely causes, checks and supported corrections.">
+<title>How it works · FixScenario</title>
+<meta name="description" content="How FixScenario works: start with an error, add workflow context, and review likely causes, checks and supported corrections.">
 <meta name="theme-color" content="#07050E">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
@@ -301,7 +301,7 @@
             filter: drop-shadow(0 3px 5px rgba(26,26,46,.34));
             animation: pv-cur 6s ease-in-out infinite; }
 
-  /* le champ de FlowFix : en relief, pose sur le panneau */
+  /* le champ de FixScenario : en relief, pose sur le panneau */
   .pv-bar { position: relative; flex: 1 1 auto; min-width: 0;
             display: flex; align-items: center; gap: 10px;
             padding: 10px 10px 10px 12px; border-radius: 13px;
@@ -437,7 +437,7 @@
 <div id="progress"></div>
 <div class="wrap">
   <div id="nav" class="pad">
-    <a class="brand" href="index.html"><img src="logo.webp" alt="" aria-hidden="true" width="29" height="24" style="display: block; width: 29px; height: 24px;"> FlowFix</a>
+    <a class="brand" href="index.html"><img src="logo.webp" alt="" aria-hidden="true" width="29" height="24" style="display: block; width: 29px; height: 24px;"> FixScenario</a>
     <div class="navlinks">
       <a href="how-it-works.html" class="here">How it works</a>
       <a href="diagnosis.html">A diagnosis</a>
@@ -465,7 +465,7 @@
         </header>
         <p>Start from the raw Make message, or just the symptom. Both work &mdash; they only change how narrow the diagnosis can get.</p>
         <p>The raw message is better than a summary, because the module number and the bundle index in it are what let the analysis find the failing run in your execution data. If you only have <em>&laquo;&nbsp;it stopped writing rows this morning&nbsp;&raquo;</em>, that is still a valid starting point.</p>
-      <figure class="pv" role="img" aria-label="Copy the error message from the Make execution log, paste it into FlowFix, and run the diagnosis.">
+      <figure class="pv" role="img" aria-label="Copy the error message from the Make execution log, paste it into FixScenario, and run the diagnosis.">
         <div class="pv-top" aria-hidden="true">
           <span class="pv-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="3" width="8" height="4" rx="1.3"/><path d="M8 5H6.4A1.4 1.4 0 0 0 5 6.4v13.2A1.4 1.4 0 0 0 6.4 21h11.2a1.4 1.4 0 0 0 1.4-1.4V6.4A1.4 1.4 0 0 0 17.6 5H16"/><path d="M9 12h6M9 16h4"/></svg></span>
           <span class="pv-kicker">Copy &middot; paste &middot; diagnose</span>
@@ -502,7 +502,7 @@
           <h2>Workflow analysis</h2>
         </header>
         <p>This is the step that makes the difference. The error names the module that threw it; that module is usually the victim, not the culprit.</p>
-        <p>So instead of parsing the wording, FlowFix rebuilds the neighbourhood of the failure from your blueprint: which modules feed the one that broke, what shape each of them promises, and what they actually produced on the run that failed.</p>
+        <p>So instead of parsing the wording, FixScenario rebuilds the neighbourhood of the failure from your blueprint: which modules feed the one that broke, what shape each of them promises, and what they actually produced on the run that failed.</p>
         <h3>What it looks at</h3>
         <ul>
           <li>The chain upstream of the failing module, module by module.</li>
@@ -562,7 +562,7 @@
         <div class="foot-news" style="display: flex; flex-direction: column; gap: 14px; width: 320px; flex-shrink: 0;">
           <div style="display: flex; align-items: center; gap: 10px;">
             <img src="logo.webp" alt="" aria-hidden="true" width="29" height="24" style="display: block; width: 29px; height: 24px;">
-            <span style="font-size: 16px; font-weight: 500; letter-spacing: -0.02em; color: #FFFFFF;">FlowFix</span>
+            <span style="font-size: 16px; font-weight: 500; letter-spacing: -0.02em; color: #FFFFFF;">FixScenario</span>
           </div>
           <p style="font-size: 13.5px; line-height: 1.6; color: #B2B2BE;">Product updates by email are not open yet. Contact us with questions.</p>
           <form id="newsForm" novalidate style="display: flex; flex-direction: column; gap: 12px;">
@@ -598,7 +598,7 @@
       </div>
       <div style="display: flex; flex-direction: column; gap: 2px;">
         <span class="m" style="font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #85859A;">Company</span>
-        <a href="about.html" style="font-size: 13.5px; color: #B2B2BE; text-decoration: none;">About FlowFix</a>
+        <a href="about.html" style="font-size: 13.5px; color: #B2B2BE; text-decoration: none;">About FixScenario</a>
         <a href="contact.html" style="font-size: 13.5px; color: #B2B2BE; text-decoration: none;">Contact</a>
       </div>
       <div style="display: flex; flex-direction: column; gap: 2px;">
@@ -611,7 +611,7 @@
       </div>
 
       <div class="foot-bottom" style="display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.08);">
-        <p style="font-size: 12.5px; color: #8E8E9E;">&copy; 2026 FlowFix. All rights reserved.</p>
+        <p style="font-size: 12.5px; color: #8E8E9E;">&copy; 2026 FixScenario. All rights reserved.</p>
         <p style="font-size: 12.5px; color: #8E8E9E;">Independent product, not affiliated with Make.com or Celonis.</p>
       </div>
 
@@ -626,7 +626,7 @@
        gestionnaire par un fetch() vers l'URL du formulaire de ton service. */
     f.addEventListener('submit', function (e) {
       e.preventDefault();
-      n.innerHTML = 'The list is not open yet &mdash; nothing was sent. Check back once FlowFix leaves private beta.';
+      n.innerHTML = 'The list is not open yet &mdash; nothing was sent. Check back once FixScenario leaves private beta.';
       n.style.color = '#B79BFF';
     });
   })();

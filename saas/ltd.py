@@ -36,7 +36,7 @@ def fulfill(account,checkout_id,api):
     product=(items[0].get('price') or {}).get('product') or {}
     if not hasattr(product,'get'):raise Invalid('Produit non développé.')
     names={'solo':'Solo','pro':'Pro','agence':'Agence'}
-    tier=next((k for k,v in LTD_PLANS.items() if session.get('currency')=='eur' and session.get('amount_total')==v['price'] and product.get('name')=='Prévente FlowFix LTD '+names[k]),None)
+    tier=next((k for k,v in LTD_PLANS.items() if session.get('currency')=='eur' and session.get('amount_total')==v['price'] and product.get('name')=='Prévente FixScenario LTD '+names[k]),None)
     if not tier:raise Invalid('Offre ou montant non reconnu.')
     intent=session.get('payment_intent')
     if not isinstance(intent,str) or not intent.startswith('pi_'):raise Invalid('Référence de paiement absente.')

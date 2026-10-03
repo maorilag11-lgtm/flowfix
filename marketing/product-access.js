@@ -1,11 +1,11 @@
 (() => {
   'use strict';
   const local = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
-  let origin = window.FLOWFIX_PRODUCT_ORIGIN || (local ? 'http://127.0.0.1:8767' : '');
+  let origin = window.FLOWFIX_PRODUCT_ORIGIN || (local ? 'http://127.0.0.1:8771' : '');
   try {
     const url = new URL(origin);
     if (url.username || url.password || url.pathname !== '/' || url.search || url.hash ||
-        (url.protocol !== 'https:' && !(local && url.origin === 'http://127.0.0.1:8767'))) throw new Error('Invalid product origin');
+        (url.protocol !== 'https:' && !(local && url.origin === 'http://127.0.0.1:8771'))) throw new Error('Invalid product origin');
     origin = url.origin;
   } catch {
     origin = '';
@@ -29,6 +29,6 @@
   const signup = new URLSearchParams(location.search).get('mode') === 'signup';
   link.href = origin + (signup ? '/signup/' : '/login/');
   link.hidden = false;
-  status.textContent = 'Opening FlowFix sign-in…';
+  status.textContent = 'Opening FixScenario sign-in…';
   location.replace(link.href);
 })();

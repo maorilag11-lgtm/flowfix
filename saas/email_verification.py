@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.db import transaction
 from django.shortcuts import render,redirect
-from django.utils import timezone
+from django.utils import timezone,translation
 from django.views.decorators.http import require_http_methods
 from local_app.service import Conflict
 from .models import Account,EmailVerification
@@ -23,6 +23,28 @@ def verified(account):
 def require_verified(account):
     if not verified(account):
         raise Conflict('Confirmez votre adresse email depuis Mon accès avant de continuer.')
+
+
+def send_verification(account):
+    """Issue a fresh proof and send it; delivery failure preserves the previous proof."""
+    if not settings.EMAIL_HOST or not settings.DEFAULT_FROM_EMAIL:
+        return False
+    try:
+        with translation.override(account.language or 'en'):
+            with transaction.atomic():
+                account=Account.objects.select_for_update().select_related('user').get(pk=account.pk)
+                email=account.user.email.strip().lower();validate_email(email)
+                secret=secrets.token_urlsafe(32)
+                EmailVerification.objects.update_or_create(account=account,defaults={'email':email,'digest':hashlib.sha256(secret.encode()).hexdigest(),'expires':timezone.now()+timedelta(hours=24)})
+                url=settings.PUBLIC_URL+'/verify-email/'+secret+'/'
+                sent=send_mail(translate('Confirmez votre adresse email — FixScenario'),
+                    translate('Confirmez cette adresse pour votre compte FixScenario :')+'\n\n'+url+'\n\n'+translate('Connectez-vous au compte concerné, puis confirmez. Ce lien expire dans 24 heures. Un nouvel envoi remplace le précédent.')+'\n'+translate('Si vous n’avez pas demandé cet email, ignorez-le.'),
+                    settings.DEFAULT_FROM_EMAIL,[email],fail_silently=False)
+                if sent!=1:raise RuntimeError('Email not sent')
+        return True
+    except Exception:
+        # Keep transport credentials, recipients and tokens out of errors/logs.
+        return False
 
 
 @login_required
@@ -51,16 +73,7 @@ def verification(request,token=None):
             message='L’envoi des emails n’est pas encore disponible. Votre compte reste accessible.';status=503
         else:
             try:
-                with transaction.atomic():
-                    account=Account.objects.select_for_update().select_related('user').get(pk=account.pk)
-                    email=account.user.email.strip().lower();validate_email(email)
-                    secret=secrets.token_urlsafe(32)
-                    EmailVerification.objects.update_or_create(account=account,defaults={'email':email,'digest':hashlib.sha256(secret.encode()).hexdigest(),'expires':timezone.now()+timedelta(hours=24)})
-                    url=settings.PUBLIC_URL+'/verify-email/'+secret+'/'
-                    sent=send_mail(translate('Confirmez votre adresse email — FlowFix'),
-                        translate('Confirmez cette adresse pour votre compte FlowFix :')+'\n\n'+url+'\n\n'+translate('Connectez-vous au compte concerné, puis confirmez. Ce lien expire dans 24 heures. Un nouvel envoi remplace le précédent.')+'\n'+translate('Si vous n’avez pas demandé cet email, ignorez-le.'),
-                        settings.DEFAULT_FROM_EMAIL,[email],fail_silently=False)
-                    if sent!=1:raise RuntimeError('Email not sent')
+                if not send_verification(account):raise RuntimeError('Email not sent')
                 message='Email envoyé. Ouvrez le lien reçu et confirmez votre adresse. Pensez aux indésirables.'
             except Exception:
                 # Never reflect SMTP errors or log a token/recipient.

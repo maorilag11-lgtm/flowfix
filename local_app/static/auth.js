@@ -17,7 +17,7 @@
       if (link.dataset.authMode === mode) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
-    document.title = (mode === 'login' ? 'Connexion' : (auth.dataset.beta === 'true' ? 'Activer mon invitation' : 'Créer un compte')) + ' — FlowFix';
+    document.title = (mode === 'login' ? 'Connexion' : (auth.dataset.beta === 'true' ? 'Activer mon invitation' : 'Créer un compte')) + ' — FixScenario';
     if (focus) panes[mode].querySelector('h2').focus({preventScroll: true});
   }
   function finish() {

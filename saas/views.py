@@ -1,22 +1,24 @@
 from local_app.diagnostic_contract import module_choices
 import copy,hashlib,json,uuid,logging
+from smtplib import SMTPException
 from datetime import timedelta
 from functools import wraps
 from django.conf import settings
 from django.contrib.auth import login,logout,views as auth_views
-from django.contrib.auth.forms import UserCreationForm,AuthenticationForm,PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError,RequestDataTooBig
 from django.core.validators import validate_email
-from django.db import transaction
+from django.db import transaction,IntegrityError
 from django.http import JsonResponse,HttpResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import render,redirect
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods,require_POST
 from local_app.service import Sessions,Invalid,Conflict,analyze,mutate,now,intake,text
+from .forms import SignupForm,EmailAuthenticationForm
 from .models import Account,Analysis,Invitation,Throttle,Workspace,TeamMember,TeamInvitation
-from .email_verification import verified,require_verified
+from .email_verification import verified,require_verified,send_verification
 from .localization import text as translate,html_source,javascript_source
 log=logging.getLogger(__name__)
 def error(message,status=400):return JsonResponse({'error':translate(message)},status=status)
@@ -41,10 +43,11 @@ def diagnostic_limited(request):
     return limited(request,'diagnostic',120) or limited(request,'diagnostic-user',120,identity=request.user.pk)
 
 class Login(auth_views.LoginView):
+    authentication_form=EmailAuthenticationForm
     template_name='registration/login.html'
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        context.update(marketing_url=settings.MARKETING_URL,auth_mode='login',login_form=context['form'],signup_form=UserCreationForm())
+        context.update(marketing_url=settings.MARKETING_URL,auth_mode='login',login_form=context['form'],signup_form=SignupForm())
         return context
     def post(self,request,*args,**kwargs):
         if limited(request,'login'):return error('Trop de tentatives. Réessayez dans 15 minutes.',429)
@@ -65,7 +68,18 @@ class LocalizedPasswordResetForm(PasswordResetForm):
         from django.utils import translation
         lang=Account.objects.filter(user=context['user']).values_list('language',flat=True).first() or 'en'
         with translation.override(lang):
-            return super().send_mail(subject_template_name,email_template_name,context,from_email,to_email,html_email_template_name)
+            from django.core.mail import EmailMultiAlternatives
+            from django.template.loader import render_to_string
+            subject=''.join(render_to_string(subject_template_name,context).splitlines())
+            body=render_to_string(email_template_name,context)
+            message=EmailMultiAlternatives(subject,body,from_email,[to_email])
+            if html_email_template_name:
+                message.attach_alternative(render_to_string(html_email_template_name,context),'text/html')
+            try:
+                if message.send()!=1:raise SMTPException('Email delivery failed')
+            except (SMTPException,OSError):
+                # Do not log transport exception details or the recipient address.
+                raise SMTPException('Email delivery failed') from None
 
 class PasswordReset(auth_views.PasswordResetView):
     form_class=LocalizedPasswordResetForm
@@ -73,32 +87,45 @@ class PasswordReset(auth_views.PasswordResetView):
         if limited(request,'reset',5):return error('Trop de demandes. Réessayez plus tard.',429)
         identity=request.POST.get('email','').strip().casefold()
         if limited(request,'reset-identity',5,identity=identity):return error('Trop de demandes. Réessayez plus tard.',429)
-        if not settings.EMAIL_HOST:return error('La récupération par email est indisponible. Contactez votre interlocuteur bêta.',503)
-        return super().post(request,*args,**kwargs)
+        if not settings.EMAIL_HOST:
+            return self.render_to_response(self.get_context_data(form=self.get_form(), reset_error=translate('L’envoi d’emails n’est pas encore activé sur cette version de test. Contactez-nous pour obtenir de l’aide.')), status=503)
+        try:
+            return super().post(request,*args,**kwargs)
+        except (SMTPException,OSError):
+            return self.render_to_response(self.get_context_data(form=self.get_form(),reset_error=translate('L’email n’a pas pu être envoyé. Réessayez plus tard.')),status=503)
 @require_http_methods(['GET','POST'])
 def signup(request,invitation_required=False):
-    if invitation_required and request.user.is_authenticated:return activate_beta(request)
+    if request.user.is_authenticated:
+        return activate_beta(request) if invitation_required else redirect('/app/')
     beta_mode=invitation_required or (request.method=='POST' and 'invitation' in request.POST)
-    form=UserCreationForm(request.POST or None)
+    form=SignupForm(request.POST or None)
     msg=''
     if request.method=='POST':
-        if limited(request,'signup'):return error('Trop de tentatives. Réessayez dans 15 minutes.',429)
+        if limited(request,'signup'):
+            return render(request,'registration/signup.html',{'marketing_url':settings.MARKETING_URL,'auth_mode':'signup','beta_mode':beta_mode,'signup_form':form,'login_form':EmailAuthenticationForm(request),'error':translate('Trop de tentatives. Réessayez dans 15 minutes.')},status=429)
         email=request.POST.get('username','').strip().lower()
         try:validate_email(email)
         except ValidationError:msg='Utilisez votre adresse email comme identifiant.'
         if not msg and form.is_valid():
             digest=hashlib.sha256(request.POST.get('invitation','').encode()).hexdigest()
-            with transaction.atomic():
-                invite=Invitation.objects.select_for_update().filter(digest=digest,email=email,used=False,expires__gt=timezone.now()).first()
-                if beta_mode and not invite:msg='Invitation invalide, expirée ou destinée à une autre adresse.'
-                elif User.objects.filter(username__iexact=email).exists():msg='Ce compte existe déjà. Connectez-vous.'
-                elif request.POST.get('acknowledge')!='yes':msg='Confirmez avoir lu les informations sur vos données et les limites de FlowFix.'
-                else:
-                    user=form.save(commit=False);user.username=email;user.email=email;user.save()
-                    Account.objects.create(user=user,beta_until=timezone.now()+timedelta(days=30) if beta_mode else None)
-                    if beta_mode:invite.used=True;invite.save()
-                    login(request,user);return redirect('/app/')
-    return render(request,'registration/signup.html',{'marketing_url':settings.MARKETING_URL,'form':form,'error':translate(msg),'auth_mode':'signup','beta_mode':beta_mode,'signup_form':form,'login_form':AuthenticationForm(request)})
+            try:
+                with transaction.atomic():
+                    invite=Invitation.objects.select_for_update().filter(digest=digest,email=email,used=False,expires__gt=timezone.now()).first()
+                    if beta_mode and not invite:msg='Invitation invalide, expirée ou destinée à une autre adresse.'
+                    elif User.objects.filter(username__iexact=email).exists():msg='Ce compte existe déjà. Connectez-vous.'
+                    elif request.POST.get('acknowledge')!='yes':msg='Confirmez avoir lu les informations sur vos données et les limites de FixScenario.'
+                    else:
+                        user=form.save(commit=False);user.username=email;user.email=email;user.save()
+                        account=Account.objects.create(user=user,beta_until=timezone.now()+timedelta(days=30) if beta_mode else None)
+                        if beta_mode:invite.used=True;invite.save()
+                        transaction.on_commit(lambda: send_verification(account))
+                        login(request,user);return redirect('/app/')
+            except IntegrityError:
+                # A concurrent submission may win after form validation. Roll back
+                # the whole account/invitation transaction before checking the user.
+                if not User.objects.filter(username__iexact=email).exists():raise
+                msg='Ce compte existe déjà. Connectez-vous.'
+    return render(request,'registration/signup.html',{'marketing_url':settings.MARKETING_URL,'form':form,'error':translate(msg),'auth_mode':'signup','beta_mode':beta_mode,'signup_form':form,'login_form':EmailAuthenticationForm(request)})
 @require_http_methods(['GET','POST'])
 def activate_beta(request):
     if not request.user.is_authenticated:return redirect('/beta/')
@@ -160,7 +187,7 @@ def endpoint(fn):
         except RequestDataTooBig:return error('La requête dépasse 1,5 Mo.',413)
         except Exception:
             # Do not log traceback locals, raw payloads or third-party exception contents.
-            log.error('FlowFix request failed: %s',fn.__name__)
+            log.error('FixScenario request failed: %s',fn.__name__)
             return error('Service momentanément indisponible. Réessayez.',503)
     return wrapped
 

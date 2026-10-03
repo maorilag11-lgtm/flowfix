@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About · FlowFix</title>
-<meta name="description" content="What FlowFix is, why it exists, and how it differs from asking a general assistant about a Make error.">
+<title>About · FixScenario</title>
+<meta name="description" content="What FixScenario is, why it exists, and how it differs from asking a general assistant about a Make error.">
 <meta name="theme-color" content="#07050E">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
@@ -241,7 +241,7 @@
 <div id="progress"></div>
 <div class="wrap">
   <div id="nav" class="pad">
-    <a class="brand" href="index.html"><img src="logo.webp" alt="" aria-hidden="true" width="29" height="24" style="display: block; width: 29px; height: 24px;"> FlowFix</a>
+    <a class="brand" href="index.html"><img src="logo.webp" alt="" aria-hidden="true" width="29" height="24" style="display: block; width: 29px; height: 24px;"> FixScenario</a>
     <div class="navlinks">
       <a href="how-it-works.html">How it works</a>
       <a href="diagnosis.html">A diagnosis</a>
@@ -267,14 +267,14 @@
           <h2>The problem it was built for</h2>
         </header>
         <p>When a Make scenario breaks, the error names the module that threw it. That module is usually the victim. The cause sits upstream &mdash; a structure that changed, a bundle that came back empty, a scope that was never wide enough &mdash; and finding it means opening the execution history, reading bundles by hand, and comparing them against a blueprint.</p>
-        <p>That hunt takes longer than building the scenario did. FlowFix does the reading part.</p>
+        <p>That hunt takes longer than building the scenario did. FixScenario does the reading part.</p>
 
       </section>
       <section id="difference">
         <header class="sec-hero">
           <h2>How it differs from asking a general assistant</h2>
         </header>
-        <p>A general assistant restates the error, because the error text is all it has. FlowFix reasons from the workflow around the failure: which modules feed the one that broke, what they actually produced on the failed run, and which of those facts is incompatible with the mapping.</p>
+        <p>A general assistant restates the error, because the error text is all it has. FixScenario reasons from the workflow around the failure: which modules feed the one that broke, what they actually produced on the failed run, and which of those facts is incompatible with the mapping.</p>
         <p>That is also why it can say <em>confirmed</em> instead of <em>probably</em> &mdash; and why it will say inconclusive when the data does not support a verdict.</p>
 
       </section>
@@ -282,7 +282,7 @@
         <header class="sec-hero">
           <h2>Independence</h2>
         </header>
-        <p>FlowFix is not affiliated with Make.com, Celonis, or any of the apps it diagnoses connections to. It reads exports you provide. It has no access to your Make account.</p>
+        <p>FixScenario is not affiliated with Make.com, Celonis, or any of the apps it diagnoses connections to. It reads exports you provide. It has no access to your Make account.</p>
 
       </section>
       <section id="who">
@@ -297,7 +297,7 @@
         <header class="sec-hero">
           <h2>Where it is today</h2>
         </header>
-        <p>FlowFix is in private beta. Accounts are not open yet, pricing is indicative, and the coverage list grows as new classes of failure become diagnosable with confidence rather than guesswork.</p>
+        <p>FixScenario is in private beta. Accounts are not open yet, pricing is indicative, and the coverage list grows as new classes of failure become diagnosable with confidence rather than guesswork.</p>
 
       </section>
       <div class="pager">
@@ -320,7 +320,7 @@
         <div class="foot-news" style="display: flex; flex-direction: column; gap: 14px; width: 320px; flex-shrink: 0;">
           <div style="display: flex; align-items: center; gap: 10px;">
             <img src="logo.webp" alt="" aria-hidden="true" width="29" height="24" style="display: block; width: 29px; height: 24px;">
-            <span style="font-size: 16px; font-weight: 500; letter-spacing: -0.02em; color: #FFFFFF;">FlowFix</span>
+            <span style="font-size: 16px; font-weight: 500; letter-spacing: -0.02em; color: #FFFFFF;">FixScenario</span>
           </div>
           <p style="font-size: 13.5px; line-height: 1.6; color: #B2B2BE;">Product updates by email are not open yet. Contact us with questions.</p>
           <form id="newsForm" novalidate style="display: flex; flex-direction: column; gap: 12px;">
@@ -356,7 +356,7 @@
       </div>
       <div style="display: flex; flex-direction: column; gap: 2px;">
         <span class="m" style="font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #85859A;">Company</span>
-        <a href="about.html" style="font-size: 13.5px; color: #B2B2BE; text-decoration: none;">About FlowFix</a>
+        <a href="about.html" style="font-size: 13.5px; color: #B2B2BE; text-decoration: none;">About FixScenario</a>
         <a href="contact.html" style="font-size: 13.5px; color: #B2B2BE; text-decoration: none;">Contact</a>
       </div>
       <div style="display: flex; flex-direction: column; gap: 2px;">
@@ -369,7 +369,7 @@
       </div>
 
       <div class="foot-bottom" style="display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.08);">
-        <p style="font-size: 12.5px; color: #8E8E9E;">&copy; 2026 FlowFix. All rights reserved.</p>
+        <p style="font-size: 12.5px; color: #8E8E9E;">&copy; 2026 FixScenario. All rights reserved.</p>
         <p style="font-size: 12.5px; color: #8E8E9E;">Independent product, not affiliated with Make.com or Celonis.</p>
       </div>
 
@@ -384,7 +384,7 @@
        gestionnaire par un fetch() vers l'URL du formulaire de ton service. */
     f.addEventListener('submit', function (e) {
       e.preventDefault();
-      n.innerHTML = 'The list is not open yet &mdash; nothing was sent. Check back once FlowFix leaves private beta.';
+      n.innerHTML = 'The list is not open yet &mdash; nothing was sent. Check back once FixScenario leaves private beta.';
       n.style.color = '#B79BFF';
     });
   })();

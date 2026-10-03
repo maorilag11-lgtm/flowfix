@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="fr">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{% if auth_mode == 'signup' %}{% if beta_mode %}Activer mon invitation{% else %}Créer un compte{% endif %}{% else %}Connexion{% endif %} — FlowFix</title><link rel="stylesheet" href="/auth.css"><script src="/auth.js" defer></script></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{% if auth_mode == 'signup' %}{% if beta_mode %}Activer mon invitation{% else %}Créer un compte{% endif %}{% else %}Connexion{% endif %} — FixScenario</title><link rel="stylesheet" href="/auth.css"><script src="/auth.js" defer></script></head>
 <body class="auth-body">
- <header class="auth-nav"><a href="{{ marketing_url }}" class="wordmark" aria-label="FlowFix — retour à la page de vente">FlowFix<span>Le debugger spécialisé Make</span></a><a href="{{ marketing_url }}">Retour à l’accueil <span aria-hidden="true">↗</span></a></header>
+ <header class="auth-nav"><a href="{{ marketing_url }}" class="wordmark" aria-label="FixScenario — retour à la page de vente">FixScenario<span>Le debugger spécialisé Make</span></a><a href="{{ marketing_url }}">Retour à l’accueil <span aria-hidden="true">↗</span></a></header>
  <main class="auth-shell">
-  <section class="auth" data-mode="{{ auth_mode }}" data-beta="{{ beta_mode|yesno:'true,false' }}" aria-label="Accès à FlowFix">
+  <section class="auth" data-mode="{{ auth_mode }}" data-beta="{{ beta_mode|yesno:'true,false' }}" aria-label="Accès à FixScenario">
    <aside class="auth-story">
     <p class="eyebrow"><span class="status-dot"></span> MOINS DE FLOU. UNE PROCHAINE ÉTAPE.</p>
     <div class="welcome"><h1 class="welcome__title"><span class="copy-login">Reprenez vos<br> <em>analyses.</em></span><span class="copy-signup">Comprenez<br> vos <em>erreurs.</em></span></h1><p class="welcome__description">Une erreur Make, le bon contexte,<br>des pistes pour comprendre le blocage<br>et savoir quoi vérifier ensuite.</p></div>
     <div class="mini-flow" aria-hidden="true"><span>{ }</span><i></i><span>?</span><i></i><span>↗</span></div>
-    <div class="story-note"><span aria-hidden="true">↳</span><p>FlowFix vous guide.<br><strong>Vous gardez la main dans Make.</strong></p></div>
+    <div class="story-note"><span aria-hidden="true">↳</span><p>FixScenario vous guide.<br><strong>Vous gardez la main dans Make.</strong></p></div>
    </aside>
    <div class="auth-forms">
     <div class="auth-switch" aria-label="Choisir un formulaire"><a href="/login/" data-auth-mode="login" {% if auth_mode == 'login' %}aria-current="page"{% endif %}>Connexion</a><a href="/signup/" data-auth-mode="signup" {% if auth_mode == 'signup' %}aria-current="page"{% endif %}>Créer un compte</a></div>
@@ -22,25 +22,25 @@
       <div class="field"><label for="login-email">Adresse email</label><input id="login-email" name="username" type="email" value="{{ login_form.username.value|default_if_none:'' }}" autocomplete="username" placeholder="vous@entreprise.fr" required {% if login_form.username.errors %}aria-invalid="true" aria-describedby="login-email-errors"{% endif %}><div id="login-email-errors" class="field-errors">{{ login_form.username.errors }}</div></div>
       <div class="field"><div class="label-row"><label for="login-password">Mot de passe</label><a href="/reset/">Mot de passe oublié ?</a></div><div class="password-field"><input id="login-password" name="password" type="password" autocomplete="current-password" required {% if login_form.password.errors %}aria-invalid="true" aria-describedby="login-password-errors"{% endif %}><button type="button" class="password-toggle" data-password="login-password" aria-label="Afficher le mot de passe" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div id="login-password-errors" class="field-errors">{{ login_form.password.errors }}</div></div>
       <button class="submit" type="submit">Se connecter <span aria-hidden="true">↗</span></button>
-     </form><p class="form-bottom">Nouveau sur FlowFix ? <a href="/signup/" data-auth-mode="signup">Créer mon compte</a></p>
+     </form><p class="form-bottom">Nouveau sur FixScenario ? <a href="/signup/" data-auth-mode="signup">Créer mon compte</a></p>
     </section>
     <section class="auth-pane" data-pane="signup" {% if auth_mode != 'signup' %}hidden inert{% endif %} aria-labelledby="signup-title">
-     <p class="form-kicker">{% if beta_mode %}ACCÈS BÊTA-TESTEUR{% else %}VOTRE PREMIER PAS AVEC FLOWFIX{% endif %}</p><h2 id="signup-title" tabindex="-1">{% if beta_mode %}Activez votre invitation.{% else %}Créez votre compte.{% endif %}</h2><p class="form-description">{% if beta_mode %}Utilisez l’adresse destinataire de votre invitation.{% else %}Analysez votre premier problème Make, sans carte bancaire.{% endif %}</p>
+     <p class="form-kicker">{% if beta_mode %}ACCÈS BÊTA-TESTEUR{% else %}VOTRE PREMIER PAS AVEC FIXSCENARIO{% endif %}</p><h2 id="signup-title" tabindex="-1">{% if beta_mode %}Activez votre invitation.{% else %}Créez votre compte.{% endif %}</h2><p class="form-description">{% if beta_mode %}Utilisez l’adresse destinataire de votre invitation.{% else %}Analysez votre premier problème Make, sans carte bancaire.{% endif %}</p>
      {% if not beta_mode %}{% include "registration/google_auth.html" %}{% endif %}
      <form action="{% if beta_mode %}/beta/{% else %}/signup/{% endif %}" method="post">
       {% csrf_token %}{% if error or signup_form.non_field_errors %}<div class="form-errors" role="alert">{{ error }}{{ signup_form.non_field_errors }}</div>{% endif %}
-      <div class="field"><label for="signup-email">Adresse email</label><input id="signup-email" type="email" name="username" value="{{ signup_form.username.value|default_if_none:'' }}" autocomplete="username" placeholder="vous@entreprise.fr" required {% if signup_form.username.errors %}aria-invalid="true" aria-describedby="signup-email-errors"{% endif %}><div id="signup-email-errors" class="field-errors">{{ signup_form.username.errors }}</div></div>
+      <div class="field"><label for="signup-email">Adresse email</label><input id="signup-email" type="email" maxlength="150" autocapitalize="none" spellcheck="false" name="username" value="{{ signup_form.username.value|default_if_none:'' }}" autocomplete="username" placeholder="vous@entreprise.fr" required {% if signup_form.username.errors %}aria-invalid="true" aria-describedby="signup-email-errors"{% endif %}><div id="signup-email-errors" class="field-errors">{{ signup_form.username.errors }}</div></div>
       <div class="field-grid"><div class="field"><label for="signup-password">Mot de passe</label><input id="signup-password" type="password" name="password1" autocomplete="new-password" required aria-describedby="password-help signup-password-errors" {% if signup_form.password1.errors %}aria-invalid="true"{% endif %}><div id="signup-password-errors" class="field-errors">{{ signup_form.password1.errors }}</div></div><div class="field"><label for="signup-confirm">Confirmer le mot de passe</label><input id="signup-confirm" type="password" name="password2" autocomplete="new-password" required {% if signup_form.password2.errors %}aria-invalid="true" aria-describedby="signup-confirm-errors"{% endif %}><div id="signup-confirm-errors" class="field-errors">{{ signup_form.password2.errors }}</div></div></div>
       <details id="password-help"><summary>Conseils pour un mot de passe valide</summary>{{ signup_form.password1.help_text|safe }}</details>
       {% if beta_mode %}<div class="field invitation-field"><label for="invitation">Code d’invitation</label><input id="invitation" name="invitation" value="{{ request.POST.invitation|default:'' }}" autocomplete="off" spellcheck="false" required placeholder="Le code reçu avec votre invitation"></div>{% endif %}
-      <label class="acknowledge"><input type="checkbox" name="acknowledge" value="yes" required {% if request.POST.acknowledge == 'yes' %}checked{% endif %}><span>J’ai lu les <a href="/privacy/">informations sur mes données et les limites de FlowFix</a>.</span></label>
+      <label class="acknowledge"><input type="checkbox" name="acknowledge" value="yes" required {% if request.POST.acknowledge == 'yes' %}checked{% endif %}><span>J’ai lu les <a href="/privacy/">informations sur mes données et les limites de FixScenario</a>.</span></label>
       <button class="submit" type="submit">{% if beta_mode %}Activer mon invitation{% else %}Créer mon compte{% endif %} <span aria-hidden="true">↗</span></button>
      </form>{% if not beta_mode %}<p class="signup-note">3 analyses gratuites à la création du compte. Les résultats non concluants ne consomment pas de crédit.</p>{% endif %}<p class="form-bottom">Vous avez déjà un compte ? <a href="/login/" data-auth-mode="login">Se connecter</a></p>
     </section>
    </div>
-   <div class="auth__band" aria-hidden="true"><span class="band__edge band__edge--lead"></span><span class="band__edge band__edge--trail"></span><div class="band__inner"><div class="band__page"><p>FLOWFIX / VOTRE ESPACE</p><h3>Comprendre.<br><em>Avancer.</em></h3><span>COMPRENDRE. VÉRIFIER. AVANCER.</span></div></div></div>
+   <div class="auth__band" aria-hidden="true"><span class="band__edge band__edge--lead"></span><span class="band__edge band__edge--trail"></span><div class="band__inner"><div class="band__page"><p>FIXSCENARIO / VOTRE ESPACE</p><h3>Comprendre.<br><em>Avancer.</em></h3><span>COMPRENDRE. VÉRIFIER. AVANCER.</span></div></div></div>
   </section>
   <p class="auth-footnote"><span aria-hidden="true">◈</span> Des pistes expliquées. Des vérifications concrètes. Vous gardez le contrôle.</p>
  </main>
- <footer class="auth-footer"><span>FlowFix est indépendant et n’est pas affilié à Make.</span><div class="footer-links"><a href="/privacy/">Données & limites</a><a class="beta-link" href="/beta/">Accès bêta-testeur</a></div></footer>
+ <footer class="auth-footer"><span>FixScenario est indépendant et n’est pas affilié à Make.</span><div class="footer-links"><a href="/privacy/">Données & limites</a><a class="beta-link" href="/beta/">Accès bêta-testeur</a></div></footer>
 </body></html>

@@ -1,1 +1,1 @@
-"""Local application adapter; the FlowFix engine remains unchanged."""
+"""Local application adapter; the FixScenario engine remains unchanged."""

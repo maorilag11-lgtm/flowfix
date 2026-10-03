@@ -111,7 +111,7 @@ def checkout(request,body):
             'billing_address_collection':'required','customer_update':{'address':'auto','name':'auto'},
             'automatic_tax':{'enabled':True},'tax_id_collection':{'enabled':True},
             'locale':account.language,
-            'branding_settings':{'display_name':'FlowFix','background_color':'#090710','button_color':'#7C4DF5','border_style':'rounded','font_family':'inter'},
+            'branding_settings':{'display_name':'FixScenario','background_color':'#090710','button_color':'#7C4DF5','border_style':'rounded','font_family':'inter'},
         },options={'idempotency_key':'flowfix-checkout-'+str(uuid4())})
     return JsonResponse({'url':session.url})
 @require_POST

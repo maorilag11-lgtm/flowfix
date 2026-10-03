@@ -78,7 +78,7 @@
 #start .workspace-selector{white-space:nowrap}#start .workspace-selector span{margin:0}#start .workspace-selector a{white-space:nowrap}
 @media(min-width:1000px) and (min-height:600px){.new-analysis .explainer ol li p{margin:2px 0 0;line-height:1.22}.new-analysis .explainer ol li{padding-bottom:4px}.new-analysis .you-get{padding-top:9px}.new-analysis .you-get ul{margin-bottom:0}.new-analysis .explainer ol{margin-bottom:6px}}
 
-/* FlowFix — product design / motion, September 2026. Scoped away from auth. */
+/* FixScenario — product design / motion, September 2026. Scoped away from auth. */
 .product-panel{--ink:#201d35;--muted:#737084;--purple:#7751ed;--line:#e9e6ef;--pale:#f2edff;--ease:cubic-bezier(.16,1,.3,1);background:#181525;color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
 .product-panel .topbar{background:rgba(255,255,255,.96);border-bottom:1px solid #eeebf2;box-shadow:0 3px 20px #20153503;backdrop-filter:blur(20px);padding-left:26px}
 .product-panel .brand{gap:11px}.product-panel .brand strong{font-size:25px;letter-spacing:-1.2px}.product-panel .brand small{font-size:10px;letter-spacing:.1px;color:#898395}.product-panel .mark{transform:scale(.82);transform-origin:center}
@@ -225,7 +225,7 @@ body.technical-panel{--ink:#e9e6f1;--muted:#a29cb4;--line:#39344b;--purple:#937c
 .technical-panel.product-panel .sidebar nav button:not(.selected){background:transparent;box-shadow:none}
 .technical-panel.product-panel .sidebar nav button:not(.selected):hover{background:#2b2738}
 
-/* FlowFix studio composition: compact rail, editorial headings, orbital illustration. */
+/* FixScenario studio composition: compact rail, editorial headings, orbital illustration. */
 body.technical-panel{--purple:#a98bff;--ink:#f0edf8;--muted:#b0a8c2;--line:#383140;background:#0d0d12}
 .technical-panel.product-panel .topbar{background:#0d0d12;border-bottom:1px solid #26222f;height:76px;padding:0 30px}
 .technical-panel.product-panel .brand strong{font-size:27px}.technical-panel.product-panel .mark i{background:linear-gradient(135deg,#c4b0ff,#5b45f0);box-shadow:none}.technical-panel.product-panel .brand small{color:#aaa3bb}

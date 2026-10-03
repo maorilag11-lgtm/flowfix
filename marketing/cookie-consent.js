@@ -1,5 +1,5 @@
 /* ============================================================================
-   Bandeau cookies FlowFix.
+   Bandeau cookies FixScenario.
    Un seul fichier a inclure sur chaque page : il pose son propre style et son
    propre balisage, aux couleurs du site.
 
@@ -139,12 +139,12 @@
     var img = el('img', 'ck-img');
     img.src = 'cookie.png'; img.width = 44; img.height = 44; img.alt = '';
     img.setAttribute('aria-hidden', 'true');
-    var title = el('h2', 'ck-t', 'Cookies on FlowFix'); title.id = 'ck-title';
+    var title = el('h2', 'ck-t', 'Cookies on FixScenario'); title.id = 'ck-title';
     head.appendChild(img); head.appendChild(title);
 
     var desc = el('p', 'ck-p'); desc.id = 'ck-desc';
     desc.innerHTML = 'We only need the essential ones to run the site. Anything that measures how you ' +
-      'use FlowFix stays off until you say yes. Details in the ' +
+      'use FixScenario stays off until you say yes. Details in the ' +
       '<a href="privacy.html">privacy notice</a>.';
 
     var acts = el('div', 'ck-acts');
