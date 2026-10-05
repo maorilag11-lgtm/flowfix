@@ -44,7 +44,8 @@ class AccessContractTests(TestCase):
         self.assertFalse(self.client.get('/api/settings').json()['can_start_trial'])
         self.assertEqual(self.post('/api/access/trial',{}).status_code,409)
 
-    def test_all_inconclusive_outcomes_preserve_credit(self):
+    def test_paid_inconclusive_outcomes_preserve_credit(self):
+        self.account.beta_until=timezone.now()+timedelta(days=1);self.account.save()
         for status in ['MULTIPLE_CANDIDATES','INSUFFICIENT_EVIDENCE','WEAK_EVIDENCE','CONTRADICTED','UNKNOWN']:
             with self.subTest(status=status),self.calculated(status):result=self.post('/api/sessions')
             self.assertEqual(result.status_code,201)
@@ -89,7 +90,8 @@ class AccessContractTests(TestCase):
         self.assertEqual(self.account.usage,1)
         self.assertEqual(result.json()['accounting']['reason'],'monthly_quota')
 
-    def test_low_confidence_candidate_is_not_counted(self):
+    def test_paid_low_confidence_candidate_is_not_counted(self):
+        self.account.beta_until=timezone.now()+timedelta(days=1);self.account.save()
         with self.calculated(confidence='low'):result=self.post('/api/sessions')
         self.assertEqual(result.json()['accounting']['reason'],'inconclusive')
         self.account.refresh_from_db();self.assertEqual(self.account.free_remaining,3)
@@ -123,3 +125,31 @@ class AccessContractTests(TestCase):
             self.assertEqual(self.post('/api/sessions').status_code,503)
         self.assertFalse(Analysis.objects.exists())
         self.account.refresh_from_db();self.assertEqual(self.account.free_remaining,3)
+
+    def test_free_error_only_results_count_and_fourth_is_blocked(self):
+        for remaining in [2,1,0]:
+            result=self.post('/api/sessions',{'error':'HTTP 422'})
+            self.assertEqual(result.status_code,201,result.content)
+            self.assertTrue(result.json()['accounting']['counted'])
+            self.assertEqual(self.client.get('/api/settings').json()['free_remaining'],remaining)
+        with patch('saas.views.analyze') as engine:
+            self.assertEqual(self.post('/api/sessions').json()['code'],'free_analyses_exhausted')
+            engine.assert_not_called()
+
+    def test_mutations_lock_a_plain_query_and_deletion_preserves_usage(self):
+        from django.db.models.query import QuerySet
+        original=QuerySet.select_for_update
+        locked=[]
+        def capture(query,*args,**kwargs):
+            if query.model is Analysis:locked.append(query.query.distinct)
+            return original(query,*args,**kwargs)
+        d=self.post('/api/sessions').json()
+        with patch.object(QuerySet,'select_for_update',capture):
+            feedback=self.post('/api/sessions/'+d['id']+'/feedback',{'revision':1,'status':'resolved'})
+            self.assertEqual(feedback.status_code,200,feedback.content)
+            deleted=self.post('/api/sessions/'+d['id']+'/delete',{'revision':feedback.json()['revision']})
+            self.assertEqual(deleted.status_code,200,deleted.content)
+        self.assertEqual(locked,[False,False])
+        self.assertEqual(self.client.get('/api/sessions').json(),[])
+        self.account.refresh_from_db();self.assertEqual(self.account.free_remaining,2)
+        self.assertEqual(DiagnosticUsage.objects.filter(analysis=None).count(),1)

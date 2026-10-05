@@ -289,7 +289,11 @@ def session(request,body,sid,operation=None):
         visible=query.get(id=sid)
         account,space,role=sponsor(request.user,visible.workspace_id)
         can_write(account,role,operation)
-        record=(authorized_analyses(request.user) if operation=='delete' else analysis_access(request.user)).select_for_update().get(id=sid);d=copy.deepcopy(record.data)
+        # PostgreSQL forbids FOR UPDATE on a DISTINCT query. Keep authorization
+        # in the subquery, and lock only the concrete Analysis row.
+        permitted=authorized_analyses(request.user) if operation=='delete' else analysis_access(request.user)
+        record=Analysis.objects.filter(pk__in=permitted.values('pk')).select_for_update().get(id=sid)
+        d=copy.deepcopy(record.data)
         if body.get('revision')!=d['revision']:raise Conflict('Cette analyse a changé. Rechargez-la.')
         if operation=='delete':record.delete();return JsonResponse({'deleted':True})
         if operation in ['answer','edit']:check_access(account)

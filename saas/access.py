@@ -55,7 +55,9 @@ def record_usage(account,analysis,output):
     _,limit,plan=entitlement(account)
     reason='inconclusive'
     counted=False
-    if conclusive:
+    # The three introductory credits count every completed diagnostic.
+    # Paid quotas retain their conclusive-only contract.
+    if conclusive or plan=='Analyses gratuites':
         if plan=='Analyses gratuites':
             account.free_remaining-=1
             reason='free_diagnosis'
