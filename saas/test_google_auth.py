@@ -7,10 +7,11 @@ from . import google_auth
 
 @override_settings(ALLOWED_HOSTS=['testserver'],SECURE_SSL_REDIRECT=False,GOOGLE_CLIENT_ID='client.apps.googleusercontent.com',GOOGLE_CLIENT_SECRET='test-only',PUBLIC_URL='https://example.test')
 class GoogleAuthTests(TestCase):
-    def test_google_form_redirect_is_allowed_only_on_start_page(self):
+    def test_google_form_redirect_is_allowed_only_on_auth_pages(self):
         for response in (self.client.get('/auth/google/'), self.client.post('/auth/google/', {'acknowledge':'yes'})):
             self.assertIn("form-action 'self' https://accounts.google.com", response['Content-Security-Policy'])
-        self.assertNotIn('accounts.google.com', self.client.get('/login/')['Content-Security-Policy'])
+        self.assertIn('accounts.google.com', self.client.get('/login/')['Content-Security-Policy'])
+        self.assertNotIn('accounts.google.com', self.client.get('/privacy/')['Content-Security-Policy'])
     def begin(self):
         response=self.client.post('/auth/google/',{'acknowledge':'yes'})
         self.assertEqual(response.status_code,302)
@@ -68,9 +69,22 @@ class GoogleAuthTests(TestCase):
         Account.objects.create(user=user,google_subject='subject-1')
         self.assertEqual(self.finish(self.begin()).status_code,403)
         self.assertNotIn('_auth_user_id',self.client.session)
-    def test_start_requires_csrf_and_acknowledgement(self):
+    def test_start_requires_csrf_but_no_intermediate_acknowledgement(self):
         self.assertEqual(Client(enforce_csrf_checks=True).post('/auth/google/',{'acknowledge':'yes'}).status_code,403)
-        self.assertEqual(self.client.post('/auth/google/',{}).status_code,400)
+        self.assertEqual(self.client.post('/auth/google/',{}).status_code,302)
+        self.assertRedirects(self.client.get('/auth/google/'),'/login/')
+
+    def test_login_and_signup_offer_direct_csrf_protected_google_form(self):
+        import re
+        client=Client(enforce_csrf_checks=True)
+        for path in ('/login/','/signup/'):
+            response=client.get(path)
+            html=response.content.decode()
+            self.assertIn('method="post" action="/auth/google/"',html)
+            token=re.search(r'name="csrfmiddlewaretoken" value="([^"]+)"',html).group(1)
+            start=client.post('/auth/google/',{'csrfmiddlewaretoken':token})
+            self.assertEqual(start.status_code,302)
+            self.assertEqual(urlparse(start.url).netloc,'accounts.google.com')
     @override_settings(GOOGLE_CLIENT_SECRET='')
     def test_unconfigured_is_safe(self):
         self.assertEqual(self.client.get('/auth/google/').status_code,503)

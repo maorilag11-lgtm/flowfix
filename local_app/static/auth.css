@@ -28,3 +28,5 @@
 
 /* Shared logo from the FixScenario sales page. */
 .brand-logo{display:inline-block;width:31px;height:26px;object-fit:contain;vertical-align:middle;flex:none;margin-right:10px}.technical-panel.product-panel .brand-logo{width:36px;height:30px;margin-right:0}.wordmark .brand-logo{vertical-align:-3px}
+
+.google-auth .google-button{width:100%;font-family:inherit}

@@ -29,8 +29,7 @@ def screen(request, error='', status=200):
 @require_http_methods(['GET','POST'])
 def start(request):
     if not configured():return screen(request,'La connexion Google n’est pas encore configurée.',503)
-    if request.method=='GET':return screen(request)
-    if request.POST.get('acknowledge')!='yes':return screen(request,'Veuillez lire les informations sur vos données avant de continuer.',400)
+    if request.method=='GET':return redirect('/login/')
     if limited(request,'google-login'):return screen(request,'Trop de tentatives. Réessayez plus tard.',429)
     state,nonce,verifier=(secrets.token_urlsafe(32) for _ in range(3))
     request.session['google_oauth']={'state':state,'nonce':nonce,'verifier':verifier,'created':time.time(),'user':request.user.pk if request.user.is_authenticated else None}
