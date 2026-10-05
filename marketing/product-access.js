@@ -19,7 +19,8 @@
       const back = document.createElement('a');
       back.textContent = '← Back to my workspace';
       back.href = (origin || '') + '/app/#new';
-      back.className = 'ff-glass ff-glass-l';
+      back.className = 'm';
+      back.style.cssText = 'align-self:flex-start;color:#C8B9EE;font-size:12px;text-decoration:none;padding:8px 0;';
       pricing.prepend(back);
       requestAnimationFrame(() => pricing.scrollIntoView({behavior: 'instant', block: 'start'}));
     }
