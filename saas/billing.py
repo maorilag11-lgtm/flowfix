@@ -18,7 +18,11 @@ from .views import endpoint,error,limited
 MONTHLY_PRICES={'solo':4900,'agency':14900,'enterprise':39900}
 
 def page(request):
-    if not request.user.is_authenticated:return redirect('/login/?next=/billing/')
+    if not request.user.is_authenticated:
+        from urllib.parse import urlencode
+        plan=request.GET.get('plan')
+        destination='/billing/' + ('?plan='+plan if plan in MONTHLY_PRICES else '')
+        return redirect('/login/?'+urlencode({'next':destination}))
     return render(request,'billing.html',{'support':settings.SUPPORT_EMAIL or 'FlowFix.contact.support@gmail.com','marketing_url':settings.MARKETING_URL})
 
 def summary(account):

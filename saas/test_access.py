@@ -74,7 +74,7 @@ class AccessContractTests(TestCase):
                 denied=self.post('/api/sessions',body)
                 self.assertEqual(denied.status_code,409)
                 self.assertEqual(denied.json()['code'],'free_analyses_exhausted')
-                self.assertEqual(denied.json()['upgrade_url'],'/billing/?plan=solo')
+                self.assertEqual(denied.json()['upgrade_url'],'/?upgrade=1#pricing')
             engine.assert_not_called()
         self.assertEqual(Analysis.objects.count(),3)
         self.assertEqual(DiagnosticUsage.objects.count(),3)

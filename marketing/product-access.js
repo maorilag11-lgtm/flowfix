@@ -13,6 +13,17 @@
   document.querySelectorAll('a[data-product-route]').forEach(link => {
     if (origin) link.href = origin + link.dataset.productRoute;
   });
+  if (new URLSearchParams(location.search).get('upgrade') === '1') {
+    const pricing = document.getElementById('pricing');
+    if (pricing) {
+      const back = document.createElement('a');
+      back.textContent = '← Back to my workspace';
+      back.href = (origin || '') + '/app/#new';
+      back.className = 'ff-glass ff-glass-l';
+      pricing.prepend(back);
+      requestAnimationFrame(() => pricing.scrollIntoView({behavior: 'instant', block: 'start'}));
+    }
+  }
   const start = document.querySelector('[data-product-start]');
   if (start) start.addEventListener('submit', event => {
     event.preventDefault();
