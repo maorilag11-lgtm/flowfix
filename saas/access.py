@@ -11,6 +11,10 @@ from .models import DiagnosticUsage
 from .catalog import rights,LTD_PLANS
 
 
+class FreeAnalysesExhausted(Conflict):
+    """Stable API signal for the subscription prompt, independent of language."""
+
+
 def entitlement(account):
     now=timezone.now()
     if account.subscription_status in ['active','trialing'] and account.paid_until and account.paid_until>now:
@@ -34,7 +38,7 @@ def entitlement(account):
 def check_access(account):
     allowed,limit,plan=entitlement(account)
     if not allowed:
-        if plan=='Analyses gratuites utilisées':raise Conflict('Vos 3 analyses gratuites ont été utilisées. Choisissez Solo à 49 € HT/mois dans Abonnement et facturation pour continuer.')
+        if plan=='Analyses gratuites utilisées':raise FreeAnalysesExhausted('Vos 3 analyses gratuites ont été utilisées. Choisissez Solo à 49 € HT/mois dans Abonnement et facturation pour continuer.')
         raise Conflict('Votre accès est terminé. Consultez Mon accès pour continuer.')
     month=timezone.now().strftime('%Y-%m')
     used=account.usage if account.usage_month==month else 0

@@ -7,7 +7,7 @@ const questions={blueprint:['Ajoutez le Blueprint de votre scénario.','Le fichi
 function node(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;}
 function message(text,error=false){$('message').textContent=text;$('message').className=error?'error':'';}
 const selectedWorkspace=new URLSearchParams(location.search).get('workspace')||'';
-async function api(path,body){if(path==='/api/settings'&&body===undefined&&selectedWorkspace)path+='?workspace='+encodeURIComponent(selectedWorkspace);if((path==='/api/sessions'||path.startsWith('/api/sessions?'))&&selectedWorkspace){if(body===undefined)path+=(path.includes('?')?'&':'?')+'workspace='+encodeURIComponent(selectedWorkspace);else body={...body,workspace:selectedWorkspace};}const res=await fetch(path,{method:body===undefined?'GET':'POST',headers:{'Content-Type':'application/json','X-FlowFix-Token':token},body:body===undefined?undefined:JSON.stringify(body)});const data=await res.json();if(res.status===401){location.href='/login/';throw Error('Reconnectez-vous.');}if(!res.ok)throw Error(data.error||'Erreur de communication.');return data;}
+async function api(path,body){if(path==='/api/settings'&&body===undefined&&selectedWorkspace)path+='?workspace='+encodeURIComponent(selectedWorkspace);if((path==='/api/sessions'||path.startsWith('/api/sessions?'))&&selectedWorkspace){if(body===undefined)path+=(path.includes('?')?'&':'?')+'workspace='+encodeURIComponent(selectedWorkspace);else body={...body,workspace:selectedWorkspace};}const res=await fetch(path,{method:body===undefined?'GET':'POST',headers:{'Content-Type':'application/json','X-FlowFix-Token':token},body:body===undefined?undefined:JSON.stringify(body)});const data=await res.json();if(res.status===401){location.href='/login/';throw Error('Reconnectez-vous.');}if(!res.ok){if(data.code==='free_analyses_exhausted')showFreePaywall();throw Error(data.error||'Erreur de communication.');}return data;}
 async function action(fn){if(busy)return;busy=true;document.body.classList.add('is-working');document.querySelectorAll('button').forEach(b=>b.disabled=true);message('Traitement en cours…');try{await fn();message('Opération terminée.');}catch(e){message(e.message,true);}finally{busy=false;document.body.classList.remove('is-working');document.querySelectorAll('button').forEach(b=>b.disabled=false);document.querySelectorAll('[data-billing-action]').forEach(b=>b.disabled=!settings.billing_enabled);applyRoleControls();}}
 let sessionRows=[],settings={display_name:'Local user'},page='new';
 async function history(){sessionRows=await api('/api/sessions');if(settings.mode==='saas'){settings=await api('/api/settings');updateProfile();}$('notification-dot').hidden=!sessionRows.length;}
@@ -206,4 +206,19 @@ function renderFreeOffer(){
  card.append(node('h2','Vos 3 analyses offertes sont utilisées'),node('p','Votre résultat et votre historique restent accessibles. Continuez avec Solo : 100 diagnostics concluants par mois calendaire, à 49 € HT/mois.'));
  const link=node('a','Continuer avec Solo · 49 € HT/mois','primary');link.href='/billing/?plan=solo';card.append(link);
  document.getElementById('detail').prepend(card);
+}
+
+
+function showFreePaywall(){
+ let dialog=$('free-paywall');
+ if(!dialog){
+  dialog=node('dialog',undefined,'free-paywall');dialog.id='free-paywall';dialog.setAttribute('aria-labelledby','free-paywall-title');dialog.setAttribute('aria-describedby','free-paywall-description');
+  const close=node('button','Fermer','paywall-close');close.type='button';close.onclick=()=>dialog.close();
+  const title=node('h2','Vos 3 analyses offertes sont utilisées');title.id='free-paywall-title';
+  const description=node('p','Votre résultat et votre historique restent accessibles. Continuez avec Solo : 100 diagnostics concluants par mois calendaire, à 49 € HT/mois.');description.id='free-paywall-description';
+  const link=node('a','Continuer avec Solo · 49 € HT/mois','primary');link.href='/billing/?plan=solo';
+  const historyLink=node('button','Consulter mon historique','paywall-history');historyLink.type='button';historyLink.onclick=()=>{dialog.close();workspace('history');};
+  dialog.append(close,title,description,link,historyLink);document.body.append(dialog);
+ }
+ if(!dialog.open)dialog.showModal();
 }

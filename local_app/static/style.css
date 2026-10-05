@@ -280,3 +280,6 @@ body.technical-panel{--purple:#a98bff;--ink:#f0edf8;--muted:#b0a8c2;--line:#3831
 
 /* Shared logo from the FixScenario sales page. */
 .brand-logo{display:inline-block;width:31px;height:26px;object-fit:contain;vertical-align:middle;flex:none;margin-right:10px}.technical-panel.product-panel .brand-logo{width:36px;height:30px;margin-right:0}.wordmark .brand-logo{vertical-align:-3px}
+
+/* Free allowance exhausted: keep the result and history accessible. */
+.technical-panel.product-panel .free-paywall{width:min(520px,calc(100vw - 32px));max-height:calc(100svh - 40px);overflow:auto;padding:30px;border:1px solid #655077;border-radius:24px;background:radial-gradient(ellipse at top right,#49316855,transparent 65%),#191520;color:#f3effb;box-shadow:0 28px 100px #0008}.free-paywall::backdrop{background:#090611b8;backdrop-filter:blur(8px)}.free-paywall h2{font-size:28px;line-height:1.2;letter-spacing:-.8px;margin:18px 0}.free-paywall p{color:#b8adc9;line-height:1.7;margin-bottom:24px}.free-paywall .primary{display:flex;justify-content:center;padding:15px;text-decoration:none}.free-paywall .paywall-close{display:block;margin-left:auto}.free-paywall .paywall-history{display:block;margin:14px auto 0}

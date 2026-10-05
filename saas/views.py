@@ -181,6 +181,8 @@ def endpoint(fn):
                 body=decode_request(request.body)
                 if not isinstance(body,dict):raise Invalid('Requête invalide.')
             return fn(request,body,*args,**kwargs)
+        except FreeAnalysesExhausted as exc:
+            return JsonResponse({'error':translate(str(exc)),'code':'free_analyses_exhausted','upgrade_url':'/billing/?plan=solo'},status=409)
         except Conflict as exc:return error(str(exc),409)
         except (Analysis.DoesNotExist,Account.DoesNotExist,Workspace.DoesNotExist,TeamMember.DoesNotExist,TeamInvitation.DoesNotExist):return error('Ressource introuvable.',404)
         except (Invalid,ValueError,TypeError,ValidationError,RecursionError):return error('Données invalides. Vérifiez les champs et le Blueprint.')
@@ -191,7 +193,7 @@ def endpoint(fn):
             return error('Service momentanément indisponible. Réessayez.',503)
     return wrapped
 
-from .access import entitlement,check_access,record_usage,start_trial
+from .access import entitlement,check_access,record_usage,start_trial,FreeAnalysesExhausted
 from .catalog import PLANS,price_catalog
 from .retention import history_days
 from .teams import workspaces,analysis_access,authorized_analyses,sponsor,can_write,team_seats,can_manage,role_for
