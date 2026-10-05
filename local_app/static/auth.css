@@ -23,3 +23,8 @@
 @media(max-width:740px){.reset-shell{width:calc(100% - 32px);padding:12px 0}.reset-card{grid-template-columns:1fr}.reset-story{display:none}.reset-content{padding:32px 25px}.reset-content h1{font-size:27px}.reset-body .auth-nav,.reset-body .auth-footer{width:calc(100% - 40px)}.reset-body .auth-nav{padding:22px 0}.reset-body .auth-footer{align-items:flex-start;line-height:1.6}.reset-body .wordmark span{font-size:9px}.reset-symbol{margin-bottom:22px}}@media(prefers-reduced-motion:reduce){.reset-card,.reset-key{animation:none}}
 
 .reset-card[data-step="2"] .reset-step b:nth-child(2),.reset-card[data-step="3"] .reset-step b{background:#c6a5f3}
+
+.google-connect .auth-shell{display:flex;align-items:center;justify-content:center;width:100%;padding:32px 20px}.google-card{width:min(100%,540px);padding:40px;border:1px solid #c0a0ff30;border-radius:24px;background:linear-gradient(140deg,#21182e,#110e1a);box-shadow:0 24px 90px #0004}.google-card h1{font-size:32px;line-height:1.15;letter-spacing:-1px;margin:16px 0}.google-card>p{color:#b9afc9;font-size:14px;line-height:1.7}.google-card [role=alert]{padding:14px;border:1px solid #ba99fa30;border-radius:10px;background:#a67aff0c}.google-card .submit{width:100%;margin-top:20px}.google-card a{color:#d1b6ff}.google-card .acknowledge{margin-top:24px}.google-card .form-kicker{font-size:10px;letter-spacing:2px}@media(max-width:540px){.google-card{padding:26px}.google-card h1{font-size:28px}}
+
+/* Shared logo from the FixScenario sales page. */
+.brand-logo{display:inline-block;width:31px;height:26px;object-fit:contain;vertical-align:middle;flex:none;margin-right:10px}.technical-panel.product-panel .brand-logo{width:36px;height:30px;margin-right:0}.wordmark .brand-logo{vertical-align:-3px}

@@ -12,3 +12,9 @@ sqlparse==0.6.0
 stripe==14.4.1
 typing_extensions==4.16.0
 urllib3==2.7.0
+google-auth==2.59.1
+cryptography==50.0.2
+cffi==2.1.1
+pyasn1==0.6.4
+pyasn1-modules==0.4.2
+pycparser==3.0

@@ -74,3 +74,6 @@ STRIPE_LTD_WEBHOOK_SECRET=os.getenv('STRIPE_LTD_WEBHOOK_SECRET','')
 
 # The public discovery offer is now 3 free analyses; existing trials remain valid.
 AGENCY_TRIAL_ENABLED=False
+
+GOOGLE_CLIENT_ID=os.getenv('GOOGLE_CLIENT_ID','')
+GOOGLE_CLIENT_SECRET=os.getenv('GOOGLE_CLIENT_SECRET','')

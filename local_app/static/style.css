@@ -277,3 +277,6 @@ body.technical-panel{--purple:#a98bff;--ink:#f0edf8;--muted:#b0a8c2;--line:#3831
  .technical-panel.product-panel.new-analysis .explainer ol{gap:10px}
  .technical-panel.product-panel.new-analysis .signal-visual{min-height:115px}
 }
+
+/* Shared logo from the FixScenario sales page. */
+.brand-logo{display:inline-block;width:31px;height:26px;object-fit:contain;vertical-align:middle;flex:none;margin-right:10px}.technical-panel.product-panel .brand-logo{width:36px;height:30px;margin-right:0}.wordmark .brand-logo{vertical-align:-3px}

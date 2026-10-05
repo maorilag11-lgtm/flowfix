@@ -879,3 +879,37 @@ VOUS POUVEZ REPRENDRE	YOU’RE READY TO GO
 Mot de passe mis à jour.	Password updated.
 Votre nouveau mot de passe est enregistré. Connectez-vous pour retrouver vos analyses.	Your new password is saved. Sign in to get back to your analyses.
 L’envoi d’emails n’est pas encore activé sur cette version de test. Contactez-nous pour obtenir de l’aide.	Email delivery is not enabled on this test version yet. Contact us for help.
+
+Votre compte	Your account
+VOTRE ESPACE	YOUR MEMBERSHIP
+Votre accès	Your access
+Actualiser le statut ↻	Refresh status ↻
+POUR COMMENCER	A GREAT PLACE TO START
+Limites techniques et usage raisonnable applicables	Technical limits and fair use apply
+Résiliation programmée	Cancellation scheduled
+Paiement à régulariser	Payment overdue
+Sans abonnement actif	No active subscription
+Fin de votre accès	Access ends
+Prochaine échéance	Next billing date
+Consultez votre espace	View your workspace
+Votre abonnement reste accessible jusqu’à la date de fin affichée. Vous pouvez gérer la résiliation dans le portail Stripe.	Your subscription remains accessible until the end date shown. You can manage cancellation in the Stripe portal.
+Votre accès payant est suspendu. Mettez à jour votre moyen de paiement dans le portail Stripe.	Your paid access is suspended. Update your payment method in the Stripe portal.
+Statut vérifié auprès de Stripe.	Status checked with Stripe.
+
+Actif	Active
+En attente	Pending
+
+La connexion Google n’est pas encore configurée.	Google sign-in is not configured yet.
+Veuillez lire les informations sur vos données avant de continuer.	Please read and accept the data information before continuing.
+Trop de tentatives. Réessayez plus tard.	Too many attempts. Please try again later.
+Cette tentative de connexion a expiré. Recommencez.	This sign-in attempt expired. Please start again.
+Votre session a changé. Recommencez.	Your session changed. Please start again.
+La connexion Google a été annulée. Votre compte n’a pas changé.	Google sign-in was cancelled. Your account has not changed.
+Réponse Google invalide. Recommencez.	Invalid Google response. Please start again.
+La connexion Google n’a pas pu être vérifiée. Réessayez.	Google sign-in could not be verified. Please try again.
+Cette identité Google est déjà associée à un autre compte.	This Google identity is already linked to another account.
+Choisissez l’identité Google avec la même adresse email que votre compte.	Choose the Google identity with the same email as your account.
+Un compte utilise déjà cette adresse. Connectez-vous avec votre mot de passe, puis revenez ici pour associer Google.	An account already uses this email. Sign in with your password first, then return here to link Google.
+Ce compte est indisponible.	This account is unavailable.
+Un compte a été modifié pendant la connexion. Recommencez.	An account was updated during sign-in. Please start again.
+Votre identité Google sert uniquement à vous connecter. Aucun accès à vos fichiers, emails ou scénarios Make.	Your Google identity is used only to sign in. We do not request access to your files, emails or Make scenarios.

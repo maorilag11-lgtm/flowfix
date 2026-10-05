@@ -23,7 +23,7 @@ def page(request):
 
 def summary(account):
     active=account.subscription_status in ['active','trialing'] and bool(account.paid_until and account.paid_until>timezone.now())
-    return {'active':active,'plan':PLANS.get(account.subscription_plan,{'name':'Abonnement'})['name'] if active else None,'status':account.subscription_status,'paid_until':account.paid_until,'has_customer':bool(account.customer),'has_subscription':bool(account.subscription)}
+    return {'active':active,'plan':PLANS.get(account.subscription_plan,{'name':'Abonnement'})['name'] if active else None,'status':account.subscription_status,'paid_until':account.paid_until,'plan_id':account.subscription_plan,'cancel_at_period_end':account.cancel_at_period_end,'cancel_at':account.cancel_at,'has_customer':bool(account.customer),'has_subscription':bool(account.subscription)}
 
 @require_GET
 @endpoint
@@ -53,6 +53,8 @@ def client():
     return stripe.StripeClient(settings.STRIPE_SECRET_KEY,max_network_retries=2)
 def sync(account,api):
     subscriptions=api.v1.subscriptions.list({'customer':account.customer,'status':'all','limit':100,'expand':['data.latest_invoice']})
+    # Fail closed if the response is incomplete; never revoke based on a partial list.
+    if subscriptions.get('has_more',False) is True:raise RuntimeError('Subscription reconciliation requires pagination')
     eligible=[]
     for sub in subscriptions.data:
         items=[i for i in sub['items']['data'] if i['price']['id'] in price_catalog()]
@@ -63,13 +65,27 @@ def sync(account,api):
             # Mixed commercial tiers are ambiguous: fail closed rather than grant a higher tier.
             plans={price_catalog()[i['price']['id']]['plan'] for i in items}
             if len(plans)!=1:raise RuntimeError('Ambiguous subscription items')
+            if sub.get('cancel_at'):end=min(end,sub['cancel_at'])
             eligible.append((end,sub,plans.pop()))
+    account.cancel_at_period_end=False;account.cancel_at=None
     if eligible:
         end,sub,plan=max(eligible,key=lambda row:row[0]);account.free_remaining=0;account.subscription_plan=plan;account.subscription=sub.id;account.subscription_status=sub.status;account.paid_until=datetime.fromtimestamp(end,tz.utc)
+        account.cancel_at_period_end=bool(sub.get('cancel_at_period_end') or sub.get('cancel_at'))
+        if account.cancel_at_period_end:account.cancel_at=account.paid_until
     else:
         pending=[s for s in subscriptions.data if s.status not in ['canceled','incomplete_expired']]
         account.subscription=pending[0].id if pending else '';account.subscription_status=pending[0].status if pending else 'inactive';account.paid_until=None
-    account.save(update_fields=['subscription','subscription_status','paid_until','subscription_plan','free_remaining'])
+    account.save(update_fields=['subscription','subscription_status','paid_until','subscription_plan','free_remaining','cancel_at_period_end','cancel_at'])
+@require_POST
+@endpoint
+def refresh(request,body):
+    if not settings.BILLING_ENABLED:return error('Les abonnements ne sont pas encore ouverts.',503)
+    if limited(request,'billing-refresh',10,identity=request.user.pk):return error('Réessayez dans quelques minutes.',429)
+    with transaction.atomic():
+        account=Account.objects.select_for_update().get(user=request.user)
+        if account.customer:sync(account,client())
+        return JsonResponse(summary(account))
+
 @require_POST
 @endpoint
 def checkout(request,body):
@@ -120,7 +136,7 @@ def portal(request,body):
     account=Account.objects.get(user=request.user)
     if not account.customer:return error('Aucun compte de facturation.',409)
     if limited(request,'billing',30,identity=request.user.pk):return error('Trop de demandes de facturation. Réessayez dans 15 minutes.',429)
-    session=client().v1.billing_portal.sessions.create({'customer':account.customer,'return_url':settings.PUBLIC_URL+'/billing/','locale':account.language})
+    session=client().v1.billing_portal.sessions.create({'customer':account.customer,'return_url':settings.PUBLIC_URL+'/billing/?portal_return=1','locale':account.language})
     return JsonResponse({'url':session.url})
 @csrf_exempt
 @require_POST
