@@ -129,7 +129,7 @@ def checkout(request,body):
             'metadata':{'flowfix_price':price},
             'subscription_data':{'metadata':{'flowfix_user':str(request.user.pk),'flowfix_plan':plan}},
             'billing_address_collection':'required','customer_update':{'address':'auto','name':'auto'},
-            'automatic_tax':{'enabled':True},'tax_id_collection':{'enabled':True},
+            'automatic_tax':{'enabled':settings.STRIPE_AUTOMATIC_TAX},'tax_id_collection':{'enabled':True},
             'locale':account.language,
             'branding_settings':{'display_name':'FixScenario','background_color':'#090710','button_color':'#7C4DF5','border_style':'rounded','font_family':'inter'},
         },options={'idempotency_key':'flowfix-checkout-'+str(uuid4())})
@@ -140,7 +140,9 @@ def portal(request,body):
     account=Account.objects.get(user=request.user)
     if not account.customer:return error('Aucun compte de facturation.',409)
     if limited(request,'billing',30,identity=request.user.pk):return error('Trop de demandes de facturation. Réessayez dans 15 minutes.',429)
-    session=client().v1.billing_portal.sessions.create({'customer':account.customer,'return_url':settings.PUBLIC_URL+'/billing/?portal_return=1','locale':account.language})
+    params={'customer':account.customer,'return_url':settings.PUBLIC_URL+'/billing/?portal_return=1','locale':account.language}
+    if settings.STRIPE_PORTAL_CONFIGURATION:params['configuration']=settings.STRIPE_PORTAL_CONFIGURATION
+    session=client().v1.billing_portal.sessions.create(params)
     return JsonResponse({'url':session.url})
 @csrf_exempt
 @require_POST

@@ -45,6 +45,13 @@ class BillingFlowTests(TestCase):
         self.api.v1.prices.retrieve.return_value['unit_amount']=100
         self.assertEqual(self.post('/api/billing/checkout',{'plan':'solo'}).status_code,503)
         self.api.v1.checkout.sessions.create.assert_not_called()
+    @override_settings(STRIPE_AUTOMATIC_TAX=False)
+    def test_confirmed_no_vat_regime_is_server_controlled(self):
+        response=self.post('/api/billing/checkout',{'plan':'solo','automatic_tax':True})
+        self.assertEqual(response.status_code,200)
+        data=self.api.v1.checkout.sessions.create.call_args.args[0]
+        self.assertFalse(data['automatic_tax']['enabled'])
+        self.assertEqual(data['line_items'],[{'price':'price_solo','quantity':1}])
     def test_unverified_cannot_pay(self):
         self.account.email_verified_at=None;self.account.save()
         self.assertNotEqual(self.post('/api/billing/checkout',{'plan':'solo'}).status_code,200)
@@ -165,3 +172,29 @@ class BillingFlowTests(TestCase):
     def test_billing_page_and_script_are_english_by_default(self):
         self.assertContains(self.client.get('/billing/'),'YOUR MEMBERSHIP')
         self.assertContains(self.client.get('/billing.js'),'Cancellation scheduled')
+
+    def test_checkout_keeps_dynamic_payment_methods_for_subscriptions(self):
+        self.assertEqual(self.post('/api/billing/checkout',{'plan':'solo','payment_method_types':['attacker']}).status_code,200)
+        data=self.api.v1.checkout.sessions.create.call_args.args[0]
+        self.assertEqual(data['mode'],'subscription')
+        # Stripe selects eligible enabled methods, including wallets and PayPal.
+        self.assertNotIn('payment_method_types',data)
+        self.assertNotIn('payment_intent_data',data)
+
+    @override_settings(STRIPE_WEBHOOK_SECRET='whsec_billing_test')
+    def test_delayed_payment_waits_for_paid_invoice_and_handles_failure(self):
+        import hmac,hashlib
+        def send(kind,event_id):
+            raw=json.dumps({'id':event_id,'object':'event','type':kind,'data':{'object':{'customer':'cus_owner'}}})
+            stamp=str(int(time.time()))
+            signature=hmac.new(b'whsec_billing_test',(stamp+'.'+raw).encode(),hashlib.sha256).hexdigest()
+            return self.client.post('/api/billing/webhook',raw,content_type='application/json',HTTP_STRIPE_SIGNATURE='t='+stamp+',v1='+signature)
+        self.api.v1.subscriptions.list.return_value.data=[self.subscription(paid=False)]
+        self.assertEqual(send('checkout.session.completed','evt_pending').status_code,200)
+        self.account.refresh_from_db();self.assertFalse(billing.summary(self.account)['active'])
+        self.api.v1.subscriptions.list.return_value.data=[self.subscription(paid=True)]
+        self.assertEqual(send('checkout.session.async_payment_succeeded','evt_settled').status_code,200)
+        self.account.refresh_from_db();self.assertTrue(billing.summary(self.account)['active'])
+        self.api.v1.subscriptions.list.return_value.data=[self.subscription(status='unpaid',paid=False)]
+        self.assertEqual(send('checkout.session.async_payment_failed','evt_failed').status_code,200)
+        self.account.refresh_from_db();self.assertFalse(billing.summary(self.account)['active'])

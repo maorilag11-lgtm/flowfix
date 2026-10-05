@@ -58,6 +58,8 @@ STRIPE_SECRET_KEY=os.getenv('STRIPE_SECRET_KEY','')
 STRIPE_WEBHOOK_SECRET=os.getenv('STRIPE_WEBHOOK_SECRET','')
 STRIPE_PRICE_ID=os.getenv('STRIPE_PRICE_ID','')
 BILLING_ENABLED=os.getenv('BILLING_ENABLED')=='1'
+STRIPE_AUTOMATIC_TAX=os.getenv('STRIPE_AUTOMATIC_TAX','1')=='1'
+STRIPE_PORTAL_CONFIGURATION=os.getenv('STRIPE_PORTAL_CONFIGURATION','')
 BETA_QUOTA=int(os.getenv('BETA_QUOTA','100'))
 PAID_QUOTA=int(os.getenv('PAID_QUOTA','500'))
 LOGGING={'version':1,'disable_existing_loggers':False,'handlers':{'console':{'class':'logging.StreamHandler'}},'loggers':{'django.request':{'handlers':['console'],'level':'ERROR','propagate':False}}}
